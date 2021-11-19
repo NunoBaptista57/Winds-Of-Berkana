@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Shader Graphs_Clouds
+  m_Shader: {fileID: -6465566751694194690, guid: 8467aecc7766b6449aa813aeb5a1f1e7, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    MotionVector: User
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  - TransparentDepthPrepass
+  - TransparentDepthPostpass
+  - TransparentBackface
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_04e7b6ed5f7643c19503c94ad38492ae: 100
+    - Vector1_2a791651f5b44c678867fe09175cc62c: -1
+    - Vector1_54ebcfbded824750804141236521b213: 0.002
+    - Vector1_60d9ece493c048b98fdab61142dd3992: 1
+    - Vector1_7f1546c4cbe8479a821e6c5c85c0b5b0: 500
+    - Vector1_96b57c1361794955864bbe0e0dd73715: -2
+    - Vector1_97c03991ee0e40bb95ebf3c28ec53778: 1
+    - Vector1_a091af1a48c649caa4de69d75444241d: 0.01
+    - Vector1_ab1b7cc00ab14e798190e8014b0cc099: 2
+    - Vector1_c040ff999fac4c49a9393f5f9fcaec91: 100
+    - Vector1_d0e833ff3fd7460da4edd0b7732f65c9: 1
+    - Vector1_d5079873bb6f4271ac53c7968d714f2e: 1
+    - Vector1_dc2d2bf771ef46278bb55091e5b2ccaa: 1
+    - Vector1_fcbb1a8bc7e54e29bdbd0b38c7cb3eb8: 1
+    - _AddPrecomputedVelocity: 0
+    - _AlphaCutoffEnable: 0
+    - _AlphaDstBlend: 0
+    - _AlphaSrcBlend: 1
+    - _AlphaToMask: 0
+    - _AlphaToMaskInspectorValue: 0
+    - _BlendMode: 0
+    - _CullMode: 1
+    - _CullModeForward: 1
+    - _DepthOffsetEnable: 0
+    - _DoubleSidedEnable: 0
+    - _DoubleSidedNormalMode: 2
+    - _DstBlend: 0
+    - _EnableBlendModePreserveSpecularLighting: 0
+    - _EnableFogOnTransparent: 1
+    - _OpaqueCullMode: 1
+    - _RenderQueueType: 1
+    - _SrcBlend: 1
+    - _StencilRef: 0
+    - _StencilRefDepth: 0
+    - _StencilRefDistortionVec: 4
+    - _StencilRefGBuffer: 2
+    - _StencilRefMV: 32
+    - _StencilWriteMask: 6
+    - _StencilWriteMaskDepth: 8
+    - _StencilWriteMaskDistortionVec: 4
+    - _StencilWriteMaskGBuffer: 14
+    - _StencilWriteMaskMV: 40
+    - _SurfaceType: 0
+    - _TransparentBackfaceEnable: 0
+    - _TransparentCullMode: 2
+    - _TransparentDepthPostpassEnable: 0
+    - _TransparentDepthPrepassEnable: 0
+    - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 0
+    - _TransparentZWrite: 0
+    - _UseShadowThreshold: 0
+    - _ZTestDepthEqualForOpaque: 3
+    - _ZTestGBuffer: 4
+    - _ZTestTransparent: 4
+    - _ZWrite: 1
+    m_Colors:
+    - Color_38d2ab1dc3074840a9b46a87e9c2d48c: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 1}
+    - Color_924f23f3d30f4a0f9dbd12b10f6294b9: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
+    - Vector4_22936672bbdf4ccc948af6d11af2ace8: {r: 0, g: 1, b: -0.3, a: 2.7}
+    - Vector4_4cde5ff9b5584485bf495f161f7466ab: {r: 1, g: 0, b: 0, a: 90}
+    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+--- !u!114 &2204686866051623814
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 11
