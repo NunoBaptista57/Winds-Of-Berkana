@@ -2,24 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TerrainManager : MonoBehaviour
+public class Planet : MonoBehaviour
 {
     [Range(2, 256)]
     public int resolution = 10;
+    public bool autoUpdate = true;
 
     [SerializeField, HideInInspector]
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
+    public ShapeSettings shapeSettings;
+    public ColorSettings colorSettings;
+    ShapeGenerator shapeGenerator;
+    [HideInInspector]
+    public bool shapeSettingsFoldout;
+    [HideInInspector]
+    public bool colorSettingsFoldout;
 
     private void OnValidate()
     {
         Initialize();
-        GenerateMesh();
+        GeneratePlanet();
     }
 
     void Initialize()
     {
+        shapeGenerator = new ShapeGenerator(shapeSettings);
+
         if (meshFilters == null || meshFilters.Length == 0)
             meshFilters = new MeshFilter[6];
         
@@ -40,16 +50,49 @@ public class TerrainManager : MonoBehaviour
 
                 
             }
-            terrainFaces[i] = new TerrainFace(meshFilters[i].sharedMesh, resolution, directions[i]);
+            terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i]);
         }
     }
 
+    public void GeneratePlanet()
+    {
+        Initialize();
+        GenerateMesh();
+        GenerateColors();
+    }
+
+    public void OnColorSettingsUpdated()
+    {
+        if (autoUpdate)
+        {
+            Initialize();
+            GenerateColors();
+        }
+    }
+
+    public void OnShapeSettingsUpdated()
+    {
+        if (autoUpdate)
+        {
+            Initialize();
+            GenerateMesh();
+        }
+    }
 
     void GenerateMesh()
     {
         foreach(TerrainFace face in terrainFaces)
         {
             face.ConstructMesh();
+        }
+    }
+
+
+    void GenerateColors()
+    {
+        foreach(var m in meshFilters)
+        {
+            m.GetComponent<MeshRenderer>().sharedMaterial.color = colorSettings.planetColor;
         }
     }
 }
