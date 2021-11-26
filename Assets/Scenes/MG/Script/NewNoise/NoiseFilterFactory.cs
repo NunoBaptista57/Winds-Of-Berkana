@@ -4,13 +4,13 @@ using UnityEngine;
 
 public static class NoiseFilterFactory
 {
-    public static INoiseFilter CreateNoiseFilter(NoiseSettings settings)
+    public static INoiseFilter CreateNoiseFilter(NewNoiseSettings settings)
     {
         switch (settings.filterType)
         {
-            case NoiseSettings.FilterType.Simple:
+            case NewNoiseSettings.FilterType.Simple:
                 return new SimpleNoiseFilter(settings.simpleNoiseSettings);
-            case NoiseSettings.FilterType.Rigid:
+            case NewNoiseSettings.FilterType.Rigid:
                 return new RigidNoiseFilter(settings.rigidNoiseSettings);
         }
 

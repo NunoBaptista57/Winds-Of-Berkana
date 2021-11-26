@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class NoiseSettings
+public class NewNoiseSettings
 {
     public enum FilterType { Simple, Rigid};
     public FilterType filterType;
