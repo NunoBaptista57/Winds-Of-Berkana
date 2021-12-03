@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345e543c57c191441bab43c92d31d5a0, type: 3}
   m_Name: RockShape
   m_EditorClassIdentifier: 
-  planetRadius: 1
+  planetRadius: 10
   noiseLayers:
   - enabled: 1
     useFirstLayerAsMask: 0
@@ -21,11 +21,11 @@ MonoBehaviour:
       simpleNoiseSettings:
         strength: 10
         numLayers: 5
-        baseRoughness: 1
-        roughness: 2
-        persistence: 2
+        baseRoughness: 2.38
+        roughness: 2.16
+        persistence: 1.99
         centre: {x: 0, y: 200, z: 200}
-        minValue: 10
+        minValue: 10.77
       rigidNoiseSettings:
         strength: 1
         numLayers: 5
@@ -34,4 +34,25 @@ MonoBehaviour:
         persistence: 1
         centre: {x: 1, y: 1, z: 1}
         minValue: 1
+        weightMultiplier: 1
+  - enabled: 1
+    useFirstLayerAsMask: 0
+    noiseSettings:
+      filterType: 1
+      simpleNoiseSettings:
+        strength: 10
+        numLayers: 5
+        baseRoughness: 2.38
+        roughness: 2.16
+        persistence: 1.99
+        centre: {x: 0, y: 200, z: 200}
+        minValue: 10.77
+      rigidNoiseSettings:
+        strength: 2
+        numLayers: 6
+        baseRoughness: 1
+        roughness: 1
+        persistence: 1
+        centre: {x: 1.64, y: 1, z: 1}
+        minValue: -0.1
         weightMultiplier: 1
