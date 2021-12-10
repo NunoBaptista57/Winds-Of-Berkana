@@ -89,7 +89,7 @@ public class CharacterMovement : MonoBehaviour
 
 
         Vector2 _look = lookAction.ReadValue<Vector2>();
-        Debug.Log("Look: " + _look);
+       // Debug.Log("Look: " + _look);
         lookTarget.transform.rotation *= Quaternion.AngleAxis(_look.x * rotationPower, Vector3.up);
     
 

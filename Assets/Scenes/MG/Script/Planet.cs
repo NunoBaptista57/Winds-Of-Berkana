@@ -106,4 +106,23 @@ public class Planet : MonoBehaviour
             m.GetComponent<MeshRenderer>().sharedMaterial.color = colorSettings.planetColor;
         }
     }
+
+
+    void Update()
+    {
+        //this.transform.Rotate(new Vector3(0.0f, 0.0f, 1.0f), 0.1f);
+       
+        this.shapeSettings.noiseLayers[2].noiseSettings.simpleNoiseSettings.centre.x += 0.01f;
+
+        //this.shapeSettings.noiseLayers[0].noiseSettings.simpleNoiseSettings.baseRoughness += 0.01f;
+
+        OnShapeSettingsUpdated();
+
+        /*foreach (var n in this.shapeSettings.noiseLayers)
+        {
+            n.noiseSettings.simpleNoiseSettings.centre.x += 0.1f;
+        }*/
+
+
+    }
 }
