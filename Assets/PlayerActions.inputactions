@@ -1,5 +1,5 @@
 {
-    "name": "PllayerActions",
+    "name": "PlayerActions",
     "maps": [
         {
             "name": "Boat",
@@ -193,7 +193,7 @@
             "actions": [
                 {
                     "name": "Move",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "3f57e1df-5301-4eac-87c1-b3bbaa8f36f5",
                     "expectedControlType": "Vector2",
                     "processors": "",
@@ -231,7 +231,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -239,7 +239,7 @@
                 {
                     "name": "WASD",
                     "id": "6dea8ebe-57b2-461c-bf29-5a812d4a851e",
-                    "path": "2DVector",
+                    "path": "2DVector(mode=2)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -294,7 +294,7 @@
                 {
                     "name": "Arrows",
                     "id": "fbabb462-6f45-4b42-966e-889961ce1f01",
-                    "path": "2DVector",
+                    "path": "2DVector(mode=2)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -349,10 +349,21 @@
                 {
                     "name": "",
                     "id": "4cc6d9e9-685f-4ff9-901e-1ccba91cc361",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4a596803-7d5d-434b-9981-0bfcb25e668b",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -360,10 +371,21 @@
                 {
                     "name": "",
                     "id": "a0e580b7-862d-48e6-b196-79f9acd7e676",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "51d68927-386f-4c09-bbdb-4c784fb5c374",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard;Gamepad",
+                    "groups": "Keyboard",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -375,6 +397,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5207cbe3-0415-469a-b9bf-7e96f6c5941f",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
