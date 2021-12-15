@@ -10,11 +10,15 @@ using UnityEngine;
     PlayerActions playerControls;
 
     public Vector2 movementInput;
+    public float moveAmount;
     public float verticalInput;
     public float horizontalInput;
 
+    private AnimatorManager animator;
+
     private void OnEnable()
     {
+        animator = this.GetComponent<AnimatorManager>();
         if(playerControls == null)
         {
             Debug.Log("Awaken");
@@ -41,7 +45,11 @@ using UnityEngine;
     {
         verticalInput = movementInput.x;
         horizontalInput = movementInput.y;
-        Debug.Log("No input");
+
+        moveAmount = Mathf.Clamp01(Math.Abs(horizontalInput) + Mathf.Abs(verticalInput));
+
+        animator.UpdateAnimatorValues(horizontalInput, verticalInput);
+
     }
 
 

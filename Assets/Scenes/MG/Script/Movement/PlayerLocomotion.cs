@@ -13,7 +13,10 @@ public class PlayerLocomotion : MonoBehaviour
 
     private Rigidbody rb;
     public bool groundedPlayer;
-    public float playerSpeed = 2.0f;
+    public float walkingSpeed = 1.5f;
+    public float runningSpeed = 5f;
+    public float sprintingSpeed = 7f;
+
     public float playerRotationSpeed = 15f;
     public float jumpHeight = 1.0f;
     public float gravityValue = -9.81f;
@@ -47,10 +50,20 @@ public class PlayerLocomotion : MonoBehaviour
         moveDirection = moveDirection + cam.transform.right * inputManager.verticalInput;
         moveDirection.Normalize();
         moveDirection.y = 0;
-        moveDirection = moveDirection * playerSpeed;
+
+        // If we arew running select the sprintingsapeed
+        // If we are running select the running speed
+        //If we are walking select the running speed;
+        if(inputManager.moveAmount >= 0.5f)
+        {
+            moveDirection = moveDirection * runningSpeed;
+        }
+        else
+        {
+            moveDirection = moveDirection * walkingSpeed;
+        }
 
         Vector3 movementVelocity = moveDirection;
-
         rb.velocity = movementVelocity;
 
 
@@ -62,8 +75,8 @@ public class PlayerLocomotion : MonoBehaviour
      
         Vector3 targetDirection = Vector3.zero;
 
-        targetDirection = cam.transform.forward * inputManager.verticalInput;
-        targetDirection = targetDirection + cam.transform.right * inputManager.horizontalInput;
+        targetDirection = cam.transform.forward * inputManager.horizontalInput;
+        targetDirection = targetDirection + cam.transform.right * inputManager.verticalInput;
         targetDirection.Normalize();
         targetDirection.y = 0;
 
