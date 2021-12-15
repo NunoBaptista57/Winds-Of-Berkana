@@ -6,9 +6,12 @@ public class PlayerManager : MonoBehaviour
 {
     InputManager inputManager;
     PlayerLocomotion playerLocomotion;
+    public bool isInteracting;
+    Animator animator;
 
     private void Awake()
     {
+        animator = GetComponent<Animator>();
         inputManager = GetComponent<InputManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
     }
@@ -16,11 +19,19 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
        
-        inputManager.HandleMovementInput();
+        inputManager.HandleAllInputs();
     }
 
     void FixedUpdate()
     {
         playerLocomotion.HandleAllMovement();
+
+    }
+
+    void LateUpdate()
+    {
+        isInteracting = animator.GetBool("isInteracting");
+        playerLocomotion.isJumping = animator.GetBool("isJumping");
+        animator.SetBool("isGrounded", playerLocomotion.isGrounded);
     }
 }
