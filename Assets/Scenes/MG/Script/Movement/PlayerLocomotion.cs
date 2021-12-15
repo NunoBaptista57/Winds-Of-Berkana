@@ -120,10 +120,10 @@ public class PlayerLocomotion : MonoBehaviour
     private void HandleFallingandLanding()
     {
         RaycastHit hit;
-
         Vector3 raycastOrigin = transform.position;
+        Vector3 targetPosition;
         raycastOrigin.y = raycastOrigin.y + raycastOriginOffSet;
-
+        targetPosition = transform.position;
         if (!isGrounded && !isJumping)
         {
             if (!playerManager.isInteracting)
@@ -143,12 +143,26 @@ public class PlayerLocomotion : MonoBehaviour
             {
                 animatorManager.PlayTargetAnimation("Land", true);
             }
+
+            Vector3 rayCastHitPoint = hit.point;
+            targetPosition.y = rayCastHitPoint.y;
+
+
             inAirTimer = 0;
             isGrounded = true;
         }
         else
         {
             isGrounded = false;
+        }
+
+        if(isGrounded && !isJumping)
+        {
+            if (playerManager.isInteracting || inputManager.moveAmount > 0)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
+            }
+            else transform.position = targetPosition;
         }
     }
 
