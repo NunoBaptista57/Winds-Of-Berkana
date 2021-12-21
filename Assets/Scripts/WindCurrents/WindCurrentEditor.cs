@@ -27,19 +27,17 @@ public class WindCurrentEditor : Editor
     {
         WindCurrent current = target as WindCurrent;
 
+        EditorGUI.BeginChangeCheck();
         DrawDefaultInspector();
-
-        //current.UseCustomDirections = GUILayout.Toggle(current.UseCustomDirections, "UseCustomDirections");
 
         if (current.UseCustomDirections)
         {
             // Quaternion Toolbar
             EditorGUILayout.EditorToolbarForTarget(EditorGUIUtility.TrTempContent("Edit Current"), target);
-            EditorGUI.BeginChangeCheck();
-            if (EditorGUI.EndChangeCheck())
-            {
-                current.RefreshColliders();
-            }
+        }
+        if (EditorGUI.EndChangeCheck())
+        {
+            current.RefreshColliders();
         }
     }
 
