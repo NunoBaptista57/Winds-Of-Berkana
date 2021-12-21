@@ -33,9 +33,15 @@ public class WindCurrent : MonoBehaviour
 
     PlayerBoatEntity player;
 
-    void OnEnable()
+    private void OnValidate()
     {
-        editorColliders = GetComponentsInChildren<WindCurrentCollider>().ToList();
+        if (points.Length != 3)
+            Array.Resize(ref points, 3);
+    }
+
+    private void OnEnable()
+    {
+        RefreshColliders();
     }
 
     void FixedUpdate()
@@ -48,6 +54,7 @@ public class WindCurrent : MonoBehaviour
             Vector3 forceDir = linePoint - player.transform.position;
             float forceRatio = FloatUtils.Intensify(forceDir.magnitude / radius, RadiusIntensify);
             Force += (forceDir).normalized * PullTowardsCenterStrength * forceRatio;
+            //Gizmos.DrawSphere(linePoint, 0.5f);
             Debug.DrawLine(player.transform.position, player.transform.position + Force.normalized * 10, Color.blue, Time.fixedDeltaTime);
         }
         if (currentColliders.Count > 0)
@@ -71,12 +78,6 @@ public class WindCurrent : MonoBehaviour
     public Vector3 GetCurvePointDerivative(float t)
     {
         return 2f * (1f - t) * (points[1] - points[0]) + 2f * t * (points[2] - points[1]);
-    }
-
-    private void OnValidate()
-    {
-        if (points.Length != 3)
-            Array.Resize(ref points, 3);
     }
 
     private void OnDrawGizmos()
@@ -117,7 +118,7 @@ public class WindCurrent : MonoBehaviour
 
     public void RefreshColliders()
     {
-        foreach (WindCurrentCollider collider in editorColliders)
+        foreach (WindCurrentCollider collider in GetComponentsInChildren<WindCurrentCollider>().ToList())
         {
             if (collider)
                 DestroyImmediate(collider.gameObject);
