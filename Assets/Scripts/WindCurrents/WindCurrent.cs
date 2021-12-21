@@ -63,7 +63,6 @@ public class WindCurrent : MonoBehaviour
             foreach (var collider in currentColliders)
             {
                 Force += collider.direction * Vector3.forward * collider.strength;
-                Debug.Log(collider.direction * Vector3.forward * collider.strength);
             }
             Force /= currentColliders.Count;
         }
