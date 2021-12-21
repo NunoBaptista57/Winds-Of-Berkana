@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class WindCurrentCollider : MonoBehaviour
 {
-    [HideInInspector] public Quaternion direction;
-    [HideInInspector] public float strength;
-    [HideInInspector] public float t;
+    [ReadOnlyInspector] public Quaternion direction;
+    [ReadOnlyInspector] public float strength;
+    [ReadOnlyInspector] public float t;
     
     [HideInInspector] public WindCurrentCollider previous, next;
 

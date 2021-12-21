@@ -33,10 +33,11 @@ public class WindCurrent : MonoBehaviour
 
     PlayerBoatEntity player;
 
-    private void OnValidate()
+    public void OnValidate()
     {
         if (points.Length != 3)
             Array.Resize(ref points, 3);
+        UpdateWindDirection();
     }
 
     private void OnEnable()
@@ -47,7 +48,6 @@ public class WindCurrent : MonoBehaviour
     void FixedUpdate()
     {
         Force = Vector3.zero;
-        Debug.Log("Force");
         if (PullTowardsCenter && player != null)
         {
             var linePoint = ClosestPoint(player.transform.position);
@@ -131,8 +131,8 @@ public class WindCurrent : MonoBehaviour
             collider.gameObject.hideFlags = HideFlags.NotEditable;
             collider.Radius = radius;
             collider.t = t;
-            //collider.direction = Quaternion.Slerp(StartDirection, EndDirection, t);
-            collider.direction = Quaternion.LookRotation(-GetCurvePointDerivative(t).normalized, Vector3.up);
+            collider.direction = Quaternion.Slerp(StartDirection, EndDirection, t);
+            //collider.direction = Quaternion.LookRotation(-GetCurvePointDerivative(t).normalized, Vector3.up);
             collider.strength = Mathf.Lerp(StartStrength, EndStrength, t);
             editorColliders.Add(collider);
         }
@@ -148,9 +148,10 @@ public class WindCurrent : MonoBehaviour
 
     public void UpdateWindDirection()
     {
-        for (int i = 0; i <= steps; i++)
+        var colliders = GetComponentsInChildren<WindCurrentCollider>();
+        for (int i = 0; i < colliders.Length; i++)
         {
-            var collider = editorColliders[i];
+            var collider = colliders[i];
             collider.Radius = radius;
             collider.direction = Quaternion.Slerp(StartDirection, EndDirection, i / (float)steps);
             collider.strength = Mathf.Lerp(StartStrength, EndStrength, i / (float)steps);

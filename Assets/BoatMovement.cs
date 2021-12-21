@@ -12,7 +12,8 @@ public class BoatMovement : MonoBehaviour
 
     [Min(0), SerializeField] float SailEffectStrength = 1;
     [Min(0), SerializeField] float ReelSpeed = 1;
-    [Min(0), SerializeField] float MaxVelocity;
+    [Min(0)] public float MaxVelocity;
+    [ReadOnlyInspector] public float CurrentMaxVelocity;
     [Min(0), SerializeField] float VelocityLimitingStrength = 1;
     [Min(0), SerializeField] float TurningTorque;
 
@@ -34,6 +35,7 @@ public class BoatMovement : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         currentSail = 1;
         currentSailMultiplier = 1;
+        CurrentMaxVelocity = MaxVelocity;
     }
 
     void Update()
@@ -50,9 +52,9 @@ public class BoatMovement : MonoBehaviour
         rigidbody.velocity = Vector3.Project(rigidbody.velocity, transform.forward);
         rigidbody.AddForce(WindForce * transform.forward, ForceMode.Acceleration);
 
-        if (rigidbody.velocity.magnitude > currentSailMultiplier * MaxVelocity)
+        if (rigidbody.velocity.magnitude > currentSailMultiplier * CurrentMaxVelocity)
         {
-            rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSailMultiplier * MaxVelocity, VelocityLimitingStrength * Time.fixedDeltaTime));
+            rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSailMultiplier * CurrentMaxVelocity, VelocityLimitingStrength * Time.fixedDeltaTime));
         }
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
         rigidbody.AddTorque(TurningTorque * input.Pitch * Vector3.Cross(transform.forward, Vector3.up).normalized, ForceMode.Acceleration);

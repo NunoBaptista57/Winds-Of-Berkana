@@ -45,6 +45,7 @@ public class WindCurrentEditor : Editor
             Undo.RecordObject(wc, "Move Point");
             EditorUtility.SetDirty(wc);
             wc.points[idx] = handleTransform.InverseTransformPoint(point);
+            wc.RefreshColliders();
         }
     }
 }

@@ -9,6 +9,7 @@ public class WindManager : MonoBehaviour
     static HashSet<WindCurrent> currentCurrents = new HashSet<WindCurrent>();
 
     public float TorqueMultiplier = 1;
+    public float MaxVelocityInCurrent = 20;
 
     void Awake()
     {
@@ -41,11 +42,16 @@ public class WindManager : MonoBehaviour
     public static void OnPlayerEnter(WindCurrent entered)
     {
         currentCurrents.Add(entered);
+        PlayerBoatEntity.instance.movement.CurrentMaxVelocity = instance.MaxVelocityInCurrent;
     }
 
     public static void OnPlayerLeave(WindCurrent left)
     {
         currentCurrents.Remove(left);
+        if (currentCurrents.Count == 0)
+        {
+            PlayerBoatEntity.instance.movement.CurrentMaxVelocity = PlayerBoatEntity.instance.movement.MaxVelocity;
+        }
     }
 
     void OnDestroy()
