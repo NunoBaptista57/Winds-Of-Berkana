@@ -383,12 +383,16 @@ MonoBehaviour:
   MinSailMultiplier: 0.2
   SailEffectStrength: 1
   ReelSpeed: 1
-  MaxVelocity: 15
+  MaxVelocity: 20
   CurrentMaxVelocity: 0
   VelocityLimitingStrength: 100
   TurningTorque: 1.5
   currentSail: 0
   currentSailMultiplier: 0
+  MinVerticalAngle: 70
+  MaxVerticalAngle: 70
+  LimitingTorqueMultiplier: 0.5
+  LimitingOffsetExponent: 1
 --- !u!54 &301635507
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -687,7 +691,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661886355}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e1fb912cebd8f840bcc1f9a01afc2ec, type: 3}
   m_Name: 
@@ -1258,7 +1262,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 9b893a03e631bd64fbdd973500a2bc75, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1.93
+  m_Radius: 1.15
   m_Height: 9.33656
   m_Direction: 2
   m_Center: {x: 0, y: 0.004626274, z: 0.3939252}
@@ -1537,7 +1541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TorqueMultiplier: 0.2
-  MaxVelocityInCurrent: 20
+  MaxVelocityInCurrent: 25
 --- !u!4 &1216156761
 Transform:
   m_ObjectHideFlags: 0

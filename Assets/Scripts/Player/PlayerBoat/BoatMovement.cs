@@ -26,6 +26,13 @@ public class BoatMovement : MonoBehaviour
     [ReadOnlyInspector, SerializeField] float currentSail;
     [ReadOnlyInspector, SerializeField] float currentSailMultiplier;
 
+    [Header("Angle Limiting")]
+    [SerializeField, Range(0, 90)] float MinVerticalAngle;
+    [SerializeField, Range(0, 90)] float MaxVerticalAngle;
+    [SerializeField, Min(0)] float LimitingTorqueMultiplier = 1;
+    [SerializeField, Min(0)] float LimitingOffsetExponent = 1;
+
+
     PlayerInput input;
 
 
@@ -58,6 +65,13 @@ public class BoatMovement : MonoBehaviour
         }
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
         rigidbody.AddTorque(TurningTorque * input.Pitch * Vector3.Cross(transform.forward, Vector3.up).normalized, ForceMode.Acceleration);
+
+        float angle = Vector3.SignedAngle(transform.forward, transform.forward.HorizontalProjection(), transform.right);
+        Debug.Log(angle);
+        if (angle > MaxVerticalAngle)
+            rigidbody.AddTorque(LimitingTorqueMultiplier * Mathf.Pow(angle - MaxVerticalAngle, LimitingOffsetExponent) * transform.right, ForceMode.Acceleration);
+        if (-angle > MinVerticalAngle)
+            rigidbody.AddTorque(LimitingTorqueMultiplier * Mathf.Pow(-angle - MinVerticalAngle, LimitingOffsetExponent) * -transform.right, ForceMode.Acceleration);
 
         var rot = rigidbody.rotation.eulerAngles;
         rot.z = 0;
