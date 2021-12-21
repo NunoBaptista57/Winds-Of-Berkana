@@ -23,6 +23,7 @@ public class WindCurrent : MonoBehaviour
     public bool PullTowardsCenter;
     public float PullTowardsCenterStrength;
     public float RadiusIntensify = 2;
+    public bool UseCustomDirections = false;
 
     public WindCurrentCollider ColliderPrefab;
     List<WindCurrentCollider> editorColliders = new List<WindCurrentCollider>();
@@ -131,8 +132,10 @@ public class WindCurrent : MonoBehaviour
             collider.gameObject.hideFlags = HideFlags.NotEditable;
             collider.Radius = radius;
             collider.t = t;
-            collider.direction = Quaternion.Slerp(StartDirection, EndDirection, t);
-            //collider.direction = Quaternion.LookRotation(-GetCurvePointDerivative(t).normalized, Vector3.up);
+            if (UseCustomDirections)
+                collider.direction = Quaternion.Slerp(StartDirection, EndDirection, t);
+            else
+                collider.direction = Quaternion.LookRotation(-GetCurvePointDerivative(t).normalized, Vector3.up);
             collider.strength = Mathf.Lerp(StartStrength, EndStrength, t);
             editorColliders.Add(collider);
         }

@@ -25,13 +25,21 @@ public class WindCurrentEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        EditorGUILayout.EditorToolbarForTarget(EditorGUIUtility.TrTempContent("Edit Current"), target);
-        EditorGUI.BeginChangeCheck();
+        WindCurrent current = target as WindCurrent;
+
         DrawDefaultInspector();
-        if (EditorGUI.EndChangeCheck())
+
+        //current.UseCustomDirections = GUILayout.Toggle(current.UseCustomDirections, "UseCustomDirections");
+
+        if (current.UseCustomDirections)
         {
-            var current = target as WindCurrent;
-            current.RefreshColliders();
+            // Quaternion Toolbar
+            EditorGUILayout.EditorToolbarForTarget(EditorGUIUtility.TrTempContent("Edit Current"), target);
+            EditorGUI.BeginChangeCheck();
+            if (EditorGUI.EndChangeCheck())
+            {
+                current.RefreshColliders();
+            }
         }
     }
 
