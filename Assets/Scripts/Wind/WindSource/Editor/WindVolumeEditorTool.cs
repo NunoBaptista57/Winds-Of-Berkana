@@ -2,12 +2,12 @@ using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
-[EditorTool("Wind Source Direction Tool", typeof(WindSource))]
-public class WindSourceEditorTool : EditorTool
+[EditorTool("Wind Source Direction Tool", typeof(WindVolume))]
+public class WindVolumeEditorTool : EditorTool
 {
     public override void OnToolGUI(EditorWindow window)
     {
-        WindSource t = target as WindSource;
+        WindVolume t = target as WindVolume;
         if (t != null)
         {
             var so = new SerializedObject(t);

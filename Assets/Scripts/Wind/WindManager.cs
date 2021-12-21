@@ -6,7 +6,7 @@ public class WindManager : MonoBehaviour
 {
     static WindManager instance;
 
-    static HashSet<WindCurrent> currentCurrents = new HashSet<WindCurrent>();
+    static HashSet<IWindEffector> currentEffectors = new HashSet<IWindEffector>();
 
     public float TorqueMultiplier = 1;
     public float MaxVelocityInCurrent = 20;
@@ -27,7 +27,7 @@ public class WindManager : MonoBehaviour
     void FixedUpdate()
     {
         Rigidbody player = PlayerBoatEntity.instance.rigidbody;
-        foreach (var current in currentCurrents)
+        foreach (var current in currentEffectors)
         {
             //Debug.Log(current.Force);
             player.AddForce(current.Force, ForceMode.Acceleration);
@@ -39,16 +39,16 @@ public class WindManager : MonoBehaviour
         }
     }
 
-    public static void OnPlayerEnter(WindCurrent entered)
+    public static void OnPlayerEnter(IWindEffector entered)
     {
-        currentCurrents.Add(entered);
+        currentEffectors.Add(entered);
         PlayerBoatEntity.instance.movement.CurrentMaxVelocity = instance.MaxVelocityInCurrent;
     }
 
-    public static void OnPlayerLeave(WindCurrent left)
+    public static void OnPlayerLeave(IWindEffector left)
     {
-        currentCurrents.Remove(left);
-        if (currentCurrents.Count == 0)
+        currentEffectors.Remove(left);
+        if (currentEffectors.Count == 0)
         {
             PlayerBoatEntity.instance.movement.CurrentMaxVelocity = PlayerBoatEntity.instance.movement.MaxVelocity;
         }
