@@ -20,13 +20,18 @@ public class WindCurrent : MonoBehaviour
     public float StartStrength;
     [Min(0)]
     public float EndStrength;
+    public bool PullTowardsCenter;
+    public float PullTowardsCenterStrength;
+    public float RadiusIntensify = 2;
 
     public WindCurrentCollider ColliderPrefab;
-    [HideInInspector] public List<WindCurrentCollider> editorColliders = new List<WindCurrentCollider>();
+    List<WindCurrentCollider> editorColliders = new List<WindCurrentCollider>();
 
     HashSet<WindCurrentCollider> currentColliders = new HashSet<WindCurrentCollider>();
 
     public Vector3 Force { get; private set; }
+
+    PlayerBoatEntity player;
 
     void OnEnable()
     {
@@ -37,6 +42,14 @@ public class WindCurrent : MonoBehaviour
     {
         Force = Vector3.zero;
         Debug.Log("Force");
+        if (PullTowardsCenter && player != null)
+        {
+            var linePoint = ClosestPoint(player.transform.position);
+            Vector3 forceDir = linePoint - player.transform.position;
+            float forceRatio = FloatUtils.Intensify(forceDir.magnitude / radius, RadiusIntensify);
+            Force += (forceDir).normalized * PullTowardsCenterStrength * forceRatio;
+            Debug.DrawLine(player.transform.position, player.transform.position + Force.normalized * 10, Color.blue, Time.fixedDeltaTime);
+        }
         if (currentColliders.Count > 0)
         {
             foreach (var collider in currentColliders)
@@ -82,11 +95,12 @@ public class WindCurrent : MonoBehaviour
         }
     }
 
-    public void OnPlayerEnter(WindCurrentCollider entered)
+    public void OnPlayerEnter(WindCurrentCollider entered, PlayerBoatEntity player)
     {
         if (currentColliders.Count == 0)
         {
             WindManager.OnPlayerEnter(this);
+            this.player = player;
         }
         currentColliders.Add(entered);
     }
@@ -97,6 +111,71 @@ public class WindCurrent : MonoBehaviour
         if (currentColliders.Count == 0)
         {
             WindManager.OnPlayerLeave(this);
+            player = null;
         }
+    }
+
+    public void RefreshColliders()
+    {
+        foreach (WindCurrentCollider collider in editorColliders)
+        {
+            if (collider)
+                DestroyImmediate(collider.gameObject);
+        }
+        editorColliders.Clear();
+        for (int i = 0; i <= steps; i++)
+        {
+            float t = i / (float)steps;
+            WindCurrentCollider collider = Instantiate(ColliderPrefab, transform.position + GetCurvePoint(t), Quaternion.identity, transform);
+            collider.gameObject.hideFlags = HideFlags.NotEditable;
+            collider.Radius = radius;
+            collider.t = t;
+            //collider.direction = Quaternion.Slerp(StartDirection, EndDirection, t);
+            collider.direction = Quaternion.LookRotation(-GetCurvePointDerivative(t).normalized, Vector3.up);
+            collider.strength = Mathf.Lerp(StartStrength, EndStrength, t);
+            editorColliders.Add(collider);
+        }
+
+        for (int i = 0; i <= steps; i++)
+        {
+            if (i > 0)
+                editorColliders[i].previous = editorColliders[i - 1];
+            if (i < steps)
+                editorColliders[i].next = editorColliders[i + 1];
+        }
+    }
+
+    public void UpdateWindDirection()
+    {
+        for (int i = 0; i <= steps; i++)
+        {
+            var collider = editorColliders[i];
+            collider.Radius = radius;
+            collider.direction = Quaternion.Slerp(StartDirection, EndDirection, i / (float)steps);
+            collider.strength = Mathf.Lerp(StartStrength, EndStrength, i / (float)steps);
+        }
+    }
+
+    public Vector3 ClosestPoint(Vector3 position)
+    {
+        WindCurrentCollider start = currentColliders.Aggregate((c1, c2) => c1.t < c2.t ? c1 : c2);
+        WindCurrentCollider end;
+        if (currentColliders.Count > 1)
+        {
+            end = currentColliders.Aggregate((c1, c2) => c1.t > c2.t ? c1 : c2);
+        }
+        else
+        {
+            end = start.next != null ? start.next : start.previous;
+        }
+        return NearestPointOnLine(start.transform.position, end.transform.position - start.transform.position, position);
+    }
+
+    public static Vector3 NearestPointOnLine(Vector3 origin, Vector3 dir, Vector3 position)
+    {
+        dir.Normalize();
+        var v = position - origin;
+        var d = Vector3.Dot(v, dir);
+        return origin + dir * d;
     }
 }

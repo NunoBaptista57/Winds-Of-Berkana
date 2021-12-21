@@ -26,14 +26,8 @@ public class WindSourceEditorTool : EditorTool
             {
                 startProp.quaternionValue = startRot;
                 endProp.quaternionValue = endRot;
-                for (int i = 0; i <= t.steps; i++)
-                {
-                    var collider = t.editorColliders[i];
-                    collider.Radius = t.radius;
-                    collider.direction = Quaternion.Slerp(t.StartDirection, t.EndDirection, i / (float)t.steps);
-                    collider.strength = Mathf.Lerp(t.StartStrength, t.EndStrength, i / (float)t.steps);
-                }
                 so.ApplyModifiedProperties();
+                t.UpdateWindDirection();
             }
         }
     }

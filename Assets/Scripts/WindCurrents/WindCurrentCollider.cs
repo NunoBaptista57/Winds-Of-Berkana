@@ -6,6 +6,9 @@ public class WindCurrentCollider : MonoBehaviour
 {
     [HideInInspector] public Quaternion direction;
     [HideInInspector] public float strength;
+    [HideInInspector] public float t;
+    
+    [HideInInspector] public WindCurrentCollider previous, next;
 
     WindCurrent parent;
 
@@ -25,7 +28,7 @@ public class WindCurrentCollider : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-            parent.OnPlayerEnter(this);
+            parent.OnPlayerEnter(this, other.GetComponentInParent<PlayerBoatEntity>());
     }
 
     private void OnTriggerExit(Collider other)

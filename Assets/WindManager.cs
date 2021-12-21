@@ -33,6 +33,7 @@ public class WindManager : MonoBehaviour
             var forceDir = current.Force.normalized;
             var torqueAxis = Vector3.Cross(player.transform.forward, forceDir).normalized;
             var directionFactor = Vector3.Angle(player.transform.forward, forceDir) / 180;
+            Debug.Log(directionFactor);
             player.AddTorque(current.Force.magnitude * TorqueMultiplier * directionFactor * torqueAxis, ForceMode.Acceleration);
         }
     }
