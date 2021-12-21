@@ -6,6 +6,7 @@ using UnityEditor;
 [CustomEditor(typeof(WindCurrent))]
 public class WindCurrentEditor : Editor
 {
+    public float HandleScaleFactor = 0.5f;
 
     private void OnSceneGUI()
     {
@@ -43,14 +44,17 @@ public class WindCurrentEditor : Editor
 
     private void ShowPointHandle(WindCurrent wc, int idx, Transform handleTransform, Quaternion handleRotation)
     {
+        var startMatrix = Handles.matrix;
         Vector3 point = wc.transform.position + wc.points[idx];
         EditorGUI.BeginChangeCheck();
-        point = Handles.DoPositionHandle(point, handleRotation);
+        Handles.matrix = Matrix4x4.Scale(Vector3.one * HandleScaleFactor) * startMatrix;
+        point = Handles.DoPositionHandle(point / HandleScaleFactor, handleRotation);
+        Handles.matrix = startMatrix;
         if (EditorGUI.EndChangeCheck())
         {
             Undo.RecordObject(wc, "Move Point");
             EditorUtility.SetDirty(wc);
-            wc.points[idx] = handleTransform.InverseTransformPoint(point);
+            wc.points[idx] = handleTransform.InverseTransformPoint(point * HandleScaleFactor);
             wc.RefreshColliders();
         }
     }
