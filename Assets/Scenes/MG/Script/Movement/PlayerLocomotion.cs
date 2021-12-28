@@ -29,6 +29,8 @@ public class PlayerLocomotion : MonoBehaviour
     public float inAirTimer;
     public float leapingVelocity;
     public float fallingVelocity;
+    public float glideVelocity;
+    private float currentFallingVelocity;
     public float raycastOriginOffSet = 0.5f;
 
     [Header("JumpSpeed")]
@@ -48,14 +50,17 @@ public class PlayerLocomotion : MonoBehaviour
         animatorManager = GetComponent<AnimatorManager>();
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
+        currentFallingVelocity = fallingVelocity;
     }
 
     public void HandleAllMovement()
     {
-
+        // HandleGlide();
         HandleFallingandLanding(); 
         if (playerManager.isInteracting)
             return;
+
+
 
         if (isJumping)
             return;
@@ -133,7 +138,7 @@ public class PlayerLocomotion : MonoBehaviour
 
             inAirTimer = inAirTimer + Time.deltaTime;
             rb.AddForce(transform.forward * leapingVelocity);
-            rb.AddForce(-Vector3.up * fallingVelocity * inAirTimer);
+            rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
         }
 
 
@@ -178,8 +183,18 @@ public class PlayerLocomotion : MonoBehaviour
             Vector3 playerVelocity = moveDirection;
             playerVelocity.y = jumpingVelocity;
             rb.velocity = playerVelocity;
-
+            currentFallingVelocity = fallingVelocity;
 
         }
+    }
+
+    public void HandleGlide()
+    {
+        if (!isGrounded)
+        {
+            Debug.Log("Glide!");
+            currentFallingVelocity = glideVelocity;
+        }
+       
     }
 }

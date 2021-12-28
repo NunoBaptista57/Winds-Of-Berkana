@@ -208,6 +208,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Glide",
+                    "type": "Value",
+                    "id": "04c32b65-dfc5-4550-8789-8e74bf557716",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "MultiTap(tapTime=1,tapDelay=1,pressPoint=0.1)"
+                },
+                {
                     "name": "Look",
                     "type": "PassThrough",
                     "id": "f3cf9c01-e022-408e-8e62-15b5a887417d",
@@ -409,6 +417,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a38ad9b-71e0-48f3-a862-5c9ec93c944b",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Glide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bc1f230f-aa1d-44d5-8fd3-a8f8b00e409a",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Glide",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

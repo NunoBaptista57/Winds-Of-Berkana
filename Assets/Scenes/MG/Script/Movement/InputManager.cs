@@ -18,6 +18,7 @@ using UnityEngine;
     private AnimatorManager animator;
 
     public bool jumpInput;
+    public bool glideInput;
 
     private void OnEnable()
     {
@@ -30,6 +31,7 @@ using UnityEngine;
 
             playerControls.Character.Move.performed += i => movementInput = i.ReadValue<Vector2>();
             playerControls.Character.Jump.performed += i => jumpInput = true;
+            playerControls.Character.Glide.performed += i => glideInput = true;
         }
 
         playerControls.Enable();
@@ -43,6 +45,7 @@ using UnityEngine;
     {
         HandleMovementInput();
         HandleJumpingInput();
+        HandleGlidingInput();
     }
 
 
@@ -64,6 +67,17 @@ using UnityEngine;
         {
             jumpInput = false;
             playerLocomotion.HandleJumping();
+        }
+    }
+
+    private void HandleGlidingInput()
+    {
+            
+        if (glideInput == true)
+        {
+            Debug.Log("Gliding");
+            glideInput = false;
+            playerLocomotion.HandleGlide();
         }
     }
 }
