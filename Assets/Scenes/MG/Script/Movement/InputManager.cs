@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-    class InputManager : MonoBehaviour
-    {
+class InputManager : MonoBehaviour
+{
     PlayerActions playerControls;
     PlayerLocomotion playerLocomotion;
 
@@ -14,11 +14,13 @@ using UnityEngine;
     public float moveAmount;
     public float verticalInput;
     public float horizontalInput;
+    public GrapplingHook gun;
 
     private AnimatorManager animator;
 
     public bool jumpInput;
     public bool glideInput;
+    public bool shootInput;
 
     private void OnEnable()
     {
@@ -32,6 +34,7 @@ using UnityEngine;
             playerControls.Character.Move.performed += i => movementInput = i.ReadValue<Vector2>();
             playerControls.Character.Jump.performed += i => jumpInput = true;
             playerControls.Character.Glide.performed += i => HandleGlidingInput();
+            playerControls.Character.Fire.performed += i => HandleShooting();
         }
 
         playerControls.Enable();
@@ -75,17 +78,35 @@ using UnityEngine;
         if (jumpInput == false)
             return;
 
-        if(playerLocomotion.isJumping && glideInput == false)
+        if (playerLocomotion.isJumping && glideInput == false)
         {
             glideInput = true;
             playerLocomotion.HandleGlide();
-            
+
         }
-        else if(glideInput == true)
+        else if (glideInput == true)
         {
             glideInput = false;
             playerLocomotion.HandleGlide();
         }
+
+    }
+
+    private void HandleShooting()
+    {
+        if (shootInput == true)
+        {
+            shootInput = false;
+            gun.StopGrapple();
+        }
+
+        else if (shootInput == false)
+        {
+            shootInput = true;
+            gun.StartGrapple();
+        }
        
+
+
     }
 }

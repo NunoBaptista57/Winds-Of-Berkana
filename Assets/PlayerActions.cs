@@ -238,7 +238,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Fire"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""0157ab3a-8a46-4d4f-8bf8-a5e7ece3ebfb"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
@@ -413,28 +413,6 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1f031179-aed3-47dc-9264-885113ff3755"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5207cbe3-0415-469a-b9bf-7e96f6c5941f"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""7a38ad9b-71e0-48f3-a862-5c9ec93c944b"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
@@ -452,6 +430,17 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Glide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1beb76bd-fbdc-4732-a799-383207f20140"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
