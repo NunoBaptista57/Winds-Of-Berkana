@@ -136,9 +136,30 @@ public class PlayerLocomotion : MonoBehaviour
                 animatorManager.PlayTargetAnimation("Falling", true);
             }
 
+
             inAirTimer = inAirTimer + Time.deltaTime;
             rb.AddForce(transform.forward * leapingVelocity);
             rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
+
+
+            // Control Rotation during Fall
+
+            Vector3 targetDirection = Vector3.zero;
+
+            targetDirection = cam.transform.forward * inputManager.horizontalInput;
+            targetDirection = targetDirection + cam.transform.right * inputManager.verticalInput;
+            targetDirection.Normalize();
+
+            if (targetDirection == Vector3.zero)
+            {
+                targetDirection = transform.forward;
+            }
+
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, playerRotationSpeed * Time.deltaTime);
+
+            transform.rotation = playerRotation;
+
         }
 
 
@@ -147,6 +168,8 @@ public class PlayerLocomotion : MonoBehaviour
             if(!isGrounded && !playerManager.isInteracting)
             {
                 animatorManager.PlayTargetAnimation("Land", true);
+                animatorManager.animator.SetBool("isJumping", false);
+                animatorManager.animator.SetBool("Gliding", false);
             }
 
             Vector3 rayCastHitPoint = hit.point;
@@ -177,7 +200,8 @@ public class PlayerLocomotion : MonoBehaviour
         if (isGrounded)
         {
             animatorManager.animator.SetBool("isJumping", true);
-            animatorManager.PlayTargetAnimation("Jump", false);
+            animatorManager.PlayTargetAnimation("Jump", true);
+            animatorManager.animator.SetBool("Gliding", false);
 
             float jumpingVelocity = Mathf.Sqrt(-2 * gravityValue * jumpHeight);
             Vector3 playerVelocity = moveDirection;
@@ -192,8 +216,19 @@ public class PlayerLocomotion : MonoBehaviour
     {
         if (!isGrounded)
         {
-            Debug.Log("Glide!");
-            currentFallingVelocity = glideVelocity;
+
+            if (currentFallingVelocity != glideVelocity)
+            {
+                animatorManager.animator.SetBool("Gliding", true);
+                animatorManager.PlayTargetAnimation("Glide", true);
+
+                currentFallingVelocity = glideVelocity;
+            }
+            else {
+                animatorManager.animator.SetBool("Gliding", false);
+                currentFallingVelocity = fallingVelocity;
+            }
+          
         }
        
     }

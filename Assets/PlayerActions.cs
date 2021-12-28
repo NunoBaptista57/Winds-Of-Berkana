@@ -222,11 +222,11 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Glide"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""04c32b65-dfc5-4550-8789-8e74bf557716"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""MultiTap(tapTime=1,tapDelay=1,pressPoint=0.1)""
+                    ""interactions"": """"
                 },
                 {
                     ""name"": ""Look"",
