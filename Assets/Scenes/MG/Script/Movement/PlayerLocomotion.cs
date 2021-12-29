@@ -17,7 +17,8 @@ public class PlayerLocomotion : MonoBehaviour
 
     [Header("Movement Flags")]
     public bool isGrounded;
-    public bool isJumping;
+    public bool isJumping = false;
+    public bool isGliding = false;
 
     [Header("Movement Speeds")]
     public float walkingSpeed = 1.5f;
@@ -178,6 +179,7 @@ public class PlayerLocomotion : MonoBehaviour
 
             inAirTimer = 0;
             isGrounded = true;
+            isGliding = false;
         }
         else
         {
@@ -212,24 +214,30 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-    public void HandleGlide()
+    public void ActivateGlide()
     {
         if (!isGrounded)
         {
 
             if (currentFallingVelocity != glideVelocity)
             {
+                Debug.Log("Activate Glide");
                 animatorManager.animator.SetBool("Gliding", true);
                 animatorManager.PlayTargetAnimation("Glide", true);
 
                 currentFallingVelocity = glideVelocity;
+                isGliding = true;
             }
-            else {
-                animatorManager.animator.SetBool("Gliding", false);
-                currentFallingVelocity = fallingVelocity;
-            }
-          
         }
        
     }
-}
+
+   public void DeactivateGlide()
+     {
+        Debug.Log("Deactivate Glide");
+        animatorManager.animator.SetBool("Gliding", false);
+        currentFallingVelocity = fallingVelocity;
+        isGliding = false;
+    }
+
+ }

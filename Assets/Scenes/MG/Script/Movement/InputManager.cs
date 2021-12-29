@@ -41,7 +41,7 @@ class InputManager : MonoBehaviour
 
             playerControls.Character.Move.performed += i => movementInput = i.ReadValue<Vector2>();
             playerControls.Character.Jump.performed += i => jumpInput = true;
-            playerControls.Character.Glide.performed += i => HandleGlidingInput();
+            playerControls.Character.Glide.performed += i => HandleGliding();
             playerControls.Character.Fire.performed += i => HandleShooting();
             playerControls.Character.Aim.started += i => aimInput = true;
             playerControls.Character.Aim.canceled += i => aimInput = false;
@@ -58,7 +58,7 @@ class InputManager : MonoBehaviour
     {
         HandleMovementInput();
         HandleJumpingInput();
-        HandleGlidingInput();
+     //   HandleGlidingInput();
         HandleAiming();
     }
 
@@ -84,21 +84,17 @@ class InputManager : MonoBehaviour
         }
     }
 
-    private void HandleGlidingInput()
+    private void HandleGliding()
     {
-        if (jumpInput == false)
-            return;
 
-        if (playerLocomotion.isJumping && glideInput == false)
+        if (!playerLocomotion.isGliding)
         {
-            glideInput = true;
-            playerLocomotion.HandleGlide();
+            playerLocomotion.ActivateGlide();
 
         }
-        else if (glideInput == true)
+        else if (playerLocomotion.isGliding)
         {
-            glideInput = false;
-            playerLocomotion.HandleGlide();
+            playerLocomotion.DeactivateGlide();
         }
 
     }

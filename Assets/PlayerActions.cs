@@ -224,9 +224,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""name"": ""Glide"",
                     ""type"": ""PassThrough"",
                     ""id"": ""04c32b65-dfc5-4550-8789-8e74bf557716"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Press(behavior=1)""
                 },
                 {
                     ""name"": ""Look"",
@@ -422,7 +422,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7a38ad9b-71e0-48f3-a862-5c9ec93c944b"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -433,7 +433,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""bc1f230f-aa1d-44d5-8fd3-a8f8b00e409a"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
