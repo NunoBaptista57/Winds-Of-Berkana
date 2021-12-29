@@ -26,10 +26,14 @@ class InputManager : MonoBehaviour
     public Cinemachine.CinemachineVirtualCameraBase baseCamera;
     public Cinemachine.CinemachineVirtualCameraBase aimCamera;
 
+    private Canvas aimCanvas;
+
     private void OnEnable()
     {
         animator = this.GetComponent<AnimatorManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
+        aimCanvas = aimCamera.GetComponentInChildren<Canvas>();
+        aimCanvas.enabled = false;
         if (playerControls == null)
         {
             Debug.Log("Awaken");
@@ -121,11 +125,13 @@ class InputManager : MonoBehaviour
         if (aimInput == true)
         {
             aimCamera.Priority = 15;
-            
+            aimCanvas.enabled = true;
+
         }
 
         else if (aimInput == false)
         {
+            aimCanvas.enabled = false;
             aimCamera.Priority = 5;
         }
 
