@@ -21,6 +21,10 @@ class InputManager : MonoBehaviour
     public bool jumpInput;
     public bool glideInput;
     public bool shootInput;
+    public bool aimInput;
+
+    public Cinemachine.CinemachineVirtualCameraBase baseCamera;
+    public Cinemachine.CinemachineVirtualCameraBase aimCamera;
 
     private void OnEnable()
     {
@@ -35,6 +39,8 @@ class InputManager : MonoBehaviour
             playerControls.Character.Jump.performed += i => jumpInput = true;
             playerControls.Character.Glide.performed += i => HandleGlidingInput();
             playerControls.Character.Fire.performed += i => HandleShooting();
+            playerControls.Character.Aim.started += i => aimInput = true;
+            playerControls.Character.Aim.canceled += i => aimInput = false;
         }
 
         playerControls.Enable();
@@ -49,6 +55,7 @@ class InputManager : MonoBehaviour
         HandleMovementInput();
         HandleJumpingInput();
         HandleGlidingInput();
+        HandleAiming();
     }
 
 
@@ -105,8 +112,24 @@ class InputManager : MonoBehaviour
             shootInput = true;
             gun.StartGrapple();
         }
+    }
+
+
+    private void HandleAiming()
+    {
+
+        if (aimInput == true)
+        {
+            aimCamera.Priority = 15;
+            
+        }
+
+        else if (aimInput == false)
+        {
+            aimCamera.Priority = 5;
+        }
+
+
        
-
-
     }
 }

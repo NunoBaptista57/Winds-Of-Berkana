@@ -13,12 +13,14 @@ public class GrapplingHook : MonoBehaviour
     private SpringJoint joint;
     private bool fired = false;
 
-
+    Cinemachine.CinemachineImpulseSource source;
+    
 
     void Awake()
     {
         lr = GetComponent<LineRenderer>();
         camera = Camera.main.GetComponent<Transform>();
+        source = GetComponent<Cinemachine.CinemachineImpulseSource>();
     }
 
 
@@ -52,6 +54,7 @@ public class GrapplingHook : MonoBehaviour
 
             lr.positionCount = 2;
             fired = true;
+            source.GenerateImpulse(Camera.main.transform.forward);
 
         }
     }
