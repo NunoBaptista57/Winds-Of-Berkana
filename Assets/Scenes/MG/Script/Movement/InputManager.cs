@@ -22,7 +22,10 @@ class InputManager : MonoBehaviour
     public bool glideInput;
     public bool shootInput;
     public bool aimInput;
-    public bool runningInput;
+    public bool runningInput = false;
+    public bool flashInput = false;
+
+    public Light flashlight;
 
     public Cinemachine.CinemachineVirtualCameraBase baseCamera;
     public Cinemachine.CinemachineVirtualCameraBase aimCamera;
@@ -47,6 +50,7 @@ class InputManager : MonoBehaviour
             playerControls.Character.Aim.started += i => aimInput = true;
             playerControls.Character.Aim.canceled += i => aimInput = false;
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
+            playerControls.Character.Flashlight.performed += i => HandleFlashlight();
         }
 
         playerControls.Enable();
@@ -60,7 +64,6 @@ class InputManager : MonoBehaviour
     {
         HandleMovementInput();
         HandleJumpingInput();
-     //   HandleGlidingInput();
         HandleAiming();
     }
 
@@ -74,6 +77,23 @@ class InputManager : MonoBehaviour
 
         animator.UpdateAnimatorValues(horizontalInput, verticalInput);
 
+    }
+
+    public void HandleFlashlight()
+    {
+        Debug.Log("Handling Flashlight" + flashInput);
+
+
+        if (!flashInput)
+        {
+            flashlight.enabled = true;
+            flashInput = true;
+        }
+        else
+        {
+            flashlight.enabled = false;
+            flashInput = false;
+        }
     }
 
 

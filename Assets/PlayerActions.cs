@@ -259,6 +259,14 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=1)""
+                },
+                {
+                    ""name"": ""Flashlight"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""0f99cc6e-ebf6-411a-b8e0-4b20674206ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
                 }
             ],
             ""bindings"": [
@@ -514,6 +522,28 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dfe7e659-b631-44fa-a14d-a16efb3c73d0"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Flashlight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c6aa817a-bae8-4de1-b1c6-03a46f69b48b"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Flashlight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -567,6 +597,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         m_Character_Fire = m_Character.FindAction("Fire", throwIfNotFound: true);
         m_Character_Aim = m_Character.FindAction("Aim", throwIfNotFound: true);
         m_Character_Run = m_Character.FindAction("Run", throwIfNotFound: true);
+        m_Character_Flashlight = m_Character.FindAction("Flashlight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -672,6 +703,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Character_Fire;
     private readonly InputAction m_Character_Aim;
     private readonly InputAction m_Character_Run;
+    private readonly InputAction m_Character_Flashlight;
     public struct CharacterActions
     {
         private @PlayerActions m_Wrapper;
@@ -683,6 +715,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         public InputAction @Fire => m_Wrapper.m_Character_Fire;
         public InputAction @Aim => m_Wrapper.m_Character_Aim;
         public InputAction @Run => m_Wrapper.m_Character_Run;
+        public InputAction @Flashlight => m_Wrapper.m_Character_Flashlight;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -713,6 +746,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Run.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnRun;
+                @Flashlight.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFlashlight;
+                @Flashlight.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFlashlight;
+                @Flashlight.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFlashlight;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -738,6 +774,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
+                @Flashlight.started += instance.OnFlashlight;
+                @Flashlight.performed += instance.OnFlashlight;
+                @Flashlight.canceled += instance.OnFlashlight;
             }
         }
     }
@@ -775,5 +814,6 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnFlashlight(InputAction.CallbackContext context);
     }
 }
