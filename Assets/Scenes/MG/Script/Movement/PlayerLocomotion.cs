@@ -36,8 +36,13 @@ public class PlayerLocomotion : MonoBehaviour
 
     [Header("JumpSpeed")]
     public float jumpHeight = 3.0f;
-    public float jumpCoeficient = 1 / 10;
+    public float jumpCoeficient = 0.1f;
+    public float jumpControlCoeficient = 20;
     public float gravityValue = -9.81f;
+
+    [Header("Glide")]
+    public float glideAcceleration = 3.0f;
+    public float glideCoeficient = 30;
 
 
     public LayerMask groundLayer;
@@ -148,12 +153,26 @@ public class PlayerLocomotion : MonoBehaviour
             //  inAirTimer += + Time.deltaTime;
             // rb.AddForce(transform.forward * leapingVelocity);
             //rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
-            // Control Rotation during Fall
+            
+            // Controlling direction of movement
+            moveDirection = cam.transform.forward * inputManager.horizontalInput; //Movement Input
+            moveDirection = moveDirection + cam.transform.right * inputManager.verticalInput;
+            moveDirection.Normalize();
 
             if (isGliding)
-                rb.AddForce(moveDirection.x * jumpCoeficient, jumpHeight, moveDirection.z * jumpCoeficient, ForceMode.Acceleration);
+            {
+                rb.AddForce(moveDirection.x * glideCoeficient, glideAcceleration, moveDirection.z * glideCoeficient, ForceMode.Acceleration);
 
+            }
+            else
+            {
+                rb.AddForce(moveDirection.x * jumpControlCoeficient, 0.0f, moveDirection.z * jumpControlCoeficient, ForceMode.Acceleration);
+            }
+
+            //Rotation while falling
             HandleRotation();
+            
+
 
         }
 
