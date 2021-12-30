@@ -144,28 +144,15 @@ public class PlayerLocomotion : MonoBehaviour
             }
 
 
-          //  inAirTimer += + Time.deltaTime;
-           // rb.AddForce(transform.forward * leapingVelocity);
-           //rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
-
-
+            //  inAirTimer += + Time.deltaTime;
+            // rb.AddForce(transform.forward * leapingVelocity);
+            //rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
             // Control Rotation during Fall
 
-            Vector3 targetDirection = Vector3.zero;
+            if (isGliding)
+                rb.AddForce(moveDirection.x, 5.0f, moveDirection.z, ForceMode.Acceleration);
 
-            targetDirection = cam.transform.forward * inputManager.horizontalInput;
-            targetDirection = targetDirection + cam.transform.right * inputManager.verticalInput;
-            targetDirection.Normalize();
-
-            if (targetDirection == Vector3.zero)
-            {
-                targetDirection = transform.forward;
-            }
-
-            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, playerRotationSpeed * Time.deltaTime);
-
-            transform.rotation = playerRotation;
+            HandleRotation();
 
         }
 
@@ -212,11 +199,15 @@ public class PlayerLocomotion : MonoBehaviour
             animatorManager.animator.SetBool("Gliding", false);
 
             float jumpingVelocity = Mathf.Sqrt(-2 * gravityValue * jumpHeight);
-            Vector3 playerVelocity = moveDirection;
-            playerVelocity.y = jumpingVelocity;
-            rb.velocity = playerVelocity;
-            currentFallingVelocity = fallingVelocity;
+           // float jumpingVelocity = jumpHeight;
 
+            //  Vector3 playerVelocity = moveDirection;
+            //  playerVelocity.y = jumpingVelocity;
+            // rb.velocity = playerVelocity;
+            //currentFallingVelocity = fallingVelocity;
+
+            //Easiest way to do the jump
+            rb.AddForce(moveDirection.x, jumpingVelocity, moveDirection.z, ForceMode.Impulse);
         }
     }
 
@@ -225,8 +216,6 @@ public class PlayerLocomotion : MonoBehaviour
         if (!isGrounded)
         {
 
-            if (currentFallingVelocity != glideVelocity)
-            {
                 Debug.Log("Activate Glide");
                 animatorManager.animator.SetBool("Gliding", true);
                 animatorManager.PlayTargetAnimation("Glide", true);
@@ -234,7 +223,6 @@ public class PlayerLocomotion : MonoBehaviour
                 // We are no longer using this....so we need to think of another way of simulating a glide
                 currentFallingVelocity = glideVelocity;
                 isGliding = true;
-            }
         }
        
     }
