@@ -30,12 +30,13 @@ public class PlayerLocomotion : MonoBehaviour
     public float inAirTimer;
     public float leapingVelocity;
     public float fallingVelocity;
-    public float glideVelocity;
-    private float currentFallingVelocity;
+    //public float glideVelocity;
+    //private float currentFallingVelocity;
     public float raycastOriginOffSet = 0.5f;
 
     [Header("JumpSpeed")]
     public float jumpHeight = 3.0f;
+    public float jumpCoeficient = 1 / 10;
     public float gravityValue = -9.81f;
 
 
@@ -51,7 +52,7 @@ public class PlayerLocomotion : MonoBehaviour
         animatorManager = GetComponent<AnimatorManager>();
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
-        currentFallingVelocity = fallingVelocity;
+      //  currentFallingVelocity = fallingVelocity;
     }
 
     public void HandleAllMovement()
@@ -150,7 +151,7 @@ public class PlayerLocomotion : MonoBehaviour
             // Control Rotation during Fall
 
             if (isGliding)
-                rb.AddForce(moveDirection.x, 5.0f, moveDirection.z, ForceMode.Acceleration);
+                rb.AddForce(moveDirection.x * jumpCoeficient, jumpHeight, moveDirection.z * jumpCoeficient, ForceMode.Acceleration);
 
             HandleRotation();
 
@@ -162,8 +163,8 @@ public class PlayerLocomotion : MonoBehaviour
             if(!isGrounded && !playerManager.isInteracting)
             {
                 animatorManager.PlayTargetAnimation("Land", true);
-                animatorManager.animator.SetBool("isJumping", false);
-                animatorManager.animator.SetBool("Gliding", false);
+                
+               
             }
 
             Vector3 rayCastHitPoint = hit.point;
@@ -171,8 +172,10 @@ public class PlayerLocomotion : MonoBehaviour
 
 
             inAirTimer = 0;
+            
             isGrounded = true;
             isGliding = false;
+           
         }
         else
         {
@@ -185,7 +188,12 @@ public class PlayerLocomotion : MonoBehaviour
             {
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
             }
-            else transform.position = targetPosition;
+            else
+            {
+                transform.position = targetPosition;
+                animatorManager.animator.SetBool("isJumping", false);
+                animatorManager.animator.SetBool("Gliding", false);
+            }
         }
     }
 
@@ -207,7 +215,7 @@ public class PlayerLocomotion : MonoBehaviour
             //currentFallingVelocity = fallingVelocity;
 
             //Easiest way to do the jump
-            rb.AddForce(moveDirection.x, jumpingVelocity, moveDirection.z, ForceMode.Impulse);
+            rb.AddForce(moveDirection.x * jumpCoeficient, jumpingVelocity, moveDirection.z * jumpCoeficient, ForceMode.Impulse);
         }
     }
 
@@ -221,7 +229,7 @@ public class PlayerLocomotion : MonoBehaviour
                 animatorManager.PlayTargetAnimation("Glide", true);
                 
                 // We are no longer using this....so we need to think of another way of simulating a glide
-                currentFallingVelocity = glideVelocity;
+                //currentFallingVelocity = glideVelocity;
                 isGliding = true;
         }
        
@@ -231,7 +239,7 @@ public class PlayerLocomotion : MonoBehaviour
      {
         Debug.Log("Deactivate Glide");
         animatorManager.animator.SetBool("Gliding", false);
-        currentFallingVelocity = fallingVelocity;
+      //  currentFallingVelocity = fallingVelocity;
         isGliding = false;
     }
 

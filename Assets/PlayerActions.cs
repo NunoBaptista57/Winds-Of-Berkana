@@ -267,6 +267,14 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=1)""
+                },
+                {
+                    ""name"": ""Reset"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""cf4e92bc-442d-4a1a-ba1c-33ecb5bb7a74"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
                 }
             ],
             ""bindings"": [
@@ -544,6 +552,28 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""action"": ""Flashlight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d9cd36aa-0482-4636-97b9-3f2f01c75d5d"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8f715877-7d76-4a03-9f4b-2648c66a6b69"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -598,6 +628,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         m_Character_Aim = m_Character.FindAction("Aim", throwIfNotFound: true);
         m_Character_Run = m_Character.FindAction("Run", throwIfNotFound: true);
         m_Character_Flashlight = m_Character.FindAction("Flashlight", throwIfNotFound: true);
+        m_Character_Reset = m_Character.FindAction("Reset", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -704,6 +735,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Character_Aim;
     private readonly InputAction m_Character_Run;
     private readonly InputAction m_Character_Flashlight;
+    private readonly InputAction m_Character_Reset;
     public struct CharacterActions
     {
         private @PlayerActions m_Wrapper;
@@ -716,6 +748,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         public InputAction @Aim => m_Wrapper.m_Character_Aim;
         public InputAction @Run => m_Wrapper.m_Character_Run;
         public InputAction @Flashlight => m_Wrapper.m_Character_Flashlight;
+        public InputAction @Reset => m_Wrapper.m_Character_Reset;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -749,6 +782,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Flashlight.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFlashlight;
                 @Flashlight.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFlashlight;
                 @Flashlight.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFlashlight;
+                @Reset.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnReset;
+                @Reset.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnReset;
+                @Reset.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnReset;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -777,6 +813,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Flashlight.started += instance.OnFlashlight;
                 @Flashlight.performed += instance.OnFlashlight;
                 @Flashlight.canceled += instance.OnFlashlight;
+                @Reset.started += instance.OnReset;
+                @Reset.performed += instance.OnReset;
+                @Reset.canceled += instance.OnReset;
             }
         }
     }
@@ -815,5 +854,6 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         void OnAim(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnFlashlight(InputAction.CallbackContext context);
+        void OnReset(InputAction.CallbackContext context);
     }
 }

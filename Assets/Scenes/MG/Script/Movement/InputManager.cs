@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 class InputManager : MonoBehaviour
 {
@@ -51,6 +52,7 @@ class InputManager : MonoBehaviour
             playerControls.Character.Aim.canceled += i => aimInput = false;
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
             playerControls.Character.Flashlight.performed += i => HandleFlashlight();
+            playerControls.Character.Reset.performed += i => RestartScene();
         }
 
         playerControls.Enable();
@@ -67,6 +69,11 @@ class InputManager : MonoBehaviour
         HandleAiming();
     }
 
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        
+    }
 
     public void HandleMovementInput()
     {
