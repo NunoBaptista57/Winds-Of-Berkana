@@ -22,6 +22,7 @@ class InputManager : MonoBehaviour
     public bool glideInput;
     public bool shootInput;
     public bool aimInput;
+    public bool runningInput;
 
     public Cinemachine.CinemachineVirtualCameraBase baseCamera;
     public Cinemachine.CinemachineVirtualCameraBase aimCamera;
@@ -45,6 +46,7 @@ class InputManager : MonoBehaviour
             playerControls.Character.Fire.performed += i => HandleShooting();
             playerControls.Character.Aim.started += i => aimInput = true;
             playerControls.Character.Aim.canceled += i => aimInput = false;
+            playerControls.Character.Run.performed += i => runningInput = !runningInput;
         }
 
         playerControls.Enable();

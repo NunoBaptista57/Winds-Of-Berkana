@@ -85,6 +85,12 @@ public class PlayerLocomotion : MonoBehaviour
         // If we arew running select the sprintingsapeed
         // If we are running select the running speed
         //If we are walking select the running speed;
+
+        if (inputManager.runningInput)
+        {
+            moveDirection = moveDirection * sprintingSpeed;
+        }
+        else 
         if(inputManager.moveAmount >= 0.5f)
         {
             moveDirection = moveDirection * runningSpeed;
@@ -138,9 +144,9 @@ public class PlayerLocomotion : MonoBehaviour
             }
 
 
-            inAirTimer = inAirTimer + Time.deltaTime;
-            rb.AddForce(transform.forward * leapingVelocity);
-            rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
+          //  inAirTimer += + Time.deltaTime;
+           // rb.AddForce(transform.forward * leapingVelocity);
+           //rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
 
 
             // Control Rotation during Fall
@@ -224,7 +230,8 @@ public class PlayerLocomotion : MonoBehaviour
                 Debug.Log("Activate Glide");
                 animatorManager.animator.SetBool("Gliding", true);
                 animatorManager.PlayTargetAnimation("Glide", true);
-
+                
+                // We are no longer using this....so we need to think of another way of simulating a glide
                 currentFallingVelocity = glideVelocity;
                 isGliding = true;
             }
