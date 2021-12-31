@@ -171,7 +171,6 @@ public class PlayerLocomotion : MonoBehaviour
 
             //Rotation while falling
             HandleRotation();
-            
 
 
         }
@@ -194,7 +193,7 @@ public class PlayerLocomotion : MonoBehaviour
             
             isGrounded = true;
             isGliding = false;
-           
+
         }
         else
         {
