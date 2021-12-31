@@ -13,6 +13,13 @@ public class GrapplingHook : MonoBehaviour
     private SpringJoint joint;
     private bool fired = false;
 
+
+    [Header("Grappling Settings")]
+    public float spring;
+    public float damper;
+    public float massScale;
+
+
     Cinemachine.CinemachineImpulseSource source;
     
 
@@ -48,9 +55,9 @@ public class GrapplingHook : MonoBehaviour
             joint.minDistance = distanceFromPoint * 0.25f;
 
             //Change these values to fit whatever you like
-            joint.spring = 4.5f;
-            joint.damper = 7f;
-            joint.massScale = 4.5f;
+            joint.spring = spring;
+            joint.damper = damper;
+            joint.massScale = massScale;
 
             lr.positionCount = 2;
             fired = true;
@@ -75,6 +82,17 @@ public class GrapplingHook : MonoBehaviour
         fired = false;
     }
 
+
+    public bool isGrappling()
+    {
+        return joint != null;
+
+    }
+
+    public Vector3 GetGrapplePoint()
+    {
+        return grapplePoint;
+    }
 
 
 
