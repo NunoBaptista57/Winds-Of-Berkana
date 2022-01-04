@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AnimatorManager : MonoBehaviour
 {
+    [HideInInspector]
     public Animator animator;
     int horizontal;
     int vertical;

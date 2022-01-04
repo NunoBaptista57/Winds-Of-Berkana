@@ -11,6 +11,7 @@ class InputManager : MonoBehaviour
     PlayerActions playerControls;
     PlayerLocomotion playerLocomotion;
 
+    [Header("Debug Purposes Only")]
     public Vector2 movementInput;
     public float moveAmount;
     public float verticalInput;

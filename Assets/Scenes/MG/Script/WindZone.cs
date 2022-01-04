@@ -39,7 +39,6 @@ public class WindZone : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("On Enter: Player go up!");
             other.gameObject.GetComponent<Rigidbody>().AddForce(auxDirection * strength, ForceMode.Impulse);
         }
     }
@@ -48,7 +47,6 @@ public class WindZone : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            Debug.Log("On Stay Player go up!");
             other.gameObject.GetComponent<Rigidbody>().AddForce(auxDirection * strength, ForceMode.Impulse);
         }
     }

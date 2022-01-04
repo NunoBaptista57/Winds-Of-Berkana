@@ -10,10 +10,12 @@ public class PlayerLocomotion : MonoBehaviour
 
     private Vector3 moveDirection;
 
-    private Animator animator;
-    private Vector3 playerVelocity;
-
     private Rigidbody rb;
+
+    [Header("Movement Settings")]
+    public bool doubleJumpAbility;
+    public bool glideAbility;
+    public bool sprintAbility;
 
     [Header("Movement Flags")]
     public bool isGrounded;
@@ -30,8 +32,6 @@ public class PlayerLocomotion : MonoBehaviour
     public float inAirTimer;
     public float leapingVelocity;
     public float fallingVelocity;
-    //public float glideVelocity;
-    //private float currentFallingVelocity;
     public float raycastOriginOffSet = 0.5f;
 
     [Header("JumpSpeed")]
@@ -49,6 +49,7 @@ public class PlayerLocomotion : MonoBehaviour
     public Transform lookTarget;
 
     private Camera cam;
+    private bool doublejumped;
 
     private void Awake()
     {
@@ -94,7 +95,9 @@ public class PlayerLocomotion : MonoBehaviour
 
         if (inputManager.runningInput)
         {
-            moveDirection = moveDirection * sprintingSpeed;
+            if(sprintAbility)
+                moveDirection = moveDirection * sprintingSpeed;
+            else moveDirection = moveDirection * runningSpeed;
         }
         else 
         if(inputManager.moveAmount >= 0.5f)
@@ -193,6 +196,8 @@ public class PlayerLocomotion : MonoBehaviour
             
             isGrounded = true;
             isGliding = false;
+            if (doubleJumpAbility)
+                doublejumped = false;
 
         }
         else
@@ -216,30 +221,34 @@ public class PlayerLocomotion : MonoBehaviour
     }
 
 
+    public void Jump()
+    {
+        animatorManager.animator.SetBool("isJumping", true);
+        animatorManager.PlayTargetAnimation("Jump", true);
+        animatorManager.animator.SetBool("Gliding", false);
+
+        float jumpingVelocity = Mathf.Sqrt(-2 * gravityValue * jumpHeight);
+        rb.AddForce(moveDirection.x * jumpCoeficient, jumpingVelocity, moveDirection.z * jumpCoeficient, ForceMode.Impulse);
+    }
+
+
     public void HandleJumping()
     {
         if (isGrounded)
         {
-            animatorManager.animator.SetBool("isJumping", true);
-            animatorManager.PlayTargetAnimation("Jump", true);
-            animatorManager.animator.SetBool("Gliding", false);
+            Jump();
+        }
 
-            float jumpingVelocity = Mathf.Sqrt(-2 * gravityValue * jumpHeight);
-           // float jumpingVelocity = jumpHeight;
-
-            //  Vector3 playerVelocity = moveDirection;
-            //  playerVelocity.y = jumpingVelocity;
-            // rb.velocity = playerVelocity;
-            //currentFallingVelocity = fallingVelocity;
-
-            //Easiest way to do the jump
-            rb.AddForce(moveDirection.x * jumpCoeficient, jumpingVelocity, moveDirection.z * jumpCoeficient, ForceMode.Impulse);
+        else if (!doublejumped && doubleJumpAbility)
+        {
+            Jump();
+            doublejumped = true;
         }
     }
 
     public void ActivateGlide()
     {
-        if (!isGrounded)
+        if (!isGrounded  && glideAbility)
         {
 
                 Debug.Log("Activate Glide");
@@ -255,10 +264,13 @@ public class PlayerLocomotion : MonoBehaviour
 
    public void DeactivateGlide()
      {
-        Debug.Log("Deactivate Glide");
-        animatorManager.animator.SetBool("Gliding", false);
-      //  currentFallingVelocity = fallingVelocity;
-        isGliding = false;
+        if (glideAbility)
+        {
+            Debug.Log("Deactivate Glide");
+            animatorManager.animator.SetBool("Gliding", false);
+            //  currentFallingVelocity = fallingVelocity;
+            isGliding = false;
+        }
     }
 
  }
