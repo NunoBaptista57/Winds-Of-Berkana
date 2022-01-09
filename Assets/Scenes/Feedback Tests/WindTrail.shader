@@ -6,16 +6,21 @@ Shader "WindTrail"
 	{
 		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
 		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
-		[ASEBegin]_NoiseScale("Noise Scale", Float) = 10
-		_TimeScale("Time Scale", Float) = 1
-		_UVScale("UV Scale", Vector) = (1,1,0,0)
+		[ASEBegin][Header(Noise)]_NoiseScale("Noise Scale", Float) = 10
+		_NoiseTimeScale("Noise Time Scale", Float) = 1
+		_Seed("Seed", Int) = 0
+		_OctaveScaleMultiplier("Octave Scale Multiplier", Float) = 2
+		_InitialOctaveStrength("Initial Octave Strength", Float) = 0.5
+		_OctaveStrengthMultiplier("Octave Strength Multiplier", Float) = 0.4
+		[Header(Mapping)]_UVScale("UV Scale", Vector) = (1,1,0,0)
 		_ScrollSpeed("Scroll Speed", Vector) = (0,0,0,0)
 		_RemapParams("Remap Params", Vector) = (0,1,0,1)
 		_TrubulenceScale("Trubulence Scale", Float) = 0
 		_TurbulenceScroll("Turbulence Scroll", Vector) = (0,0,0,0)
-		[ASEEnd]_TurbulenceStrength("Turbulence Strength", Float) = 0
+		_TurbulenceStrength("Turbulence Strength", Float) = 0
+		[ASEEnd]_Color("Color", Color) = (1,1,1,0)
 
-		[HideInInspector]_RenderQueueType("Render Queue Type", Float) = 1
+		[HideInInspector]_RenderQueueType("Render Queue Type", Float) = 5
 		[HideInInspector][ToggleUI]_AddPrecomputedVelocity("Add Precomputed Velocity", Float) = 1
 		//[HideInInspector]_ShadowMatteFilter("Shadow Matte Filter", Float) = 2
 		[HideInInspector]_StencilRef("Stencil Ref", Int) = 0
@@ -31,7 +36,7 @@ Shader "WindTrail"
 		[HideInInspector]_ZTestGBuffer("_ZTestGBuffer", Int) = 4
 		[HideInInspector][ToggleUI]_RequireSplitLighting("_RequireSplitLighting", Float) = 0
 		[HideInInspector][ToggleUI]_ReceivesSSR("_ReceivesSSR", Float) = 0
-		[HideInInspector]_SurfaceType("_SurfaceType", Float) = 0
+		[HideInInspector]_SurfaceType("_SurfaceType", Float) = 1
 		[HideInInspector]_BlendMode("_BlendMode", Float) = 0
 		[HideInInspector]_SrcBlend("_SrcBlend", Float) = 1
 		[HideInInspector]_DstBlend("_DstBlend", Float) = 0
@@ -68,7 +73,7 @@ Shader "WindTrail"
 
 		
 
-		Tags { "RenderPipeline"="HDRenderPipeline" "RenderType"="Opaque" "Queue"="Geometry" }
+		Tags { "RenderPipeline"="HDRenderPipeline" "RenderType"="Opaque" "Queue"="Transparent" }
 
 		HLSLINCLUDE
 		#pragma target 4.5
@@ -236,14 +241,12 @@ Shader "WindTrail"
 
 
 
-			#define ASE_NEEDS_FRAG_COLOR
-
+			
 
 			struct VertexInput
 			{
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -252,21 +255,25 @@ Shader "WindTrail"
 			{
 				float4 positionCS : SV_Position;
 				float3 positionRWS : TEXCOORD0;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord1 : TEXCOORD1;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
 			CBUFFER_START( UnityPerMaterial )
+			float4 _Color;
 			float4 _RemapParams;
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _InitialOctaveStrength;
+			int _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
-			float _TimeScale;
+			float _NoiseTimeScale;
 			float _NoiseScale;
+			float _OctaveStrengthMultiplier;
+			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -460,7 +467,6 @@ Shader "WindTrail"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( o );
 
-				o.ase_color = inputMesh.ase_color;
 				o.ase_texcoord1.xy = inputMesh.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -490,7 +496,6 @@ Shader "WindTrail"
 			{
 				float3 positionOS : INTERNALTESSPOS;
 				float3 normalOS : NORMAL;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -509,7 +514,6 @@ Shader "WindTrail"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.positionOS = v.positionOS;
 				o.normalOS = v.normalOS;
-				o.ase_color = v.ase_color;
 				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
@@ -554,7 +558,6 @@ Shader "WindTrail"
 				VertexInput o = (VertexInput) 0;
 				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
 				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
-				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
 				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
@@ -590,6 +593,7 @@ Shader "WindTrail"
 				float3 V = GetWorldSpaceNormalizeViewDir( input.positionRWS );
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
+				float temp_output_26_0_g1 = _InitialOctaveStrength;
 				float2 texCoord11 = packedInput.ase_texcoord1.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord1.xy * float2( 1,1 ) + float2( 0,0 );
@@ -598,15 +602,28 @@ Shader "WindTrail"
 				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
 				float2 turbulence50 = appendResult52;
 				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _TimeScale;
+				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float simplePerlin3D12 = snoise( appendResult24*_NoiseScale );
-				simplePerlin3D12 = simplePerlin3D12*0.5 + 0.5;
-				float clampResult34 = clamp( (_RemapParams.z + (simplePerlin3D12 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
+				float temp_output_1_0_g1 = _NoiseScale;
+				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
+				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
+				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
+				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
+				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
+				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
+				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
+				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
+				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
+				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
+				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
+				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
+				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
+				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
 				
-				surfaceDescription.Color = packedInput.ase_color.rgb;
+				surfaceDescription.Color = _Color.rgb;
 				surfaceDescription.Emission = 0;
-				surfaceDescription.Alpha = ( packedInput.ase_color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
 				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
 				surfaceDescription.ShadowTint = float4( 0, 0 ,0 ,1 );
 				float2 Distortion = float2 ( 0, 0 );
@@ -694,7 +711,6 @@ Shader "WindTrail"
 			{
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -702,21 +718,25 @@ Shader "WindTrail"
 			struct VertexOutput
 			{
 				float4 positionCS : SV_Position;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
 			CBUFFER_START( UnityPerMaterial )
+			float4 _Color;
 			float4 _RemapParams;
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _InitialOctaveStrength;
+			int _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
-			float _TimeScale;
+			float _NoiseTimeScale;
 			float _NoiseScale;
+			float _OctaveStrengthMultiplier;
+			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -882,7 +902,6 @@ Shader "WindTrail"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( o );
 
-				o.ase_color = inputMesh.ase_color;
 				o.ase_texcoord.xy = inputMesh.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -911,7 +930,6 @@ Shader "WindTrail"
 			{
 				float3 positionOS : INTERNALTESSPOS;
 				float3 normalOS : NORMAL;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -930,7 +948,6 @@ Shader "WindTrail"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.positionOS = v.positionOS;
 				o.normalOS = v.normalOS;
-				o.ase_color = v.ase_color;
 				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
@@ -975,7 +992,6 @@ Shader "WindTrail"
 				VertexInput o = (VertexInput) 0;
 				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
 				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
-				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
 				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
@@ -1026,6 +1042,7 @@ Shader "WindTrail"
 				float3 V = float3( 1.0, 1.0, 1.0 );
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
+				float temp_output_26_0_g1 = _InitialOctaveStrength;
 				float2 texCoord11 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
@@ -1034,13 +1051,26 @@ Shader "WindTrail"
 				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
 				float2 turbulence50 = appendResult52;
 				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _TimeScale;
+				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float simplePerlin3D12 = snoise( appendResult24*_NoiseScale );
-				simplePerlin3D12 = simplePerlin3D12*0.5 + 0.5;
-				float clampResult34 = clamp( (_RemapParams.z + (simplePerlin3D12 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
+				float temp_output_1_0_g1 = _NoiseScale;
+				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
+				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
+				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
+				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
+				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
+				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
+				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
+				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
+				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
+				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
+				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
+				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
+				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
+				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
 				
-				surfaceDescription.Alpha = ( packedInput.ase_color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
 				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
 
 				SurfaceData surfaceData;
@@ -1096,14 +1126,19 @@ Shader "WindTrail"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			CBUFFER_START( UnityPerMaterial )
+			float4 _Color;
 			float4 _RemapParams;
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _InitialOctaveStrength;
+			int _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
-			float _TimeScale;
+			float _NoiseTimeScale;
 			float _NoiseScale;
+			float _OctaveStrengthMultiplier;
+			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -1172,8 +1207,7 @@ Shader "WindTrail"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/MaterialUtilities.hlsl"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphFunctions.hlsl"
 
-			#define ASE_NEEDS_FRAG_COLOR
-
+			
 
 			struct VertexInput
 			{
@@ -1181,7 +1215,6 @@ Shader "WindTrail"
 				float3 normalOS : NORMAL;
 				float4 uv1 : TEXCOORD1;
 				float4 uv2 : TEXCOORD2;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -1189,7 +1222,6 @@ Shader "WindTrail"
 			struct VertexOutput
 			{
 				float4 positionCS : SV_Position;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -1303,7 +1335,6 @@ Shader "WindTrail"
 				UNITY_SETUP_INSTANCE_ID( inputMesh );
 				UNITY_TRANSFER_INSTANCE_ID( inputMesh, o );
 
-				o.ase_color = inputMesh.ase_color;
 				o.ase_texcoord.xy = inputMesh.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -1343,7 +1374,6 @@ Shader "WindTrail"
 				float3 normalOS : NORMAL;
 				float4 uv1 : TEXCOORD1;
 				float4 uv2 : TEXCOORD2;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -1364,7 +1394,6 @@ Shader "WindTrail"
 				o.normalOS = v.normalOS;
 				o.uv1 = v.uv1;
 				o.uv2 = v.uv2;
-				o.ase_color = v.ase_color;
 				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
@@ -1411,7 +1440,6 @@ Shader "WindTrail"
 				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
 				o.uv1 = patch[0].uv1 * bary.x + patch[1].uv1 * bary.y + patch[2].uv1 * bary.z;
 				o.uv2 = patch[0].uv2 * bary.x + patch[1].uv2 * bary.y + patch[2].uv2 * bary.z;
-				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
 				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
@@ -1443,6 +1471,7 @@ Shader "WindTrail"
 				float3 V = float3( 1.0, 1.0, 1.0 );
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
+				float temp_output_26_0_g1 = _InitialOctaveStrength;
 				float2 texCoord11 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
@@ -1451,15 +1480,28 @@ Shader "WindTrail"
 				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
 				float2 turbulence50 = appendResult52;
 				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _TimeScale;
+				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float simplePerlin3D12 = snoise( appendResult24*_NoiseScale );
-				simplePerlin3D12 = simplePerlin3D12*0.5 + 0.5;
-				float clampResult34 = clamp( (_RemapParams.z + (simplePerlin3D12 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
+				float temp_output_1_0_g1 = _NoiseScale;
+				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
+				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
+				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
+				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
+				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
+				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
+				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
+				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
+				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
+				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
+				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
+				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
+				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
+				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
 				
-				surfaceDescription.Color = packedInput.ase_color.rgb;
+				surfaceDescription.Color = _Color.rgb;
 				surfaceDescription.Emission = 0;
-				surfaceDescription.Alpha = ( packedInput.ase_color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
 				surfaceDescription.AlphaClipThreshold =  _AlphaCutoff;
 
 				SurfaceData surfaceData;
@@ -1524,14 +1566,19 @@ Shader "WindTrail"
 			int _PassValue;
 
 			CBUFFER_START( UnityPerMaterial )
+			float4 _Color;
 			float4 _RemapParams;
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _InitialOctaveStrength;
+			int _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
-			float _TimeScale;
+			float _NoiseTimeScale;
 			float _NoiseScale;
+			float _OctaveStrengthMultiplier;
+			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -1598,7 +1645,6 @@ Shader "WindTrail"
 			{
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -1606,7 +1652,6 @@ Shader "WindTrail"
 			struct VertexOutput
 			{
 				float4 positionCS : SV_Position;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
@@ -1718,7 +1763,6 @@ Shader "WindTrail"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( o );
 
-				o.ase_color = inputMesh.ase_color;
 				o.ase_texcoord.xy = inputMesh.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -1747,7 +1791,6 @@ Shader "WindTrail"
 			{
 				float3 positionOS : INTERNALTESSPOS;
 				float3 normalOS : NORMAL;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -1766,7 +1809,6 @@ Shader "WindTrail"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.positionOS = v.positionOS;
 				o.normalOS = v.normalOS;
-				o.ase_color = v.ase_color;
 				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
@@ -1811,7 +1853,6 @@ Shader "WindTrail"
 				VertexInput o = (VertexInput) 0;
 				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
 				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
-				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
 				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
@@ -1852,6 +1893,7 @@ Shader "WindTrail"
 				SurfaceData surfaceData;
 				BuiltinData builtinData;
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
+				float temp_output_26_0_g1 = _InitialOctaveStrength;
 				float2 texCoord11 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
@@ -1860,13 +1902,26 @@ Shader "WindTrail"
 				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
 				float2 turbulence50 = appendResult52;
 				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _TimeScale;
+				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float simplePerlin3D12 = snoise( appendResult24*_NoiseScale );
-				simplePerlin3D12 = simplePerlin3D12*0.5 + 0.5;
-				float clampResult34 = clamp( (_RemapParams.z + (simplePerlin3D12 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
+				float temp_output_1_0_g1 = _NoiseScale;
+				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
+				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
+				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
+				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
+				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
+				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
+				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
+				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
+				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
+				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
+				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
+				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
+				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
+				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
 				
-				surfaceDescription.Alpha = ( packedInput.ase_color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
 				surfaceDescription.AlphaClipThreshold =  _AlphaCutoff;
 
 				GetSurfaceAndBuiltinData(surfaceDescription, input, V, posInput, surfaceData, builtinData);
@@ -1925,14 +1980,19 @@ Shader "WindTrail"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			CBUFFER_START( UnityPerMaterial )
+			float4 _Color;
 			float4 _RemapParams;
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _InitialOctaveStrength;
+			int _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
-			float _TimeScale;
+			float _NoiseTimeScale;
 			float _NoiseScale;
+			float _OctaveStrengthMultiplier;
+			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -1999,7 +2059,6 @@ Shader "WindTrail"
 			{
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -2007,7 +2066,6 @@ Shader "WindTrail"
 			struct VertexOutput
 			{
 				float4 positionCS : SV_Position;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
@@ -2118,7 +2176,6 @@ Shader "WindTrail"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( o );
 
-				o.ase_color = inputMesh.ase_color;
 				o.ase_texcoord.xy = inputMesh.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -2147,7 +2204,6 @@ Shader "WindTrail"
 			{
 				float3 positionOS : INTERNALTESSPOS;
 				float3 normalOS : NORMAL;
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -2166,7 +2222,6 @@ Shader "WindTrail"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.positionOS = v.positionOS;
 				o.normalOS = v.normalOS;
-				o.ase_color = v.ase_color;
 				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
@@ -2211,7 +2266,6 @@ Shader "WindTrail"
 				VertexInput o = (VertexInput) 0;
 				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
 				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
-				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
 				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
@@ -2261,6 +2315,7 @@ Shader "WindTrail"
 				float3 V = float3( 1.0, 1.0, 1.0 );
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
+				float temp_output_26_0_g1 = _InitialOctaveStrength;
 				float2 texCoord11 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
@@ -2269,13 +2324,26 @@ Shader "WindTrail"
 				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
 				float2 turbulence50 = appendResult52;
 				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _TimeScale;
+				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float simplePerlin3D12 = snoise( appendResult24*_NoiseScale );
-				simplePerlin3D12 = simplePerlin3D12*0.5 + 0.5;
-				float clampResult34 = clamp( (_RemapParams.z + (simplePerlin3D12 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
+				float temp_output_1_0_g1 = _NoiseScale;
+				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
+				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
+				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
+				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
+				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
+				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
+				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
+				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
+				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
+				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
+				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
+				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
+				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
+				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
 				
-				surfaceDescription.Alpha = ( packedInput.ase_color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
 				surfaceDescription.AlphaClipThreshold =  _AlphaCutoff;
 
 				SurfaceData surfaceData;
@@ -2346,14 +2414,19 @@ Shader "WindTrail"
 			#include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderGraphHeader.hlsl"
 
 			CBUFFER_START( UnityPerMaterial )
+			float4 _Color;
 			float4 _RemapParams;
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _InitialOctaveStrength;
+			int _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
-			float _TimeScale;
+			float _NoiseTimeScale;
 			float _NoiseScale;
+			float _OctaveStrengthMultiplier;
+			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -2424,7 +2497,6 @@ Shader "WindTrail"
 				#if defined (_ADD_PRECOMPUTED_VELOCITY)
 					float3 precomputedVelocity : TEXCOORD5;
 				#endif
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -2435,7 +2507,6 @@ Shader "WindTrail"
 				float3 vmeshInterp00 : TEXCOORD0;
 				float3 vpassInterpolators0 : TEXCOORD1; //interpolators0
 				float3 vpassInterpolators1 : TEXCOORD2; //interpolators1
-				float4 ase_color : COLOR;
 				float4 ase_texcoord3 : TEXCOORD3;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
@@ -2542,7 +2613,6 @@ Shader "WindTrail"
 			VertexInput ApplyMeshModification(VertexInput inputMesh, float3 timeParameters, inout VertexOutput o )
 			{
 				_TimeParameters.xyz = timeParameters;
-				o.ase_color = inputMesh.ase_color;
 				o.ase_texcoord3.xy = inputMesh.ase_texcoord.xy;
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -2645,7 +2715,6 @@ Shader "WindTrail"
 				#if defined (_ADD_PRECOMPUTED_VELOCITY)
 					float3 precomputedVelocity : TEXCOORD5;
 				#endif
-				float4 ase_color : COLOR;
 				float4 ase_texcoord : TEXCOORD0;
 
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -2668,7 +2737,6 @@ Shader "WindTrail"
 				#if defined (_ADD_PRECOMPUTED_VELOCITY)
 					o.precomputedVelocity = v.precomputedVelocity;
 				#endif
-				o.ase_color = v.ase_color;
 				o.ase_texcoord = v.ase_texcoord;
 				return o;
 			}
@@ -2717,7 +2785,6 @@ Shader "WindTrail"
 				#if defined (_ADD_PRECOMPUTED_VELOCITY)
 					o.precomputedVelocity = patch[0].precomputedVelocity * bary.x + patch[1].precomputedVelocity * bary.y + patch[2].precomputedVelocity * bary.z;
 				#endif
-				o.ase_color = patch[0].ase_color * bary.x + patch[1].ase_color * bary.y + patch[2].ase_color * bary.z;
 				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
@@ -2767,6 +2834,7 @@ Shader "WindTrail"
 				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
+				float temp_output_26_0_g1 = _InitialOctaveStrength;
 				float2 texCoord11 = packedInput.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
@@ -2775,13 +2843,26 @@ Shader "WindTrail"
 				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
 				float2 turbulence50 = appendResult52;
 				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _TimeScale;
+				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float simplePerlin3D12 = snoise( appendResult24*_NoiseScale );
-				simplePerlin3D12 = simplePerlin3D12*0.5 + 0.5;
-				float clampResult34 = clamp( (_RemapParams.z + (simplePerlin3D12 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
+				float temp_output_1_0_g1 = _NoiseScale;
+				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
+				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
+				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
+				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
+				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
+				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
+				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
+				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
+				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
+				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
+				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
+				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
+				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
+				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
 				
-				surfaceDescription.Alpha = ( packedInput.ase_color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
 				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
 
 				SurfaceData surfaceData;
@@ -2831,42 +2912,49 @@ Shader "WindTrail"
 }
 /*ASEBEGIN
 Version=18928
-949;73;682;646;802.7393;464.8635;1.712891;True;False
+361;73;1270;646;1424.8;201.9434;1.9;True;False
 Node;AmplifyShaderEditor.TextureCoordinatesNode;46;-1968.241,623.0529;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector2Node;57;-1879.038,785.5466;Inherit;False;Property;_TurbulenceScroll;Turbulence Scroll;8;0;Create;True;0;0;0;False;0;False;0,0;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
-Node;AmplifyShaderEditor.RangedFloatNode;45;-1578.901,782.9142;Inherit;False;Property;_TrubulenceScale;Trubulence Scale;6;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector2Node;57;-1879.038,785.5466;Inherit;False;Property;_TurbulenceScroll;Turbulence Scroll;11;0;Create;True;1;;0;0;False;0;False;0,0;-0.5,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.RangedFloatNode;45;-1578.901,782.9142;Inherit;False;Property;_TrubulenceScale;Trubulence Scale;10;0;Create;True;0;0;0;False;0;False;0;2;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.PannerNode;47;-1561.045,633.5035;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.RangedFloatNode;56;-1348.73,761.3722;Inherit;False;Property;_TurbulenceStrength;Turbulence Strength;8;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;56;-1348.73,761.3722;Inherit;False;Property;_TurbulenceStrength;Turbulence Strength;12;0;Create;True;0;0;0;False;0;False;0;0.05;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.NoiseGeneratorNode;44;-1334.615,638.4576;Inherit;False;Simplex2D;False;False;2;0;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;55;-1139.73,656.3722;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector2Node;30;-1617.849,411.3058;Inherit;False;Property;_ScrollSpeed;Scroll Speed;7;0;Create;True;0;0;0;False;0;False;0,0;2,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.DynamicAppendNode;52;-994.8798,635.8597;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.Vector2Node;30;-1617.849,411.3058;Inherit;False;Property;_ScrollSpeed;Scroll Speed;3;0;Create;True;0;0;0;False;0;False;0,0;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.TextureCoordinatesNode;11;-1722.817,225.921;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector2Node;26;-1384.307,347.2227;Inherit;False;Property;_UVScale;UV Scale;2;0;Create;True;0;0;0;False;0;False;1,1;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.PannerNode;29;-1419.686,225.1177;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;50;-850.0651,634.6873;Inherit;False;turbulence;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.Vector2Node;26;-1384.307,347.2227;Inherit;False;Property;_UVScale;UV Scale;6;1;[Header];Create;True;1;Mapping;0;0;False;0;False;1,1;0.6,1;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;27;-1227.601,225.504;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.GetLocalVarNode;53;-1299.88,120.8597;Inherit;False;50;turbulence;1;0;OBJECT;;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.RangedFloatNode;25;-1203.011,365.6573;Inherit;False;Property;_TimeScale;Time Scale;1;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;54;-1089.88,224.8597;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.BreakToComponentsNode;21;-974.0224,229.1096;Inherit;False;FLOAT2;1;0;FLOAT2;0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.RangedFloatNode;25;-1230.011,369.6573;Inherit;False;Property;_NoiseTimeScale;Noise Time Scale;1;0;Create;True;0;0;0;False;0;False;1;0.05;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleTimeNode;14;-1036.674,370.402;Inherit;False;1;0;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.IntNode;68;-953.3,82;Inherit;False;Property;_Seed;Seed;2;0;Create;True;0;0;0;False;0;False;0;0;False;0;1;INT;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;21;-974.0224,229.1096;Inherit;False;FLOAT2;1;0;FLOAT2;0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;70;-809.3001,114;Inherit;False;2;2;0;INT;0;False;1;INT;1000;False;1;INT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;24;-854.4209,228.4032;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RangedFloatNode;17;-841.9075,381.6395;Inherit;False;Property;_NoiseScale;Noise Scale;0;0;Create;True;0;0;0;False;0;False;10;10;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.NoiseGeneratorNode;12;-660.5682,63.56066;Inherit;True;Simplex3D;True;False;2;0;FLOAT3;0,0,0;False;1;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector4Node;43;-595.9623,287.4665;Inherit;False;Property;_RemapParams;Remap Params;5;0;Create;True;0;0;0;False;0;False;0,1,0,1;0,0,0,0;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.TFHCRemapNode;33;-392.3333,232.8622;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0.49;False;2;FLOAT;0.51;False;3;FLOAT;0;False;4;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ClampOpNode;34;-179.6042,264.7149;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.VertexColorNode;35;-202.5407,-8.345519;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;32;-353.655,405.7759;Inherit;False;Property;_Power;Power;4;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;58;-22.26471,180.8962;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;38;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;1;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;META;0;2;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;40;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;1;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;DepthForwardOnly;0;4;DepthForwardOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;True;True;0;True;-7;255;False;-1;255;True;-8;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=DepthForwardOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;42;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;1;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;DistortionVectors;0;6;DistortionVectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-11;255;False;-1;255;True;-12;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;37;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;1;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;ShadowCaster;0;1;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;41;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;1;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-9;255;False;-1;255;True;-10;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;39;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;1;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=SceneSelectionPass;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;36;140.457,-5.138668;Float;False;True;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;WindTrail;7f5cb9c3ea6481f469fdd856555439ef;True;Forward Unlit;0;0;Forward Unlit;9;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-20;0;True;-21;1;0;True;-22;0;True;-23;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-5;255;False;-1;255;True;-6;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-24;True;0;True;-32;False;True;1;LightMode=ForwardOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;29;Surface Type;0;  Rendering Pass ;0;  Rendering Pass;1;  Blending Mode;0;  Receive Fog;1;  Distortion;0;    Distortion Mode;0;    Distortion Only;1;  Depth Write;1;  Cull Mode;0;  Depth Test;4;Double-Sided;0;Alpha Clipping;0;Motion Vectors;1;  Add Precomputed Velocity;0;Shadow Matte;0;Cast Shadows;1;DOTS Instancing;0;GPU Instancing;1;Tessellation;0;  Phong;0;  Strength;0.5,False,-1;  Type;0;  Tess;16,False,-1;  Min;10,False,-1;  Max;25,False,-1;  Edge Length;16,False,-1;  Max Displacement;25,False,-1;Vertex Position,InvertActionOnDeselection;1;0;7;True;True;True;True;True;True;False;False;;False;0
+Node;AmplifyShaderEditor.RangedFloatNode;74;-683.9,436.5997;Inherit;False;Property;_InitialOctaveStrength;Initial Octave Strength;4;0;Create;True;0;0;0;False;0;False;0.5;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;75;-693.4001,350.8998;Inherit;False;Property;_OctaveScaleMultiplier;Octave Scale Multiplier;3;0;Create;True;0;0;0;False;0;False;2;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;72;-697.2001,522.3;Inherit;False;Property;_OctaveStrengthMultiplier;Octave Strength Multiplier;5;0;Create;True;0;0;0;False;0;False;0.4;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;71;-631.8998,140.8001;Inherit;False;2;2;0;INT;0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RangedFloatNode;17;-627.2068,269.5394;Inherit;False;Property;_NoiseScale;Noise Scale;0;1;[Header];Create;True;1;Noise;0;0;False;0;False;10;3;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;76;-400.5,257.2001;Inherit;True;Octave Noise;-1;;1;ec732fbb68dec504fb3a7cb83c8b1002;0;5;24;FLOAT3;0,0,0;False;1;FLOAT;1;False;8;FLOAT;0.5;False;26;FLOAT;0.8;False;25;FLOAT;0.5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector4Node;43;-208.4999,513.1997;Inherit;False;Property;_RemapParams;Remap Params;9;0;Create;True;0;0;0;False;0;False;0,1,0,1;0,1,0,1;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TFHCRemapNode;33;-0.5000777,465.2001;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0.49;False;2;FLOAT;0.51;False;3;FLOAT;0;False;4;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ClampOpNode;34;223.4999,497.1999;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;67;147.2998,230.1001;Inherit;False;Property;_Color;Color;13;0;Create;True;0;0;0;False;0;False;1,1,1,0;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;32;47.49995,625.1998;Inherit;False;Property;_Power;Power;8;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;58;367.5,401.2001;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;60;-1421.093,-410.051;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;38;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;META;0;2;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;40;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;DepthForwardOnly;0;4;DepthForwardOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;True;True;0;True;-7;255;False;-1;255;True;-8;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=DepthForwardOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;36;543.5005,225.2001;Float;False;True;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;WindTrail;7f5cb9c3ea6481f469fdd856555439ef;True;Forward Unlit;0;0;Forward Unlit;9;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Transparent=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-20;0;True;-21;1;0;True;-22;0;True;-23;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-5;255;False;-1;255;True;-6;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-24;True;0;True;-32;False;True;1;LightMode=ForwardOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;29;Surface Type;1;  Rendering Pass ;0;  Rendering Pass;1;  Blending Mode;0;  Receive Fog;1;  Distortion;0;    Distortion Mode;0;    Distortion Only;1;  Depth Write;1;  Cull Mode;0;  Depth Test;4;Double-Sided;0;Alpha Clipping;0;Motion Vectors;1;  Add Precomputed Velocity;0;Shadow Matte;0;Cast Shadows;1;DOTS Instancing;0;GPU Instancing;1;Tessellation;0;  Phong;0;  Strength;0.5,False,-1;  Type;0;  Tess;16,False,-1;  Min;10,False,-1;  Max;25,False,-1;  Edge Length;16,False,-1;  Max Displacement;25,False,-1;Vertex Position,InvertActionOnDeselection;1;0;7;True;True;True;True;True;True;False;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;39;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=SceneSelectionPass;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;41;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-9;255;False;-1;255;True;-10;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;37;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;ShadowCaster;0;1;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;42;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;DistortionVectors;0;6;DistortionVectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-11;255;False;-1;255;True;-12;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 WireConnection;47;0;46;0
 WireConnection;47;2;57;0
 WireConnection;44;0;47;0
@@ -2881,22 +2969,28 @@ WireConnection;27;0;29;0
 WireConnection;27;1;26;0
 WireConnection;54;0;27;0
 WireConnection;54;1;53;0
-WireConnection;21;0;54;0
 WireConnection;14;0;25;0
+WireConnection;21;0;54;0
+WireConnection;70;0;68;0
 WireConnection;24;0;21;0
 WireConnection;24;1;21;1
 WireConnection;24;2;14;0
-WireConnection;12;0;24;0
-WireConnection;12;1;17;0
-WireConnection;33;0;12;0
+WireConnection;71;0;70;0
+WireConnection;71;1;24;0
+WireConnection;76;24;71;0
+WireConnection;76;1;17;0
+WireConnection;76;8;75;0
+WireConnection;76;26;74;0
+WireConnection;76;25;72;0
+WireConnection;33;0;76;0
 WireConnection;33;1;43;1
 WireConnection;33;2;43;2
 WireConnection;33;3;43;3
 WireConnection;33;4;43;4
 WireConnection;34;0;33;0
-WireConnection;58;0;35;4
+WireConnection;58;0;67;4
 WireConnection;58;1;34;0
-WireConnection;36;0;35;0
+WireConnection;36;0;67;0
 WireConnection;36;2;58;0
 ASEEND*/
-//CHKSM=4DC85989611A04A8D143023E39D822A9049AC29A
+//CHKSM=C5372989BA0263B4BDEF730A5CC20588AD855AA8

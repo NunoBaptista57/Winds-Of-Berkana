@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WindTrail
+  m_Name: WindTrail Test
   m_Shader: {fileID: 4800000, guid: 5a766b24c7d84ba47b18a51106fa69e0, type: 3}
   m_ShaderKeywords: _ADD_PRECOMPUTED_VELOCITY _DISABLE_SSR_TRANSPARENT _ENABLE_FOG_ON_TRANSPARENT
     _SURFACE_TYPE_TRANSPARENT
@@ -39,11 +39,11 @@ Material:
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 10
     - _EnableFogOnTransparent: 1
-    - _InitialOctaveStrength: 0.37
-    - _NoiseScale: 2
-    - _NoiseTimeScale: 0.05
+    - _InitialOctaveStrength: 0.58
+    - _NoiseScale: 3
+    - _NoiseTimeScale: 0.01
     - _OctaveScaleMultiplier: 3
-    - _OctaveStrengthMultiplier: 0.27
+    - _OctaveStrengthMultiplier: 0.45
     - _Power: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
@@ -63,14 +63,14 @@ Material:
     - _StencilWriteMaskMV: 40
     - _SupportDecals: 1
     - _SurfaceType: 1
-    - _TimeScale: 0.05
+    - _TimeScale: 0.1
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentSortPriority: 0
     - _TransparentZWrite: 0
     - _TrubulenceScale: 2
     - _TurbulenceScroll: 1
-    - _TurbulenceStrength: 0.025
+    - _TurbulenceStrength: 0
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
@@ -80,8 +80,8 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RemapParams: {r: 0.25, g: 0.26, b: 0, a: 1}
-    - _ScrollSpeed: {r: 1, g: 0, b: 0, a: 0}
-    - _TurbulenceScroll: {r: -0.7, g: 0, b: 0, a: 0}
-    - _UVScale: {r: 0.6, g: 1, b: 0, a: 0}
+    - _RemapParams: {r: 0.57, g: 0.7, b: 0, a: 1}
+    - _ScrollSpeed: {r: 0.2, g: 0, b: 0, a: 0}
+    - _TurbulenceScroll: {r: 0, g: 0, b: 0, a: 0}
+    - _UVScale: {r: 0.15, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
