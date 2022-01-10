@@ -31,6 +31,8 @@ Material:
     - _AlphaDstBlend: 10
     - _AlphaSrcBlend: 1
     - _BlendMode: 0
+    - _BorderAspectRatio: 0
+    - _BorderSize: 0.03
     - _CullMode: 2
     - _CullModeForward: 2
     - _DistortionEnable: 0
@@ -40,10 +42,14 @@ Material:
     - _DstBlend: 10
     - _EnableFogOnTransparent: 1
     - _InitialOctaveStrength: 0.37
+    - _InitialOctaveStrength1: 0.5
     - _NoiseScale: 2
-    - _NoiseTimeScale: 0.05
+    - _NoiseScale1: 10
+    - _NoiseTimeScale: 0.1
     - _OctaveScaleMultiplier: 3
+    - _OctaveScaleMultiplier1: 2
     - _OctaveStrengthMultiplier: 0.27
+    - _OctaveStrengthMultiplier1: 0.4
     - _Power: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
@@ -81,7 +87,7 @@ Material:
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _RemapParams: {r: 0.25, g: 0.26, b: 0, a: 1}
-    - _ScrollSpeed: {r: 1, g: 0, b: 0, a: 0}
+    - _ScrollSpeed: {r: 2, g: 0, b: 0, a: 0}
     - _TurbulenceScroll: {r: -0.7, g: 0, b: 0, a: 0}
     - _UVScale: {r: 0.6, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

@@ -8,16 +8,16 @@ Shader "WindTrail"
 		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
 		[ASEBegin][Header(Noise)]_NoiseScale("Noise Scale", Float) = 10
 		_NoiseTimeScale("Noise Time Scale", Float) = 1
-		_Seed("Seed", Int) = 0
+		_Seed("Seed", Float) = 0
 		_OctaveScaleMultiplier("Octave Scale Multiplier", Float) = 2
 		_InitialOctaveStrength("Initial Octave Strength", Float) = 0.5
 		_OctaveStrengthMultiplier("Octave Strength Multiplier", Float) = 0.4
 		[Header(Mapping)]_UVScale("UV Scale", Vector) = (1,1,0,0)
 		_ScrollSpeed("Scroll Speed", Vector) = (0,0,0,0)
 		_RemapParams("Remap Params", Vector) = (0,1,0,1)
-		_TrubulenceScale("Trubulence Scale", Float) = 0
-		_TurbulenceScroll("Turbulence Scroll", Vector) = (0,0,0,0)
-		_TurbulenceStrength("Turbulence Strength", Float) = 0
+		_TrubulenceScale("Trubulence Scale", Float) = 2
+		_TurbulenceScroll("Turbulence Scroll", Vector) = (-0.7,0,0,0)
+		_TurbulenceStrength("Turbulence Strength", Float) = 0.025
 		[ASEEnd]_Color("Color", Color) = (1,1,1,0)
 
 		[HideInInspector]_RenderQueueType("Render Queue Type", Float) = 5
@@ -266,14 +266,14 @@ Shader "WindTrail"
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _NoiseScale;
+			float _OctaveScaleMultiplier;
 			float _InitialOctaveStrength;
-			int _Seed;
+			float _OctaveStrengthMultiplier;
+			float _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
 			float _NoiseTimeScale;
-			float _NoiseScale;
-			float _OctaveStrengthMultiplier;
-			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -593,37 +593,101 @@ Shader "WindTrail"
 				float3 V = GetWorldSpaceNormalizeViewDir( input.positionRWS );
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
-				float temp_output_26_0_g1 = _InitialOctaveStrength;
+				float4 appendResult164 = (float4(_NoiseScale , _OctaveScaleMultiplier , _InitialOctaveStrength , _OctaveStrengthMultiplier));
+				float4 NoiseParams163 = appendResult164;
+				float4 break166 = NoiseParams163;
+				float temp_output_26_0_g10 = break166.z;
+				float2 ScrollSpeed232 = _ScrollSpeed;
 				float2 texCoord11 = packedInput.ase_texcoord1.xy * float2( 1,1 ) + float2( 0,0 );
-				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
+				float2 panner29 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord1.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner47 = ( 1.0 * _Time.y * _TurbulenceScroll + texCoord46);
 				float simplePerlin2D44 = snoise( panner47*_TrubulenceScale );
-				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
-				float2 turbulence50 = appendResult52;
-				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
+				simplePerlin2D44 = simplePerlin2D44*0.5 + 0.5;
+				float turbulence50 = simplePerlin2D44;
+				float2 appendResult52 = (float2(0.0 , ( (-1.0 + (turbulence50 - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * _TurbulenceStrength )));
+				float2 break21 = ( ( panner29 * _UVScale ) + appendResult52 );
+				float NoiseTimeScale186 = _NoiseTimeScale;
+				float mulTime14 = _TimeParameters.x * NoiseTimeScale186;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
-				float temp_output_1_0_g1 = _NoiseScale;
-				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
-				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
-				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
-				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
-				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
-				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
-				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
-				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
-				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
-				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
-				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
-				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
-				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
-				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g10 = ( ( _Seed * 10000.0 ) + appendResult24 );
+				float temp_output_1_0_g10 = break166.x;
+				float simplePerlin3D18_g10 = snoise( temp_output_24_0_g10*temp_output_1_0_g10 );
+				simplePerlin3D18_g10 = simplePerlin3D18_g10*0.5 + 0.5;
+				float temp_output_25_0_g10 = break166.w;
+				float temp_output_8_0_g10 = break166.y;
+				float simplePerlin3D19_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * temp_output_8_0_g10 ) );
+				simplePerlin3D19_g10 = simplePerlin3D19_g10*0.5 + 0.5;
+				float simplePerlin3D20_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 2.0 ) ) );
+				simplePerlin3D20_g10 = simplePerlin3D20_g10*0.5 + 0.5;
+				float simplePerlin3D21_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 3.0 ) ) );
+				simplePerlin3D21_g10 = simplePerlin3D21_g10*0.5 + 0.5;
+				float simplePerlin3D35_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 4.0 ) ) );
+				simplePerlin3D35_g10 = simplePerlin3D35_g10*0.5 + 0.5;
+				float clampResult34_g10 = clamp( ( ( temp_output_26_0_g10 * simplePerlin3D18_g10 ) + ( temp_output_26_0_g10 * temp_output_25_0_g10 * simplePerlin3D19_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 2.0 ) * simplePerlin3D20_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D21_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D35_g10 ) ) , 0.0 , 1.0 );
+				float4 RemapParams83 = _RemapParams;
+				float4 break84 = RemapParams83;
+				float clampResult34 = clamp( (break84.z + (clampResult34_g10 - break84.x) * (break84.w - break84.z) / (break84.y - break84.x)) , 0.0 , 1.0 );
+				float4 break167 = NoiseParams163;
+				float temp_output_26_0_g5 = break167.z;
+				float2 texCoord131 = packedInput.ase_texcoord1.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime150 = _TimeParameters.x * 0.52;
+				float2 appendResult149 = (float2(texCoord131.y , mulTime150));
+				float2 temp_output_24_0_g5 = appendResult149;
+				float temp_output_1_0_g5 = break167.x;
+				float simplePerlin2D18_g5 = snoise( temp_output_24_0_g5*temp_output_1_0_g5 );
+				simplePerlin2D18_g5 = simplePerlin2D18_g5*0.5 + 0.5;
+				float temp_output_25_0_g5 = break167.w;
+				float temp_output_8_0_g5 = break167.y;
+				float simplePerlin2D19_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * temp_output_8_0_g5 ) );
+				simplePerlin2D19_g5 = simplePerlin2D19_g5*0.5 + 0.5;
+				float simplePerlin2D20_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 2.0 ) ) );
+				simplePerlin2D20_g5 = simplePerlin2D20_g5*0.5 + 0.5;
+				float simplePerlin2D21_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 3.0 ) ) );
+				simplePerlin2D21_g5 = simplePerlin2D21_g5*0.5 + 0.5;
+				float simplePerlin2D35_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 4.0 ) ) );
+				simplePerlin2D35_g5 = simplePerlin2D35_g5*0.5 + 0.5;
+				float clampResult34_g5 = clamp( ( ( temp_output_26_0_g5 * simplePerlin2D18_g5 ) + ( temp_output_26_0_g5 * temp_output_25_0_g5 * simplePerlin2D19_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 2.0 ) * simplePerlin2D20_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D21_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D35_g5 ) ) , 0.0 , 1.0 );
+				float temp_output_148_0 = ( clampResult34_g5 * 0.32 );
+				float smoothstepResult137 = smoothstep( temp_output_148_0 , ( temp_output_148_0 + 0.01 ) , texCoord131.x);
+				float4 break194 = NoiseParams163;
+				float temp_output_26_0_g9 = break194.z;
+				float2 texCoord190 = packedInput.ase_texcoord1.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime192 = _TimeParameters.x * -0.52;
+				float2 appendResult193 = (float2(texCoord190.y , mulTime192));
+				float2 temp_output_24_0_g9 = appendResult193;
+				float temp_output_1_0_g9 = break194.x;
+				float simplePerlin2D18_g9 = snoise( temp_output_24_0_g9*temp_output_1_0_g9 );
+				simplePerlin2D18_g9 = simplePerlin2D18_g9*0.5 + 0.5;
+				float temp_output_25_0_g9 = break194.w;
+				float temp_output_8_0_g9 = break194.y;
+				float simplePerlin2D19_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * temp_output_8_0_g9 ) );
+				simplePerlin2D19_g9 = simplePerlin2D19_g9*0.5 + 0.5;
+				float simplePerlin2D20_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 2.0 ) ) );
+				simplePerlin2D20_g9 = simplePerlin2D20_g9*0.5 + 0.5;
+				float simplePerlin2D21_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 3.0 ) ) );
+				simplePerlin2D21_g9 = simplePerlin2D21_g9*0.5 + 0.5;
+				float simplePerlin2D35_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 4.0 ) ) );
+				simplePerlin2D35_g9 = simplePerlin2D35_g9*0.5 + 0.5;
+				float clampResult34_g9 = clamp( ( ( temp_output_26_0_g9 * simplePerlin2D18_g9 ) + ( temp_output_26_0_g9 * temp_output_25_0_g9 * simplePerlin2D19_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 2.0 ) * simplePerlin2D20_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D21_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D35_g9 ) ) , 0.0 , 1.0 );
+				float temp_output_196_0 = ( clampResult34_g9 * 0.32 );
+				float smoothstepResult198 = smoothstep( temp_output_196_0 , ( temp_output_196_0 + 0.01 ) , ( 1.0 - texCoord190.x ));
+				float2 texCoord224 = packedInput.ase_texcoord1.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner225 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord224);
+				float simplePerlin2D226 = snoise( panner225*3.0 );
+				simplePerlin2D226 = simplePerlin2D226*0.5 + 0.5;
+				float temp_output_227_0 = ( simplePerlin2D226 * 0.2 );
+				float smoothstepResult231 = smoothstep( temp_output_227_0 , ( temp_output_227_0 + 0.01 ) , texCoord224.y);
+				float2 texCoord218 = packedInput.ase_texcoord1.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner220 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord218);
+				float simplePerlin2D221 = snoise( panner220*3.0 );
+				simplePerlin2D221 = simplePerlin2D221*0.5 + 0.5;
+				float temp_output_213_0 = ( simplePerlin2D221 * 0.2 );
+				float smoothstepResult216 = smoothstep( temp_output_213_0 , ( temp_output_213_0 + 0.01 ) , ( 1.0 - texCoord218.y ));
 				
 				surfaceDescription.Color = _Color.rgb;
 				surfaceDescription.Emission = 0;
-				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 * ( smoothstepResult137 * smoothstepResult198 * smoothstepResult231 * smoothstepResult216 ) );
 				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
 				surfaceDescription.ShadowTint = float4( 0, 0 ,0 ,1 );
 				float2 Distortion = float2 ( 0, 0 );
@@ -729,14 +793,14 @@ Shader "WindTrail"
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _NoiseScale;
+			float _OctaveScaleMultiplier;
 			float _InitialOctaveStrength;
-			int _Seed;
+			float _OctaveStrengthMultiplier;
+			float _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
 			float _NoiseTimeScale;
-			float _NoiseScale;
-			float _OctaveStrengthMultiplier;
-			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -1042,35 +1106,99 @@ Shader "WindTrail"
 				float3 V = float3( 1.0, 1.0, 1.0 );
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
-				float temp_output_26_0_g1 = _InitialOctaveStrength;
+				float4 appendResult164 = (float4(_NoiseScale , _OctaveScaleMultiplier , _InitialOctaveStrength , _OctaveStrengthMultiplier));
+				float4 NoiseParams163 = appendResult164;
+				float4 break166 = NoiseParams163;
+				float temp_output_26_0_g10 = break166.z;
+				float2 ScrollSpeed232 = _ScrollSpeed;
 				float2 texCoord11 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
-				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
+				float2 panner29 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner47 = ( 1.0 * _Time.y * _TurbulenceScroll + texCoord46);
 				float simplePerlin2D44 = snoise( panner47*_TrubulenceScale );
-				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
-				float2 turbulence50 = appendResult52;
-				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
+				simplePerlin2D44 = simplePerlin2D44*0.5 + 0.5;
+				float turbulence50 = simplePerlin2D44;
+				float2 appendResult52 = (float2(0.0 , ( (-1.0 + (turbulence50 - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * _TurbulenceStrength )));
+				float2 break21 = ( ( panner29 * _UVScale ) + appendResult52 );
+				float NoiseTimeScale186 = _NoiseTimeScale;
+				float mulTime14 = _TimeParameters.x * NoiseTimeScale186;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
-				float temp_output_1_0_g1 = _NoiseScale;
-				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
-				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
-				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
-				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
-				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
-				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
-				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
-				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
-				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
-				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
-				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
-				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
-				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
-				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g10 = ( ( _Seed * 10000.0 ) + appendResult24 );
+				float temp_output_1_0_g10 = break166.x;
+				float simplePerlin3D18_g10 = snoise( temp_output_24_0_g10*temp_output_1_0_g10 );
+				simplePerlin3D18_g10 = simplePerlin3D18_g10*0.5 + 0.5;
+				float temp_output_25_0_g10 = break166.w;
+				float temp_output_8_0_g10 = break166.y;
+				float simplePerlin3D19_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * temp_output_8_0_g10 ) );
+				simplePerlin3D19_g10 = simplePerlin3D19_g10*0.5 + 0.5;
+				float simplePerlin3D20_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 2.0 ) ) );
+				simplePerlin3D20_g10 = simplePerlin3D20_g10*0.5 + 0.5;
+				float simplePerlin3D21_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 3.0 ) ) );
+				simplePerlin3D21_g10 = simplePerlin3D21_g10*0.5 + 0.5;
+				float simplePerlin3D35_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 4.0 ) ) );
+				simplePerlin3D35_g10 = simplePerlin3D35_g10*0.5 + 0.5;
+				float clampResult34_g10 = clamp( ( ( temp_output_26_0_g10 * simplePerlin3D18_g10 ) + ( temp_output_26_0_g10 * temp_output_25_0_g10 * simplePerlin3D19_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 2.0 ) * simplePerlin3D20_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D21_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D35_g10 ) ) , 0.0 , 1.0 );
+				float4 RemapParams83 = _RemapParams;
+				float4 break84 = RemapParams83;
+				float clampResult34 = clamp( (break84.z + (clampResult34_g10 - break84.x) * (break84.w - break84.z) / (break84.y - break84.x)) , 0.0 , 1.0 );
+				float4 break167 = NoiseParams163;
+				float temp_output_26_0_g5 = break167.z;
+				float2 texCoord131 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime150 = _TimeParameters.x * 0.52;
+				float2 appendResult149 = (float2(texCoord131.y , mulTime150));
+				float2 temp_output_24_0_g5 = appendResult149;
+				float temp_output_1_0_g5 = break167.x;
+				float simplePerlin2D18_g5 = snoise( temp_output_24_0_g5*temp_output_1_0_g5 );
+				simplePerlin2D18_g5 = simplePerlin2D18_g5*0.5 + 0.5;
+				float temp_output_25_0_g5 = break167.w;
+				float temp_output_8_0_g5 = break167.y;
+				float simplePerlin2D19_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * temp_output_8_0_g5 ) );
+				simplePerlin2D19_g5 = simplePerlin2D19_g5*0.5 + 0.5;
+				float simplePerlin2D20_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 2.0 ) ) );
+				simplePerlin2D20_g5 = simplePerlin2D20_g5*0.5 + 0.5;
+				float simplePerlin2D21_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 3.0 ) ) );
+				simplePerlin2D21_g5 = simplePerlin2D21_g5*0.5 + 0.5;
+				float simplePerlin2D35_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 4.0 ) ) );
+				simplePerlin2D35_g5 = simplePerlin2D35_g5*0.5 + 0.5;
+				float clampResult34_g5 = clamp( ( ( temp_output_26_0_g5 * simplePerlin2D18_g5 ) + ( temp_output_26_0_g5 * temp_output_25_0_g5 * simplePerlin2D19_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 2.0 ) * simplePerlin2D20_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D21_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D35_g5 ) ) , 0.0 , 1.0 );
+				float temp_output_148_0 = ( clampResult34_g5 * 0.32 );
+				float smoothstepResult137 = smoothstep( temp_output_148_0 , ( temp_output_148_0 + 0.01 ) , texCoord131.x);
+				float4 break194 = NoiseParams163;
+				float temp_output_26_0_g9 = break194.z;
+				float2 texCoord190 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime192 = _TimeParameters.x * -0.52;
+				float2 appendResult193 = (float2(texCoord190.y , mulTime192));
+				float2 temp_output_24_0_g9 = appendResult193;
+				float temp_output_1_0_g9 = break194.x;
+				float simplePerlin2D18_g9 = snoise( temp_output_24_0_g9*temp_output_1_0_g9 );
+				simplePerlin2D18_g9 = simplePerlin2D18_g9*0.5 + 0.5;
+				float temp_output_25_0_g9 = break194.w;
+				float temp_output_8_0_g9 = break194.y;
+				float simplePerlin2D19_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * temp_output_8_0_g9 ) );
+				simplePerlin2D19_g9 = simplePerlin2D19_g9*0.5 + 0.5;
+				float simplePerlin2D20_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 2.0 ) ) );
+				simplePerlin2D20_g9 = simplePerlin2D20_g9*0.5 + 0.5;
+				float simplePerlin2D21_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 3.0 ) ) );
+				simplePerlin2D21_g9 = simplePerlin2D21_g9*0.5 + 0.5;
+				float simplePerlin2D35_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 4.0 ) ) );
+				simplePerlin2D35_g9 = simplePerlin2D35_g9*0.5 + 0.5;
+				float clampResult34_g9 = clamp( ( ( temp_output_26_0_g9 * simplePerlin2D18_g9 ) + ( temp_output_26_0_g9 * temp_output_25_0_g9 * simplePerlin2D19_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 2.0 ) * simplePerlin2D20_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D21_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D35_g9 ) ) , 0.0 , 1.0 );
+				float temp_output_196_0 = ( clampResult34_g9 * 0.32 );
+				float smoothstepResult198 = smoothstep( temp_output_196_0 , ( temp_output_196_0 + 0.01 ) , ( 1.0 - texCoord190.x ));
+				float2 texCoord224 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner225 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord224);
+				float simplePerlin2D226 = snoise( panner225*3.0 );
+				simplePerlin2D226 = simplePerlin2D226*0.5 + 0.5;
+				float temp_output_227_0 = ( simplePerlin2D226 * 0.2 );
+				float smoothstepResult231 = smoothstep( temp_output_227_0 , ( temp_output_227_0 + 0.01 ) , texCoord224.y);
+				float2 texCoord218 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner220 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord218);
+				float simplePerlin2D221 = snoise( panner220*3.0 );
+				simplePerlin2D221 = simplePerlin2D221*0.5 + 0.5;
+				float temp_output_213_0 = ( simplePerlin2D221 * 0.2 );
+				float smoothstepResult216 = smoothstep( temp_output_213_0 , ( temp_output_213_0 + 0.01 ) , ( 1.0 - texCoord218.y ));
 				
-				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 * ( smoothstepResult137 * smoothstepResult198 * smoothstepResult231 * smoothstepResult216 ) );
 				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
 
 				SurfaceData surfaceData;
@@ -1131,14 +1259,14 @@ Shader "WindTrail"
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _NoiseScale;
+			float _OctaveScaleMultiplier;
 			float _InitialOctaveStrength;
-			int _Seed;
+			float _OctaveStrengthMultiplier;
+			float _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
 			float _NoiseTimeScale;
-			float _NoiseScale;
-			float _OctaveStrengthMultiplier;
-			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -1471,37 +1599,101 @@ Shader "WindTrail"
 				float3 V = float3( 1.0, 1.0, 1.0 );
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
-				float temp_output_26_0_g1 = _InitialOctaveStrength;
+				float4 appendResult164 = (float4(_NoiseScale , _OctaveScaleMultiplier , _InitialOctaveStrength , _OctaveStrengthMultiplier));
+				float4 NoiseParams163 = appendResult164;
+				float4 break166 = NoiseParams163;
+				float temp_output_26_0_g10 = break166.z;
+				float2 ScrollSpeed232 = _ScrollSpeed;
 				float2 texCoord11 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
-				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
+				float2 panner29 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner47 = ( 1.0 * _Time.y * _TurbulenceScroll + texCoord46);
 				float simplePerlin2D44 = snoise( panner47*_TrubulenceScale );
-				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
-				float2 turbulence50 = appendResult52;
-				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
+				simplePerlin2D44 = simplePerlin2D44*0.5 + 0.5;
+				float turbulence50 = simplePerlin2D44;
+				float2 appendResult52 = (float2(0.0 , ( (-1.0 + (turbulence50 - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * _TurbulenceStrength )));
+				float2 break21 = ( ( panner29 * _UVScale ) + appendResult52 );
+				float NoiseTimeScale186 = _NoiseTimeScale;
+				float mulTime14 = _TimeParameters.x * NoiseTimeScale186;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
-				float temp_output_1_0_g1 = _NoiseScale;
-				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
-				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
-				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
-				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
-				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
-				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
-				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
-				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
-				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
-				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
-				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
-				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
-				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
-				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g10 = ( ( _Seed * 10000.0 ) + appendResult24 );
+				float temp_output_1_0_g10 = break166.x;
+				float simplePerlin3D18_g10 = snoise( temp_output_24_0_g10*temp_output_1_0_g10 );
+				simplePerlin3D18_g10 = simplePerlin3D18_g10*0.5 + 0.5;
+				float temp_output_25_0_g10 = break166.w;
+				float temp_output_8_0_g10 = break166.y;
+				float simplePerlin3D19_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * temp_output_8_0_g10 ) );
+				simplePerlin3D19_g10 = simplePerlin3D19_g10*0.5 + 0.5;
+				float simplePerlin3D20_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 2.0 ) ) );
+				simplePerlin3D20_g10 = simplePerlin3D20_g10*0.5 + 0.5;
+				float simplePerlin3D21_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 3.0 ) ) );
+				simplePerlin3D21_g10 = simplePerlin3D21_g10*0.5 + 0.5;
+				float simplePerlin3D35_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 4.0 ) ) );
+				simplePerlin3D35_g10 = simplePerlin3D35_g10*0.5 + 0.5;
+				float clampResult34_g10 = clamp( ( ( temp_output_26_0_g10 * simplePerlin3D18_g10 ) + ( temp_output_26_0_g10 * temp_output_25_0_g10 * simplePerlin3D19_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 2.0 ) * simplePerlin3D20_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D21_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D35_g10 ) ) , 0.0 , 1.0 );
+				float4 RemapParams83 = _RemapParams;
+				float4 break84 = RemapParams83;
+				float clampResult34 = clamp( (break84.z + (clampResult34_g10 - break84.x) * (break84.w - break84.z) / (break84.y - break84.x)) , 0.0 , 1.0 );
+				float4 break167 = NoiseParams163;
+				float temp_output_26_0_g5 = break167.z;
+				float2 texCoord131 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime150 = _TimeParameters.x * 0.52;
+				float2 appendResult149 = (float2(texCoord131.y , mulTime150));
+				float2 temp_output_24_0_g5 = appendResult149;
+				float temp_output_1_0_g5 = break167.x;
+				float simplePerlin2D18_g5 = snoise( temp_output_24_0_g5*temp_output_1_0_g5 );
+				simplePerlin2D18_g5 = simplePerlin2D18_g5*0.5 + 0.5;
+				float temp_output_25_0_g5 = break167.w;
+				float temp_output_8_0_g5 = break167.y;
+				float simplePerlin2D19_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * temp_output_8_0_g5 ) );
+				simplePerlin2D19_g5 = simplePerlin2D19_g5*0.5 + 0.5;
+				float simplePerlin2D20_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 2.0 ) ) );
+				simplePerlin2D20_g5 = simplePerlin2D20_g5*0.5 + 0.5;
+				float simplePerlin2D21_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 3.0 ) ) );
+				simplePerlin2D21_g5 = simplePerlin2D21_g5*0.5 + 0.5;
+				float simplePerlin2D35_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 4.0 ) ) );
+				simplePerlin2D35_g5 = simplePerlin2D35_g5*0.5 + 0.5;
+				float clampResult34_g5 = clamp( ( ( temp_output_26_0_g5 * simplePerlin2D18_g5 ) + ( temp_output_26_0_g5 * temp_output_25_0_g5 * simplePerlin2D19_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 2.0 ) * simplePerlin2D20_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D21_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D35_g5 ) ) , 0.0 , 1.0 );
+				float temp_output_148_0 = ( clampResult34_g5 * 0.32 );
+				float smoothstepResult137 = smoothstep( temp_output_148_0 , ( temp_output_148_0 + 0.01 ) , texCoord131.x);
+				float4 break194 = NoiseParams163;
+				float temp_output_26_0_g9 = break194.z;
+				float2 texCoord190 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime192 = _TimeParameters.x * -0.52;
+				float2 appendResult193 = (float2(texCoord190.y , mulTime192));
+				float2 temp_output_24_0_g9 = appendResult193;
+				float temp_output_1_0_g9 = break194.x;
+				float simplePerlin2D18_g9 = snoise( temp_output_24_0_g9*temp_output_1_0_g9 );
+				simplePerlin2D18_g9 = simplePerlin2D18_g9*0.5 + 0.5;
+				float temp_output_25_0_g9 = break194.w;
+				float temp_output_8_0_g9 = break194.y;
+				float simplePerlin2D19_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * temp_output_8_0_g9 ) );
+				simplePerlin2D19_g9 = simplePerlin2D19_g9*0.5 + 0.5;
+				float simplePerlin2D20_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 2.0 ) ) );
+				simplePerlin2D20_g9 = simplePerlin2D20_g9*0.5 + 0.5;
+				float simplePerlin2D21_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 3.0 ) ) );
+				simplePerlin2D21_g9 = simplePerlin2D21_g9*0.5 + 0.5;
+				float simplePerlin2D35_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 4.0 ) ) );
+				simplePerlin2D35_g9 = simplePerlin2D35_g9*0.5 + 0.5;
+				float clampResult34_g9 = clamp( ( ( temp_output_26_0_g9 * simplePerlin2D18_g9 ) + ( temp_output_26_0_g9 * temp_output_25_0_g9 * simplePerlin2D19_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 2.0 ) * simplePerlin2D20_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D21_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D35_g9 ) ) , 0.0 , 1.0 );
+				float temp_output_196_0 = ( clampResult34_g9 * 0.32 );
+				float smoothstepResult198 = smoothstep( temp_output_196_0 , ( temp_output_196_0 + 0.01 ) , ( 1.0 - texCoord190.x ));
+				float2 texCoord224 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner225 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord224);
+				float simplePerlin2D226 = snoise( panner225*3.0 );
+				simplePerlin2D226 = simplePerlin2D226*0.5 + 0.5;
+				float temp_output_227_0 = ( simplePerlin2D226 * 0.2 );
+				float smoothstepResult231 = smoothstep( temp_output_227_0 , ( temp_output_227_0 + 0.01 ) , texCoord224.y);
+				float2 texCoord218 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner220 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord218);
+				float simplePerlin2D221 = snoise( panner220*3.0 );
+				simplePerlin2D221 = simplePerlin2D221*0.5 + 0.5;
+				float temp_output_213_0 = ( simplePerlin2D221 * 0.2 );
+				float smoothstepResult216 = smoothstep( temp_output_213_0 , ( temp_output_213_0 + 0.01 ) , ( 1.0 - texCoord218.y ));
 				
 				surfaceDescription.Color = _Color.rgb;
 				surfaceDescription.Emission = 0;
-				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 * ( smoothstepResult137 * smoothstepResult198 * smoothstepResult231 * smoothstepResult216 ) );
 				surfaceDescription.AlphaClipThreshold =  _AlphaCutoff;
 
 				SurfaceData surfaceData;
@@ -1571,14 +1763,14 @@ Shader "WindTrail"
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _NoiseScale;
+			float _OctaveScaleMultiplier;
 			float _InitialOctaveStrength;
-			int _Seed;
+			float _OctaveStrengthMultiplier;
+			float _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
 			float _NoiseTimeScale;
-			float _NoiseScale;
-			float _OctaveStrengthMultiplier;
-			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -1893,35 +2085,99 @@ Shader "WindTrail"
 				SurfaceData surfaceData;
 				BuiltinData builtinData;
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
-				float temp_output_26_0_g1 = _InitialOctaveStrength;
+				float4 appendResult164 = (float4(_NoiseScale , _OctaveScaleMultiplier , _InitialOctaveStrength , _OctaveStrengthMultiplier));
+				float4 NoiseParams163 = appendResult164;
+				float4 break166 = NoiseParams163;
+				float temp_output_26_0_g10 = break166.z;
+				float2 ScrollSpeed232 = _ScrollSpeed;
 				float2 texCoord11 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
-				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
+				float2 panner29 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner47 = ( 1.0 * _Time.y * _TurbulenceScroll + texCoord46);
 				float simplePerlin2D44 = snoise( panner47*_TrubulenceScale );
-				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
-				float2 turbulence50 = appendResult52;
-				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
+				simplePerlin2D44 = simplePerlin2D44*0.5 + 0.5;
+				float turbulence50 = simplePerlin2D44;
+				float2 appendResult52 = (float2(0.0 , ( (-1.0 + (turbulence50 - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * _TurbulenceStrength )));
+				float2 break21 = ( ( panner29 * _UVScale ) + appendResult52 );
+				float NoiseTimeScale186 = _NoiseTimeScale;
+				float mulTime14 = _TimeParameters.x * NoiseTimeScale186;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
-				float temp_output_1_0_g1 = _NoiseScale;
-				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
-				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
-				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
-				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
-				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
-				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
-				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
-				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
-				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
-				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
-				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
-				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
-				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
-				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g10 = ( ( _Seed * 10000.0 ) + appendResult24 );
+				float temp_output_1_0_g10 = break166.x;
+				float simplePerlin3D18_g10 = snoise( temp_output_24_0_g10*temp_output_1_0_g10 );
+				simplePerlin3D18_g10 = simplePerlin3D18_g10*0.5 + 0.5;
+				float temp_output_25_0_g10 = break166.w;
+				float temp_output_8_0_g10 = break166.y;
+				float simplePerlin3D19_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * temp_output_8_0_g10 ) );
+				simplePerlin3D19_g10 = simplePerlin3D19_g10*0.5 + 0.5;
+				float simplePerlin3D20_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 2.0 ) ) );
+				simplePerlin3D20_g10 = simplePerlin3D20_g10*0.5 + 0.5;
+				float simplePerlin3D21_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 3.0 ) ) );
+				simplePerlin3D21_g10 = simplePerlin3D21_g10*0.5 + 0.5;
+				float simplePerlin3D35_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 4.0 ) ) );
+				simplePerlin3D35_g10 = simplePerlin3D35_g10*0.5 + 0.5;
+				float clampResult34_g10 = clamp( ( ( temp_output_26_0_g10 * simplePerlin3D18_g10 ) + ( temp_output_26_0_g10 * temp_output_25_0_g10 * simplePerlin3D19_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 2.0 ) * simplePerlin3D20_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D21_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D35_g10 ) ) , 0.0 , 1.0 );
+				float4 RemapParams83 = _RemapParams;
+				float4 break84 = RemapParams83;
+				float clampResult34 = clamp( (break84.z + (clampResult34_g10 - break84.x) * (break84.w - break84.z) / (break84.y - break84.x)) , 0.0 , 1.0 );
+				float4 break167 = NoiseParams163;
+				float temp_output_26_0_g5 = break167.z;
+				float2 texCoord131 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime150 = _TimeParameters.x * 0.52;
+				float2 appendResult149 = (float2(texCoord131.y , mulTime150));
+				float2 temp_output_24_0_g5 = appendResult149;
+				float temp_output_1_0_g5 = break167.x;
+				float simplePerlin2D18_g5 = snoise( temp_output_24_0_g5*temp_output_1_0_g5 );
+				simplePerlin2D18_g5 = simplePerlin2D18_g5*0.5 + 0.5;
+				float temp_output_25_0_g5 = break167.w;
+				float temp_output_8_0_g5 = break167.y;
+				float simplePerlin2D19_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * temp_output_8_0_g5 ) );
+				simplePerlin2D19_g5 = simplePerlin2D19_g5*0.5 + 0.5;
+				float simplePerlin2D20_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 2.0 ) ) );
+				simplePerlin2D20_g5 = simplePerlin2D20_g5*0.5 + 0.5;
+				float simplePerlin2D21_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 3.0 ) ) );
+				simplePerlin2D21_g5 = simplePerlin2D21_g5*0.5 + 0.5;
+				float simplePerlin2D35_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 4.0 ) ) );
+				simplePerlin2D35_g5 = simplePerlin2D35_g5*0.5 + 0.5;
+				float clampResult34_g5 = clamp( ( ( temp_output_26_0_g5 * simplePerlin2D18_g5 ) + ( temp_output_26_0_g5 * temp_output_25_0_g5 * simplePerlin2D19_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 2.0 ) * simplePerlin2D20_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D21_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D35_g5 ) ) , 0.0 , 1.0 );
+				float temp_output_148_0 = ( clampResult34_g5 * 0.32 );
+				float smoothstepResult137 = smoothstep( temp_output_148_0 , ( temp_output_148_0 + 0.01 ) , texCoord131.x);
+				float4 break194 = NoiseParams163;
+				float temp_output_26_0_g9 = break194.z;
+				float2 texCoord190 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime192 = _TimeParameters.x * -0.52;
+				float2 appendResult193 = (float2(texCoord190.y , mulTime192));
+				float2 temp_output_24_0_g9 = appendResult193;
+				float temp_output_1_0_g9 = break194.x;
+				float simplePerlin2D18_g9 = snoise( temp_output_24_0_g9*temp_output_1_0_g9 );
+				simplePerlin2D18_g9 = simplePerlin2D18_g9*0.5 + 0.5;
+				float temp_output_25_0_g9 = break194.w;
+				float temp_output_8_0_g9 = break194.y;
+				float simplePerlin2D19_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * temp_output_8_0_g9 ) );
+				simplePerlin2D19_g9 = simplePerlin2D19_g9*0.5 + 0.5;
+				float simplePerlin2D20_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 2.0 ) ) );
+				simplePerlin2D20_g9 = simplePerlin2D20_g9*0.5 + 0.5;
+				float simplePerlin2D21_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 3.0 ) ) );
+				simplePerlin2D21_g9 = simplePerlin2D21_g9*0.5 + 0.5;
+				float simplePerlin2D35_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 4.0 ) ) );
+				simplePerlin2D35_g9 = simplePerlin2D35_g9*0.5 + 0.5;
+				float clampResult34_g9 = clamp( ( ( temp_output_26_0_g9 * simplePerlin2D18_g9 ) + ( temp_output_26_0_g9 * temp_output_25_0_g9 * simplePerlin2D19_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 2.0 ) * simplePerlin2D20_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D21_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D35_g9 ) ) , 0.0 , 1.0 );
+				float temp_output_196_0 = ( clampResult34_g9 * 0.32 );
+				float smoothstepResult198 = smoothstep( temp_output_196_0 , ( temp_output_196_0 + 0.01 ) , ( 1.0 - texCoord190.x ));
+				float2 texCoord224 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner225 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord224);
+				float simplePerlin2D226 = snoise( panner225*3.0 );
+				simplePerlin2D226 = simplePerlin2D226*0.5 + 0.5;
+				float temp_output_227_0 = ( simplePerlin2D226 * 0.2 );
+				float smoothstepResult231 = smoothstep( temp_output_227_0 , ( temp_output_227_0 + 0.01 ) , texCoord224.y);
+				float2 texCoord218 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner220 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord218);
+				float simplePerlin2D221 = snoise( panner220*3.0 );
+				simplePerlin2D221 = simplePerlin2D221*0.5 + 0.5;
+				float temp_output_213_0 = ( simplePerlin2D221 * 0.2 );
+				float smoothstepResult216 = smoothstep( temp_output_213_0 , ( temp_output_213_0 + 0.01 ) , ( 1.0 - texCoord218.y ));
 				
-				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 * ( smoothstepResult137 * smoothstepResult198 * smoothstepResult231 * smoothstepResult216 ) );
 				surfaceDescription.AlphaClipThreshold =  _AlphaCutoff;
 
 				GetSurfaceAndBuiltinData(surfaceDescription, input, V, posInput, surfaceData, builtinData);
@@ -1985,14 +2241,14 @@ Shader "WindTrail"
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _NoiseScale;
+			float _OctaveScaleMultiplier;
 			float _InitialOctaveStrength;
-			int _Seed;
+			float _OctaveStrengthMultiplier;
+			float _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
 			float _NoiseTimeScale;
-			float _NoiseScale;
-			float _OctaveStrengthMultiplier;
-			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -2315,35 +2571,99 @@ Shader "WindTrail"
 				float3 V = float3( 1.0, 1.0, 1.0 );
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
-				float temp_output_26_0_g1 = _InitialOctaveStrength;
+				float4 appendResult164 = (float4(_NoiseScale , _OctaveScaleMultiplier , _InitialOctaveStrength , _OctaveStrengthMultiplier));
+				float4 NoiseParams163 = appendResult164;
+				float4 break166 = NoiseParams163;
+				float temp_output_26_0_g10 = break166.z;
+				float2 ScrollSpeed232 = _ScrollSpeed;
 				float2 texCoord11 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
-				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
+				float2 panner29 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner47 = ( 1.0 * _Time.y * _TurbulenceScroll + texCoord46);
 				float simplePerlin2D44 = snoise( panner47*_TrubulenceScale );
-				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
-				float2 turbulence50 = appendResult52;
-				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
+				simplePerlin2D44 = simplePerlin2D44*0.5 + 0.5;
+				float turbulence50 = simplePerlin2D44;
+				float2 appendResult52 = (float2(0.0 , ( (-1.0 + (turbulence50 - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * _TurbulenceStrength )));
+				float2 break21 = ( ( panner29 * _UVScale ) + appendResult52 );
+				float NoiseTimeScale186 = _NoiseTimeScale;
+				float mulTime14 = _TimeParameters.x * NoiseTimeScale186;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
-				float temp_output_1_0_g1 = _NoiseScale;
-				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
-				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
-				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
-				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
-				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
-				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
-				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
-				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
-				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
-				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
-				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
-				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
-				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
-				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g10 = ( ( _Seed * 10000.0 ) + appendResult24 );
+				float temp_output_1_0_g10 = break166.x;
+				float simplePerlin3D18_g10 = snoise( temp_output_24_0_g10*temp_output_1_0_g10 );
+				simplePerlin3D18_g10 = simplePerlin3D18_g10*0.5 + 0.5;
+				float temp_output_25_0_g10 = break166.w;
+				float temp_output_8_0_g10 = break166.y;
+				float simplePerlin3D19_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * temp_output_8_0_g10 ) );
+				simplePerlin3D19_g10 = simplePerlin3D19_g10*0.5 + 0.5;
+				float simplePerlin3D20_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 2.0 ) ) );
+				simplePerlin3D20_g10 = simplePerlin3D20_g10*0.5 + 0.5;
+				float simplePerlin3D21_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 3.0 ) ) );
+				simplePerlin3D21_g10 = simplePerlin3D21_g10*0.5 + 0.5;
+				float simplePerlin3D35_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 4.0 ) ) );
+				simplePerlin3D35_g10 = simplePerlin3D35_g10*0.5 + 0.5;
+				float clampResult34_g10 = clamp( ( ( temp_output_26_0_g10 * simplePerlin3D18_g10 ) + ( temp_output_26_0_g10 * temp_output_25_0_g10 * simplePerlin3D19_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 2.0 ) * simplePerlin3D20_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D21_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D35_g10 ) ) , 0.0 , 1.0 );
+				float4 RemapParams83 = _RemapParams;
+				float4 break84 = RemapParams83;
+				float clampResult34 = clamp( (break84.z + (clampResult34_g10 - break84.x) * (break84.w - break84.z) / (break84.y - break84.x)) , 0.0 , 1.0 );
+				float4 break167 = NoiseParams163;
+				float temp_output_26_0_g5 = break167.z;
+				float2 texCoord131 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime150 = _TimeParameters.x * 0.52;
+				float2 appendResult149 = (float2(texCoord131.y , mulTime150));
+				float2 temp_output_24_0_g5 = appendResult149;
+				float temp_output_1_0_g5 = break167.x;
+				float simplePerlin2D18_g5 = snoise( temp_output_24_0_g5*temp_output_1_0_g5 );
+				simplePerlin2D18_g5 = simplePerlin2D18_g5*0.5 + 0.5;
+				float temp_output_25_0_g5 = break167.w;
+				float temp_output_8_0_g5 = break167.y;
+				float simplePerlin2D19_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * temp_output_8_0_g5 ) );
+				simplePerlin2D19_g5 = simplePerlin2D19_g5*0.5 + 0.5;
+				float simplePerlin2D20_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 2.0 ) ) );
+				simplePerlin2D20_g5 = simplePerlin2D20_g5*0.5 + 0.5;
+				float simplePerlin2D21_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 3.0 ) ) );
+				simplePerlin2D21_g5 = simplePerlin2D21_g5*0.5 + 0.5;
+				float simplePerlin2D35_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 4.0 ) ) );
+				simplePerlin2D35_g5 = simplePerlin2D35_g5*0.5 + 0.5;
+				float clampResult34_g5 = clamp( ( ( temp_output_26_0_g5 * simplePerlin2D18_g5 ) + ( temp_output_26_0_g5 * temp_output_25_0_g5 * simplePerlin2D19_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 2.0 ) * simplePerlin2D20_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D21_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D35_g5 ) ) , 0.0 , 1.0 );
+				float temp_output_148_0 = ( clampResult34_g5 * 0.32 );
+				float smoothstepResult137 = smoothstep( temp_output_148_0 , ( temp_output_148_0 + 0.01 ) , texCoord131.x);
+				float4 break194 = NoiseParams163;
+				float temp_output_26_0_g9 = break194.z;
+				float2 texCoord190 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime192 = _TimeParameters.x * -0.52;
+				float2 appendResult193 = (float2(texCoord190.y , mulTime192));
+				float2 temp_output_24_0_g9 = appendResult193;
+				float temp_output_1_0_g9 = break194.x;
+				float simplePerlin2D18_g9 = snoise( temp_output_24_0_g9*temp_output_1_0_g9 );
+				simplePerlin2D18_g9 = simplePerlin2D18_g9*0.5 + 0.5;
+				float temp_output_25_0_g9 = break194.w;
+				float temp_output_8_0_g9 = break194.y;
+				float simplePerlin2D19_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * temp_output_8_0_g9 ) );
+				simplePerlin2D19_g9 = simplePerlin2D19_g9*0.5 + 0.5;
+				float simplePerlin2D20_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 2.0 ) ) );
+				simplePerlin2D20_g9 = simplePerlin2D20_g9*0.5 + 0.5;
+				float simplePerlin2D21_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 3.0 ) ) );
+				simplePerlin2D21_g9 = simplePerlin2D21_g9*0.5 + 0.5;
+				float simplePerlin2D35_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 4.0 ) ) );
+				simplePerlin2D35_g9 = simplePerlin2D35_g9*0.5 + 0.5;
+				float clampResult34_g9 = clamp( ( ( temp_output_26_0_g9 * simplePerlin2D18_g9 ) + ( temp_output_26_0_g9 * temp_output_25_0_g9 * simplePerlin2D19_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 2.0 ) * simplePerlin2D20_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D21_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D35_g9 ) ) , 0.0 , 1.0 );
+				float temp_output_196_0 = ( clampResult34_g9 * 0.32 );
+				float smoothstepResult198 = smoothstep( temp_output_196_0 , ( temp_output_196_0 + 0.01 ) , ( 1.0 - texCoord190.x ));
+				float2 texCoord224 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner225 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord224);
+				float simplePerlin2D226 = snoise( panner225*3.0 );
+				simplePerlin2D226 = simplePerlin2D226*0.5 + 0.5;
+				float temp_output_227_0 = ( simplePerlin2D226 * 0.2 );
+				float smoothstepResult231 = smoothstep( temp_output_227_0 , ( temp_output_227_0 + 0.01 ) , texCoord224.y);
+				float2 texCoord218 = packedInput.ase_texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner220 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord218);
+				float simplePerlin2D221 = snoise( panner220*3.0 );
+				simplePerlin2D221 = simplePerlin2D221*0.5 + 0.5;
+				float temp_output_213_0 = ( simplePerlin2D221 * 0.2 );
+				float smoothstepResult216 = smoothstep( temp_output_213_0 , ( temp_output_213_0 + 0.01 ) , ( 1.0 - texCoord218.y ));
 				
-				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 * ( smoothstepResult137 * smoothstepResult198 * smoothstepResult231 * smoothstepResult216 ) );
 				surfaceDescription.AlphaClipThreshold =  _AlphaCutoff;
 
 				SurfaceData surfaceData;
@@ -2419,14 +2739,14 @@ Shader "WindTrail"
 			float2 _ScrollSpeed;
 			float2 _UVScale;
 			float2 _TurbulenceScroll;
+			float _NoiseScale;
+			float _OctaveScaleMultiplier;
 			float _InitialOctaveStrength;
-			int _Seed;
+			float _OctaveStrengthMultiplier;
+			float _Seed;
 			float _TrubulenceScale;
 			float _TurbulenceStrength;
 			float _NoiseTimeScale;
-			float _NoiseScale;
-			float _OctaveStrengthMultiplier;
-			float _OctaveScaleMultiplier;
 			float4 _EmissionColor;
 			float _RenderQueueType;
 			#ifdef _ADD_PRECOMPUTED_VELOCITY
@@ -2834,35 +3154,99 @@ Shader "WindTrail"
 				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
-				float temp_output_26_0_g1 = _InitialOctaveStrength;
+				float4 appendResult164 = (float4(_NoiseScale , _OctaveScaleMultiplier , _InitialOctaveStrength , _OctaveStrengthMultiplier));
+				float4 NoiseParams163 = appendResult164;
+				float4 break166 = NoiseParams163;
+				float temp_output_26_0_g10 = break166.z;
+				float2 ScrollSpeed232 = _ScrollSpeed;
 				float2 texCoord11 = packedInput.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
-				float2 panner29 = ( 1.0 * _Time.y * _ScrollSpeed + texCoord11);
+				float2 panner29 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord11);
 				float2 texCoord46 = packedInput.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
 				float2 panner47 = ( 1.0 * _Time.y * _TurbulenceScroll + texCoord46);
 				float simplePerlin2D44 = snoise( panner47*_TrubulenceScale );
-				float2 appendResult52 = (float2(0.0 , ( simplePerlin2D44 * _TurbulenceStrength )));
-				float2 turbulence50 = appendResult52;
-				float2 break21 = ( ( panner29 * _UVScale ) + turbulence50 );
-				float mulTime14 = _TimeParameters.x * _NoiseTimeScale;
+				simplePerlin2D44 = simplePerlin2D44*0.5 + 0.5;
+				float turbulence50 = simplePerlin2D44;
+				float2 appendResult52 = (float2(0.0 , ( (-1.0 + (turbulence50 - 0.0) * (1.0 - -1.0) / (1.0 - 0.0)) * _TurbulenceStrength )));
+				float2 break21 = ( ( panner29 * _UVScale ) + appendResult52 );
+				float NoiseTimeScale186 = _NoiseTimeScale;
+				float mulTime14 = _TimeParameters.x * NoiseTimeScale186;
 				float3 appendResult24 = (float3(break21.x , break21.y , mulTime14));
-				float3 temp_output_24_0_g1 = ( ( _Seed * 1000 ) + appendResult24 );
-				float temp_output_1_0_g1 = _NoiseScale;
-				float simplePerlin3D18_g1 = snoise( temp_output_24_0_g1*temp_output_1_0_g1 );
-				simplePerlin3D18_g1 = simplePerlin3D18_g1*0.5 + 0.5;
-				float temp_output_25_0_g1 = _OctaveStrengthMultiplier;
-				float temp_output_8_0_g1 = _OctaveScaleMultiplier;
-				float simplePerlin3D19_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * temp_output_8_0_g1 ) );
-				simplePerlin3D19_g1 = simplePerlin3D19_g1*0.5 + 0.5;
-				float simplePerlin3D20_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 2.0 ) ) );
-				simplePerlin3D20_g1 = simplePerlin3D20_g1*0.5 + 0.5;
-				float simplePerlin3D21_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 3.0 ) ) );
-				simplePerlin3D21_g1 = simplePerlin3D21_g1*0.5 + 0.5;
-				float simplePerlin3D35_g1 = snoise( temp_output_24_0_g1*( temp_output_1_0_g1 * pow( temp_output_8_0_g1 , 4.0 ) ) );
-				simplePerlin3D35_g1 = simplePerlin3D35_g1*0.5 + 0.5;
-				float clampResult34_g1 = clamp( ( ( temp_output_26_0_g1 * simplePerlin3D18_g1 ) + ( temp_output_26_0_g1 * temp_output_25_0_g1 * simplePerlin3D19_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 2.0 ) * simplePerlin3D20_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D21_g1 ) + ( temp_output_26_0_g1 * pow( temp_output_25_0_g1 , 3.0 ) * simplePerlin3D35_g1 ) ) , 0.0 , 1.0 );
-				float clampResult34 = clamp( (_RemapParams.z + (clampResult34_g1 - _RemapParams.x) * (_RemapParams.w - _RemapParams.z) / (_RemapParams.y - _RemapParams.x)) , 0.0 , 1.0 );
+				float3 temp_output_24_0_g10 = ( ( _Seed * 10000.0 ) + appendResult24 );
+				float temp_output_1_0_g10 = break166.x;
+				float simplePerlin3D18_g10 = snoise( temp_output_24_0_g10*temp_output_1_0_g10 );
+				simplePerlin3D18_g10 = simplePerlin3D18_g10*0.5 + 0.5;
+				float temp_output_25_0_g10 = break166.w;
+				float temp_output_8_0_g10 = break166.y;
+				float simplePerlin3D19_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * temp_output_8_0_g10 ) );
+				simplePerlin3D19_g10 = simplePerlin3D19_g10*0.5 + 0.5;
+				float simplePerlin3D20_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 2.0 ) ) );
+				simplePerlin3D20_g10 = simplePerlin3D20_g10*0.5 + 0.5;
+				float simplePerlin3D21_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 3.0 ) ) );
+				simplePerlin3D21_g10 = simplePerlin3D21_g10*0.5 + 0.5;
+				float simplePerlin3D35_g10 = snoise( temp_output_24_0_g10*( temp_output_1_0_g10 * pow( temp_output_8_0_g10 , 4.0 ) ) );
+				simplePerlin3D35_g10 = simplePerlin3D35_g10*0.5 + 0.5;
+				float clampResult34_g10 = clamp( ( ( temp_output_26_0_g10 * simplePerlin3D18_g10 ) + ( temp_output_26_0_g10 * temp_output_25_0_g10 * simplePerlin3D19_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 2.0 ) * simplePerlin3D20_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D21_g10 ) + ( temp_output_26_0_g10 * pow( temp_output_25_0_g10 , 3.0 ) * simplePerlin3D35_g10 ) ) , 0.0 , 1.0 );
+				float4 RemapParams83 = _RemapParams;
+				float4 break84 = RemapParams83;
+				float clampResult34 = clamp( (break84.z + (clampResult34_g10 - break84.x) * (break84.w - break84.z) / (break84.y - break84.x)) , 0.0 , 1.0 );
+				float4 break167 = NoiseParams163;
+				float temp_output_26_0_g5 = break167.z;
+				float2 texCoord131 = packedInput.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime150 = _TimeParameters.x * 0.52;
+				float2 appendResult149 = (float2(texCoord131.y , mulTime150));
+				float2 temp_output_24_0_g5 = appendResult149;
+				float temp_output_1_0_g5 = break167.x;
+				float simplePerlin2D18_g5 = snoise( temp_output_24_0_g5*temp_output_1_0_g5 );
+				simplePerlin2D18_g5 = simplePerlin2D18_g5*0.5 + 0.5;
+				float temp_output_25_0_g5 = break167.w;
+				float temp_output_8_0_g5 = break167.y;
+				float simplePerlin2D19_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * temp_output_8_0_g5 ) );
+				simplePerlin2D19_g5 = simplePerlin2D19_g5*0.5 + 0.5;
+				float simplePerlin2D20_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 2.0 ) ) );
+				simplePerlin2D20_g5 = simplePerlin2D20_g5*0.5 + 0.5;
+				float simplePerlin2D21_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 3.0 ) ) );
+				simplePerlin2D21_g5 = simplePerlin2D21_g5*0.5 + 0.5;
+				float simplePerlin2D35_g5 = snoise( temp_output_24_0_g5*( temp_output_1_0_g5 * pow( temp_output_8_0_g5 , 4.0 ) ) );
+				simplePerlin2D35_g5 = simplePerlin2D35_g5*0.5 + 0.5;
+				float clampResult34_g5 = clamp( ( ( temp_output_26_0_g5 * simplePerlin2D18_g5 ) + ( temp_output_26_0_g5 * temp_output_25_0_g5 * simplePerlin2D19_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 2.0 ) * simplePerlin2D20_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D21_g5 ) + ( temp_output_26_0_g5 * pow( temp_output_25_0_g5 , 3.0 ) * simplePerlin2D35_g5 ) ) , 0.0 , 1.0 );
+				float temp_output_148_0 = ( clampResult34_g5 * 0.32 );
+				float smoothstepResult137 = smoothstep( temp_output_148_0 , ( temp_output_148_0 + 0.01 ) , texCoord131.x);
+				float4 break194 = NoiseParams163;
+				float temp_output_26_0_g9 = break194.z;
+				float2 texCoord190 = packedInput.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
+				float mulTime192 = _TimeParameters.x * -0.52;
+				float2 appendResult193 = (float2(texCoord190.y , mulTime192));
+				float2 temp_output_24_0_g9 = appendResult193;
+				float temp_output_1_0_g9 = break194.x;
+				float simplePerlin2D18_g9 = snoise( temp_output_24_0_g9*temp_output_1_0_g9 );
+				simplePerlin2D18_g9 = simplePerlin2D18_g9*0.5 + 0.5;
+				float temp_output_25_0_g9 = break194.w;
+				float temp_output_8_0_g9 = break194.y;
+				float simplePerlin2D19_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * temp_output_8_0_g9 ) );
+				simplePerlin2D19_g9 = simplePerlin2D19_g9*0.5 + 0.5;
+				float simplePerlin2D20_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 2.0 ) ) );
+				simplePerlin2D20_g9 = simplePerlin2D20_g9*0.5 + 0.5;
+				float simplePerlin2D21_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 3.0 ) ) );
+				simplePerlin2D21_g9 = simplePerlin2D21_g9*0.5 + 0.5;
+				float simplePerlin2D35_g9 = snoise( temp_output_24_0_g9*( temp_output_1_0_g9 * pow( temp_output_8_0_g9 , 4.0 ) ) );
+				simplePerlin2D35_g9 = simplePerlin2D35_g9*0.5 + 0.5;
+				float clampResult34_g9 = clamp( ( ( temp_output_26_0_g9 * simplePerlin2D18_g9 ) + ( temp_output_26_0_g9 * temp_output_25_0_g9 * simplePerlin2D19_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 2.0 ) * simplePerlin2D20_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D21_g9 ) + ( temp_output_26_0_g9 * pow( temp_output_25_0_g9 , 3.0 ) * simplePerlin2D35_g9 ) ) , 0.0 , 1.0 );
+				float temp_output_196_0 = ( clampResult34_g9 * 0.32 );
+				float smoothstepResult198 = smoothstep( temp_output_196_0 , ( temp_output_196_0 + 0.01 ) , ( 1.0 - texCoord190.x ));
+				float2 texCoord224 = packedInput.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner225 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord224);
+				float simplePerlin2D226 = snoise( panner225*3.0 );
+				simplePerlin2D226 = simplePerlin2D226*0.5 + 0.5;
+				float temp_output_227_0 = ( simplePerlin2D226 * 0.2 );
+				float smoothstepResult231 = smoothstep( temp_output_227_0 , ( temp_output_227_0 + 0.01 ) , texCoord224.y);
+				float2 texCoord218 = packedInput.ase_texcoord3.xy * float2( 1,1 ) + float2( 0,0 );
+				float2 panner220 = ( 1.0 * _Time.y * ScrollSpeed232 + texCoord218);
+				float simplePerlin2D221 = snoise( panner220*3.0 );
+				simplePerlin2D221 = simplePerlin2D221*0.5 + 0.5;
+				float temp_output_213_0 = ( simplePerlin2D221 * 0.2 );
+				float smoothstepResult216 = smoothstep( temp_output_213_0 , ( temp_output_213_0 + 0.01 ) , ( 1.0 - texCoord218.y ));
 				
-				surfaceDescription.Alpha = ( _Color.a * clampResult34 );
+				surfaceDescription.Alpha = ( _Color.a * clampResult34 * ( smoothstepResult137 * smoothstepResult198 * smoothstepResult231 * smoothstepResult216 ) );
 				surfaceDescription.AlphaClipThreshold = _AlphaCutoff;
 
 				SurfaceData surfaceData;
@@ -2912,85 +3296,193 @@ Shader "WindTrail"
 }
 /*ASEBEGIN
 Version=18928
-361;73;1270;646;1424.8;201.9434;1.9;True;False
+361;73;1270;646;4985.22;314.7386;5.386691;True;False
+Node;AmplifyShaderEditor.Vector2Node;57;-1852.713,790.7524;Inherit;False;Property;_TurbulenceScroll;Turbulence Scroll;10;0;Create;True;1;;0;0;False;0;False;-0.7,0;-0.7,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.TextureCoordinatesNode;46;-1968.241,623.0529;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.Vector2Node;57;-1879.038,785.5466;Inherit;False;Property;_TurbulenceScroll;Turbulence Scroll;11;0;Create;True;1;;0;0;False;0;False;0,0;-0.5,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
-Node;AmplifyShaderEditor.RangedFloatNode;45;-1578.901,782.9142;Inherit;False;Property;_TrubulenceScale;Trubulence Scale;10;0;Create;True;0;0;0;False;0;False;0;2;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.PannerNode;47;-1561.045,633.5035;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.RangedFloatNode;56;-1348.73,761.3722;Inherit;False;Property;_TurbulenceStrength;Turbulence Strength;12;0;Create;True;0;0;0;False;0;False;0;0.05;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.NoiseGeneratorNode;44;-1334.615,638.4576;Inherit;False;Simplex2D;False;False;2;0;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;55;-1139.73,656.3722;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector2Node;30;-1617.849,411.3058;Inherit;False;Property;_ScrollSpeed;Scroll Speed;7;0;Create;True;0;0;0;False;0;False;0,0;2,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
-Node;AmplifyShaderEditor.DynamicAppendNode;52;-994.8798,635.8597;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.RangedFloatNode;45;-1576.256,781.5915;Inherit;False;Property;_TrubulenceScale;Trubulence Scale;9;0;Create;True;0;0;0;False;0;False;2;2;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.NoiseGeneratorNode;44;-1334.615,638.4576;Inherit;False;Simplex2D;True;False;2;0;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.Vector2Node;30;-2562.041,550.5414;Inherit;False;Property;_ScrollSpeed;Scroll Speed;7;0;Create;True;0;0;0;False;0;False;0,0;1,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.RegisterLocalVarNode;50;-1096.062,636.8113;Inherit;True;turbulence;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;53;-1792.88,-41.1403;Inherit;False;50;turbulence;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;232;-2384.333,549.0991;Inherit;False;ScrollSpeed;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.TFHCRemapNode;211;-1596.274,-33.8075;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;-1;False;4;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;75;-2615.469,266.5679;Inherit;False;Property;_OctaveScaleMultiplier;Octave Scale Multiplier;3;0;Create;True;0;0;0;False;0;False;2;3;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;56;-1621.73,132.3722;Inherit;False;Property;_TurbulenceStrength;Turbulence Strength;11;0;Create;True;0;0;0;False;0;False;0.025;0.025;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;17;-2554.308,190.2394;Inherit;False;Property;_NoiseScale;Noise Scale;0;1;[Header];Create;True;1;Noise;0;0;False;0;False;10;2;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;72;-2624.301,442.9999;Inherit;False;Property;_OctaveStrengthMultiplier;Octave Strength Multiplier;5;0;Create;True;0;0;0;False;0;False;0.4;0.27;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;74;-2611.001,357.2997;Inherit;False;Property;_InitialOctaveStrength;Initial Octave Strength;4;0;Create;True;0;0;0;False;0;False;0.5;0.37;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;233;-1683.8,372.1539;Inherit;False;232;ScrollSpeed;1;0;OBJECT;;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.TextureCoordinatesNode;11;-1722.817,225.921;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;25;-2337.689,93.283;Inherit;False;Property;_NoiseTimeScale;Noise Time Scale;1;0;Create;True;0;0;0;False;0;False;1;0.1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.PannerNode;29;-1419.686,225.1177;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;50;-850.0651,634.6873;Inherit;False;turbulence;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;55;-1391.73,116.3722;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.Vector2Node;26;-1384.307,347.2227;Inherit;False;Property;_UVScale;UV Scale;6;1;[Header];Create;True;1;Mapping;0;0;False;0;False;1,1;0.6,1;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
+Node;AmplifyShaderEditor.DynamicAppendNode;164;-2364.234,268.8631;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.DynamicAppendNode;52;-1230.88,119.8597;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;186;-2120.335,91.53394;Inherit;False;NoiseTimeScale;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;27;-1227.601,225.504;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.GetLocalVarNode;53;-1299.88,120.8597;Inherit;False;50;turbulence;1;0;OBJECT;;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;163;-2216.033,261.063;Inherit;False;NoiseParams;-1;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;54;-1089.88,224.8597;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.RangedFloatNode;25;-1230.011,369.6573;Inherit;False;Property;_NoiseTimeScale;Noise Time Scale;1;0;Create;True;0;0;0;False;0;False;1;0.05;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleTimeNode;14;-1036.674,370.402;Inherit;False;1;0;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.IntNode;68;-953.3,82;Inherit;False;Property;_Seed;Seed;2;0;Create;True;0;0;0;False;0;False;0;0;False;0;1;INT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;234;-1386.435,2823.388;Inherit;False;232;ScrollSpeed;1;0;OBJECT;;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;218;-1416.462,2645.037;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TextureCoordinatesNode;190;-1478.084,1598.224;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.TextureCoordinatesNode;131;-1527.794,963.0087;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.GetLocalVarNode;168;-1585.416,1380.665;Inherit;False;163;NoiseParams;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.SimpleTimeNode;192;-1507.752,1800.857;Inherit;False;1;0;FLOAT;-0.52;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleTimeNode;150;-1518.224,1167.043;Inherit;False;1;0;FLOAT;0.52;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TextureCoordinatesNode;224;-1387.035,2230.726;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.GetLocalVarNode;187;-1235.711,366.1322;Inherit;False;186;NoiseTimeScale;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;191;-1535.706,2015.88;Inherit;False;163;NoiseParams;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.GetLocalVarNode;235;-1342.924,2431.788;Inherit;False;232;ScrollSpeed;1;0;OBJECT;;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;167;-1390.418,1387.99;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.DynamicAppendNode;149;-1339.151,1142.018;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.DynamicAppendNode;193;-1289.441,1777.233;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;194;-1340.708,2023.206;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.PannerNode;220;-1158.505,2806.462;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;-2,0;False;1;FLOAT;1;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.PannerNode;225;-1142.962,2406.034;Inherit;False;3;0;FLOAT2;0,0;False;2;FLOAT2;-2,0;False;1;FLOAT;1;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;21;-974.0224,229.1096;Inherit;False;FLOAT2;1;0;FLOAT2;0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;70;-809.3001,114;Inherit;False;2;2;0;INT;0;False;1;INT;1000;False;1;INT;0
+Node;AmplifyShaderEditor.Vector4Node;43;-2307.448,-143.9067;Inherit;False;Property;_RemapParams;Remap Params;8;0;Create;True;0;0;0;False;0;False;0,1,0,1;0.25,0.26,0,1;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleTimeNode;14;-1036.674,370.402;Inherit;False;1;0;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;81;-953.5198,37.86523;Inherit;False;Property;_Seed;Seed;2;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;24;-854.4209,228.4032;Inherit;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RangedFloatNode;74;-683.9,436.5997;Inherit;False;Property;_InitialOctaveStrength;Initial Octave Strength;4;0;Create;True;0;0;0;False;0;False;0.5;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;75;-693.4001,350.8998;Inherit;False;Property;_OctaveScaleMultiplier;Octave Scale Multiplier;3;0;Create;True;0;0;0;False;0;False;2;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;72;-697.2001,522.3;Inherit;False;Property;_OctaveStrengthMultiplier;Octave Strength Multiplier;5;0;Create;True;0;0;0;False;0;False;0.4;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;71;-631.8998,140.8001;Inherit;False;2;2;0;INT;0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RangedFloatNode;17;-627.2068,269.5394;Inherit;False;Property;_NoiseScale;Noise Scale;0;1;[Header];Create;True;1;Noise;0;0;False;0;False;10;3;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;76;-400.5,257.2001;Inherit;True;Octave Noise;-1;;1;ec732fbb68dec504fb3a7cb83c8b1002;0;5;24;FLOAT3;0,0,0;False;1;FLOAT;1;False;8;FLOAT;0.5;False;26;FLOAT;0.8;False;25;FLOAT;0.5;False;1;FLOAT;0
-Node;AmplifyShaderEditor.Vector4Node;43;-208.4999,513.1997;Inherit;False;Property;_RemapParams;Remap Params;9;0;Create;True;0;0;0;False;0;False;0,1,0,1;0,1,0,1;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.FunctionNode;195;-1150.235,1880.15;Inherit;True;Octave Noise 2D;-1;;9;c2c0af719f7ef45458320a45e70694da;0;5;24;FLOAT2;0,0;False;1;FLOAT;1;False;8;FLOAT;0.5;False;26;FLOAT;0.8;False;25;FLOAT;0.5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;169;-1199.945,1244.935;Inherit;True;Octave Noise 2D;-1;;5;c2c0af719f7ef45458320a45e70694da;0;5;24;FLOAT2;0,0;False;1;FLOAT;1;False;8;FLOAT;0.5;False;26;FLOAT;0.8;False;25;FLOAT;0.5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.NoiseGeneratorNode;226;-920.0025,2409.252;Inherit;False;Simplex2D;True;False;2;0;FLOAT2;0,0;False;1;FLOAT;3;False;1;FLOAT;0
+Node;AmplifyShaderEditor.NoiseGeneratorNode;221;-935.5464,2809.681;Inherit;False;Simplex2D;True;False;2;0;FLOAT2;0,0;False;1;FLOAT;3;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;83;-2102.841,-137.5663;Inherit;False;RemapParams;-1;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;70;-808.3001,114;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;10000;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;165;-766.4034,398.3887;Inherit;False;163;NoiseParams;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;71;-631.8998,140.8001;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;196;-740.0715,1750.395;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.32;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode;85;-378.8629,507.9844;Inherit;False;83;RemapParams;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;213;-713.6263,2805.705;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.2;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;227;-698.0821,2405.277;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.2;False;1;FLOAT;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;166;-574.8794,405.7505;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;148;-826.6534,1237.383;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.32;False;1;FLOAT;0
+Node;AmplifyShaderEditor.OneMinusNode;200;-955.7214,1626.917;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;197;-576.7396,1867.76;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.01;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;139;-612.7535,1198.833;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.01;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;230;-552.4653,2491.883;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.01;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;170;-400.5,257.2001;Inherit;True;Octave Noise 3D;-1;;10;ec732fbb68dec504fb3a7cb83c8b1002;0;5;24;FLOAT3;0,0,0;False;1;FLOAT;1;False;8;FLOAT;0.5;False;26;FLOAT;0.8;False;25;FLOAT;0.5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;215;-568.0092,2892.311;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.01;False;1;FLOAT;0
+Node;AmplifyShaderEditor.OneMinusNode;217;-630.5027,2677.154;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.BreakToComponentsNode;84;-175.5198,513.8652;Inherit;False;FLOAT4;1;0;FLOAT4;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.TFHCRemapNode;33;-0.5000777,465.2001;Inherit;False;5;0;FLOAT;0;False;1;FLOAT;0.49;False;2;FLOAT;0.51;False;3;FLOAT;0;False;4;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SmoothstepOpNode;198;-425.3549,1543.612;Inherit;True;3;0;FLOAT;0;False;1;FLOAT;0.4;False;2;FLOAT;0.6;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SmoothstepOpNode;137;-468.0489,994.3358;Inherit;True;3;0;FLOAT;0;False;1;FLOAT;0.4;False;2;FLOAT;0.6;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SmoothstepOpNode;216;-450.0094,2679.311;Inherit;True;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SmoothstepOpNode;231;-434.4653,2278.883;Inherit;True;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;201;-11.23856,980.6215;Inherit;True;4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;67;147.2998,230.1001;Inherit;False;Property;_Color;Color;12;0;Create;True;0;0;0;False;0;False;1,1,1,0;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ClampOpNode;34;223.4999,497.1999;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;67;147.2998,230.1001;Inherit;False;Property;_Color;Color;13;0;Create;True;0;0;0;False;0;False;1,1,1,0;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;32;47.49995,625.1998;Inherit;False;Property;_Power;Power;8;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;58;367.5,401.2001;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TextureCoordinatesNode;60;-1421.093,-410.051;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;127;-1668.054,1516.66;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;58;367.5,401.2001;Inherit;True;3;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;126;-1891.713,1604.983;Inherit;False;Property;_BorderAspectRatio;Border Aspect Ratio;13;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;42;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;DistortionVectors;0;6;DistortionVectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-11;255;False;-1;255;True;-12;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;38;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;META;0;2;META;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;40;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;DepthForwardOnly;0;4;DepthForwardOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;True;True;0;True;-7;255;False;-1;255;True;-8;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=DepthForwardOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;36;543.5005,225.2001;Float;False;True;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;WindTrail;7f5cb9c3ea6481f469fdd856555439ef;True;Forward Unlit;0;0;Forward Unlit;9;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Transparent=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-20;0;True;-21;1;0;True;-22;0;True;-23;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-5;255;False;-1;255;True;-6;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-24;True;0;True;-32;False;True;1;LightMode=ForwardOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;29;Surface Type;1;  Rendering Pass ;0;  Rendering Pass;1;  Blending Mode;0;  Receive Fog;1;  Distortion;0;    Distortion Mode;0;    Distortion Only;1;  Depth Write;1;  Cull Mode;0;  Depth Test;4;Double-Sided;0;Alpha Clipping;0;Motion Vectors;1;  Add Precomputed Velocity;0;Shadow Matte;0;Cast Shadows;1;DOTS Instancing;0;GPU Instancing;1;Tessellation;0;  Phong;0;  Strength;0.5,False,-1;  Type;0;  Tess;16,False,-1;  Min;10,False,-1;  Max;25,False,-1;  Edge Length;16,False,-1;  Max Displacement;25,False,-1;Vertex Position,InvertActionOnDeselection;1;0;7;True;True;True;True;True;True;False;False;;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;39;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;SceneSelectionPass;0;3;SceneSelectionPass;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=SceneSelectionPass;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;41;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-9;255;False;-1;255;True;-10;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;37;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;ShadowCaster;0;1;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;True;False;False;False;False;0;False;-1;False;False;False;False;False;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;42;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;DistortionVectors;0;6;DistortionVectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;4;1;False;-1;1;False;-1;4;1;False;-1;1;False;-1;True;1;False;-1;1;False;-1;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-11;255;False;-1;255;True;-12;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;3;False;-1;False;True;1;LightMode=DistortionVectors;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;36;543.5005,225.2001;Float;False;True;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;WindTrail;7f5cb9c3ea6481f469fdd856555439ef;True;Forward Unlit;0;0;Forward Unlit;9;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Transparent=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;True;1;0;True;-20;0;True;-21;1;0;True;-22;0;True;-23;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-5;255;False;-1;255;True;-6;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;0;True;-24;True;0;True;-32;False;True;1;LightMode=ForwardOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;29;Surface Type;1;  Rendering Pass ;0;  Rendering Pass;1;  Blending Mode;0;  Receive Fog;1;  Distortion;0;    Distortion Mode;0;    Distortion Only;1;  Depth Write;1;  Cull Mode;0;  Depth Test;4;Double-Sided;0;Alpha Clipping;0;Motion Vectors;1;  Add Precomputed Velocity;0;Shadow Matte;0;Cast Shadows;1;DOTS Instancing;0;GPU Instancing;1;Tessellation;0;  Phong;0;  Strength;0.5,False,-1;  Type;0;  Tess;16,False,-1;  Min;10,False,-1;  Max;25,False,-1;  Edge Length;16,False,-1;  Max Displacement;25,False,-1;Vertex Position,InvertActionOnDeselection;1;0;7;True;True;True;True;True;True;False;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;41;0,0;Float;False;False;-1;2;Rendering.HighDefinition.HDUnlitGUI;0;13;New Amplify Shader;7f5cb9c3ea6481f469fdd856555439ef;True;Motion Vectors;0;5;Motion Vectors;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;3;RenderPipeline=HDRenderPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;5;True;7;d3d11;metal;vulkan;xboxone;xboxseries;playstation;switch;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;0;True;-26;False;False;False;False;False;False;False;False;False;True;True;0;True;-9;255;False;-1;255;True;-10;7;False;-1;3;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=MotionVectors;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 WireConnection;47;0;46;0
 WireConnection;47;2;57;0
 WireConnection;44;0;47;0
 WireConnection;44;1;45;0
-WireConnection;55;0;44;0
-WireConnection;55;1;56;0
-WireConnection;52;1;55;0
+WireConnection;50;0;44;0
+WireConnection;232;0;30;0
+WireConnection;211;0;53;0
 WireConnection;29;0;11;0
-WireConnection;29;2;30;0
-WireConnection;50;0;52;0
+WireConnection;29;2;233;0
+WireConnection;55;0;211;0
+WireConnection;55;1;56;0
+WireConnection;164;0;17;0
+WireConnection;164;1;75;0
+WireConnection;164;2;74;0
+WireConnection;164;3;72;0
+WireConnection;52;1;55;0
+WireConnection;186;0;25;0
 WireConnection;27;0;29;0
 WireConnection;27;1;26;0
+WireConnection;163;0;164;0
 WireConnection;54;0;27;0
-WireConnection;54;1;53;0
-WireConnection;14;0;25;0
+WireConnection;54;1;52;0
+WireConnection;167;0;168;0
+WireConnection;149;0;131;2
+WireConnection;149;1;150;0
+WireConnection;193;0;190;2
+WireConnection;193;1;192;0
+WireConnection;194;0;191;0
+WireConnection;220;0;218;0
+WireConnection;220;2;234;0
+WireConnection;225;0;224;0
+WireConnection;225;2;235;0
 WireConnection;21;0;54;0
-WireConnection;70;0;68;0
+WireConnection;14;0;187;0
 WireConnection;24;0;21;0
 WireConnection;24;1;21;1
 WireConnection;24;2;14;0
+WireConnection;195;24;193;0
+WireConnection;195;1;194;0
+WireConnection;195;8;194;1
+WireConnection;195;26;194;2
+WireConnection;195;25;194;3
+WireConnection;169;24;149;0
+WireConnection;169;1;167;0
+WireConnection;169;8;167;1
+WireConnection;169;26;167;2
+WireConnection;169;25;167;3
+WireConnection;226;0;225;0
+WireConnection;221;0;220;0
+WireConnection;83;0;43;0
+WireConnection;70;0;81;0
 WireConnection;71;0;70;0
 WireConnection;71;1;24;0
-WireConnection;76;24;71;0
-WireConnection;76;1;17;0
-WireConnection;76;8;75;0
-WireConnection;76;26;74;0
-WireConnection;76;25;72;0
-WireConnection;33;0;76;0
-WireConnection;33;1;43;1
-WireConnection;33;2;43;2
-WireConnection;33;3;43;3
-WireConnection;33;4;43;4
+WireConnection;196;0;195;0
+WireConnection;213;0;221;0
+WireConnection;227;0;226;0
+WireConnection;166;0;165;0
+WireConnection;148;0;169;0
+WireConnection;200;0;190;1
+WireConnection;197;0;196;0
+WireConnection;139;0;148;0
+WireConnection;230;0;227;0
+WireConnection;170;24;71;0
+WireConnection;170;1;166;0
+WireConnection;170;8;166;1
+WireConnection;170;26;166;2
+WireConnection;170;25;166;3
+WireConnection;215;0;213;0
+WireConnection;217;0;218;2
+WireConnection;84;0;85;0
+WireConnection;33;0;170;0
+WireConnection;33;1;84;0
+WireConnection;33;2;84;1
+WireConnection;33;3;84;2
+WireConnection;33;4;84;3
+WireConnection;198;0;200;0
+WireConnection;198;1;196;0
+WireConnection;198;2;197;0
+WireConnection;137;0;131;1
+WireConnection;137;1;148;0
+WireConnection;137;2;139;0
+WireConnection;216;0;217;0
+WireConnection;216;1;213;0
+WireConnection;216;2;215;0
+WireConnection;231;0;224;2
+WireConnection;231;1;227;0
+WireConnection;231;2;230;0
+WireConnection;201;0;137;0
+WireConnection;201;1;198;0
+WireConnection;201;2;231;0
+WireConnection;201;3;216;0
 WireConnection;34;0;33;0
+WireConnection;127;1;126;0
 WireConnection;58;0;67;4
 WireConnection;58;1;34;0
+WireConnection;58;2;201;0
 WireConnection;36;0;67;0
 WireConnection;36;2;58;0
 ASEEND*/
-//CHKSM=C5372989BA0263B4BDEF730A5CC20588AD855AA8
+//CHKSM=B6BFF66DB4BEA789B8135571B4A45ADB942E1CBF
