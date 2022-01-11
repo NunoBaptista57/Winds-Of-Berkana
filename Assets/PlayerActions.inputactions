@@ -262,6 +262,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press(behavior=1)"
+                },
+                {
+                    "name": "Pickup",
+                    "type": "PassThrough",
+                    "id": "4e35e6e3-1e27-4bdf-94ab-0e06e420ddbb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=1)"
                 }
             ],
             "bindings": [
@@ -559,6 +567,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2618f46f-a385-4ee8-b599-4aee6d752498",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Pickup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "552757e9-44d2-424a-a0d6-391c3edb3872",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Pickup",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

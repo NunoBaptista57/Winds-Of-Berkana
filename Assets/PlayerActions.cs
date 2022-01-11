@@ -275,6 +275,14 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=1)""
+                },
+                {
+                    ""name"": ""Pickup"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""4e35e6e3-1e27-4bdf-94ab-0e06e420ddbb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)""
                 }
             ],
             ""bindings"": [
@@ -574,6 +582,28 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""action"": ""Reset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2618f46f-a385-4ee8-b599-4aee6d752498"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""552757e9-44d2-424a-a0d6-391c3edb3872"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -629,6 +659,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         m_Character_Run = m_Character.FindAction("Run", throwIfNotFound: true);
         m_Character_Flashlight = m_Character.FindAction("Flashlight", throwIfNotFound: true);
         m_Character_Reset = m_Character.FindAction("Reset", throwIfNotFound: true);
+        m_Character_Pickup = m_Character.FindAction("Pickup", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -736,6 +767,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Character_Run;
     private readonly InputAction m_Character_Flashlight;
     private readonly InputAction m_Character_Reset;
+    private readonly InputAction m_Character_Pickup;
     public struct CharacterActions
     {
         private @PlayerActions m_Wrapper;
@@ -749,6 +781,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         public InputAction @Run => m_Wrapper.m_Character_Run;
         public InputAction @Flashlight => m_Wrapper.m_Character_Flashlight;
         public InputAction @Reset => m_Wrapper.m_Character_Reset;
+        public InputAction @Pickup => m_Wrapper.m_Character_Pickup;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -785,6 +818,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Reset.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnReset;
                 @Reset.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnReset;
                 @Reset.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnReset;
+                @Pickup.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
+                @Pickup.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
+                @Pickup.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -816,6 +852,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Reset.started += instance.OnReset;
                 @Reset.performed += instance.OnReset;
                 @Reset.canceled += instance.OnReset;
+                @Pickup.started += instance.OnPickup;
+                @Pickup.performed += instance.OnPickup;
+                @Pickup.canceled += instance.OnPickup;
             }
         }
     }
@@ -855,5 +894,6 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnFlashlight(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
+        void OnPickup(InputAction.CallbackContext context);
     }
 }

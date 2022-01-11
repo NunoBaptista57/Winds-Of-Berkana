@@ -285,7 +285,7 @@ Shader "Shock"
 			HLSLPROGRAM
 
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
-			#define _DISABLE_SSR_TRANSPARENT 1
+			#define _AMBIENT_OCCLUSION 1
 			#define ASE_SRP_VERSION 100700
 
 
@@ -810,8 +810,8 @@ Shader "Shock"
 
 				surfaceDescription.Emission = _Colour.rgb;
 				surfaceDescription.Smoothness = 0.5;
-				surfaceDescription.Occlusion = 1;
-				surfaceDescription.Alpha = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Occlusion = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Alpha = 1;
 
 				#ifdef _ALPHATEST_ON
 				surfaceDescription.AlphaClipThreshold = _AlphaCuttof;
@@ -899,7 +899,7 @@ Shader "Shock"
 			HLSLPROGRAM
 
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
-			#define _DISABLE_SSR_TRANSPARENT 1
+			#define _AMBIENT_OCCLUSION 1
 			#define ASE_SRP_VERSION 100700
 
 
@@ -1395,8 +1395,8 @@ Shader "Shock"
 
 				surfaceDescription.Emission = _Colour.rgb;
 				surfaceDescription.Smoothness = 0.5;
-				surfaceDescription.Occlusion = 1;
-				surfaceDescription.Alpha = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Occlusion = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Alpha = 1;
 
 				#ifdef _ALPHATEST_ON
 				surfaceDescription.AlphaClipThreshold = _AlphaCuttof;
@@ -1477,7 +1477,7 @@ Shader "Shock"
 			HLSLPROGRAM
 
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
-			#define _DISABLE_SSR_TRANSPARENT 1
+			#define _AMBIENT_OCCLUSION 1
 			#define ASE_SRP_VERSION 100700
 
 
@@ -1587,7 +1587,7 @@ Shader "Shock"
 			{
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1595,7 +1595,7 @@ Shader "Shock"
 			{
 				float4 positionCS : SV_Position;
 				float3 interp00 : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
@@ -1744,10 +1744,7 @@ Shader "Shock"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 
-				outputPackedVaryingsMeshToPS.ase_texcoord1.xy = inputMesh.ase_texcoord.xy;
 				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				outputPackedVaryingsMeshToPS.ase_texcoord1.zw = 0;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
@@ -1775,8 +1772,7 @@ Shader "Shock"
 			{
 				float3 positionOS : INTERNALTESSPOS;
 				float3 normalOS : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1793,7 +1789,7 @@ Shader "Shock"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.positionOS = v.positionOS;
 				o.normalOS = v.normalOS;
-				o.ase_texcoord = v.ase_texcoord;
+				
 				return o;
 			}
 
@@ -1837,7 +1833,7 @@ Shader "Shock"
 				AttributesMesh o = (AttributesMesh) 0;
 				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
 				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -1918,10 +1914,8 @@ Shader "Shock"
 				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
 				AlphaSurfaceDescription surfaceDescription = (AlphaSurfaceDescription)0;
-				float RadialGradient18 = ( 1.0 - length( ( ( ( packedInput.ase_texcoord1.xy + _AnimationXY ) * float2( 1,1 ) ) - float2( 0.5,0.5 ) ) ) );
-				float mulTime22 = _TimeParameters.x * _Speed;
 				
-				surfaceDescription.Alpha = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Alpha = 1;
 
 				#ifdef _ALPHATEST_ON
 				surfaceDescription.AlphaClipThreshold = _AlphaCuttof;
@@ -1969,7 +1963,7 @@ Shader "Shock"
 			HLSLPROGRAM
 
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
-			#define _DISABLE_SSR_TRANSPARENT 1
+			#define _AMBIENT_OCCLUSION 1
 			#define ASE_SRP_VERSION 100700
 
 
@@ -2080,7 +2074,7 @@ Shader "Shock"
 			{
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -2088,7 +2082,7 @@ Shader "Shock"
 			{
 				float4 positionCS : SV_Position;
 				float3 interp00 : TEXCOORD0;
-				float4 ase_texcoord1 : TEXCOORD1;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
@@ -2236,10 +2230,7 @@ Shader "Shock"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 
-				outputPackedVaryingsMeshToPS.ase_texcoord1.xy = inputMesh.ase_texcoord.xy;
 				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				outputPackedVaryingsMeshToPS.ase_texcoord1.zw = 0;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
@@ -2267,8 +2258,7 @@ Shader "Shock"
 			{
 				float3 positionOS : INTERNALTESSPOS;
 				float3 normalOS : NORMAL;
-				float4 ase_texcoord : TEXCOORD0;
-
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -2285,7 +2275,7 @@ Shader "Shock"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				o.positionOS = v.positionOS;
 				o.normalOS = v.normalOS;
-				o.ase_texcoord = v.ase_texcoord;
+				
 				return o;
 			}
 
@@ -2329,7 +2319,7 @@ Shader "Shock"
 				AttributesMesh o = (AttributesMesh) 0;
 				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
 				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -2410,10 +2400,8 @@ Shader "Shock"
 				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
 				SceneSurfaceDescription surfaceDescription = (SceneSurfaceDescription)0;
-				float RadialGradient18 = ( 1.0 - length( ( ( ( packedInput.ase_texcoord1.xy + _AnimationXY ) * float2( 1,1 ) ) - float2( 0.5,0.5 ) ) ) );
-				float mulTime22 = _TimeParameters.x * _Speed;
 				
-				surfaceDescription.Alpha = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Alpha = 1;
 
 				#ifdef _ALPHATEST_ON
 				surfaceDescription.AlphaClipThreshold = _AlphaCuttof;
@@ -2471,7 +2459,7 @@ Shader "Shock"
 			HLSLPROGRAM
 
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
-			#define _DISABLE_SSR_TRANSPARENT 1
+			#define _AMBIENT_OCCLUSION 1
 			#define ASE_SRP_VERSION 100700
 
 
@@ -2584,7 +2572,7 @@ Shader "Shock"
 				float3 positionOS : POSITION;
 				float3 normalOS : NORMAL;
 				float4 tangentOS : TANGENT;
-				float4 ase_texcoord : TEXCOORD0;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -2594,7 +2582,7 @@ Shader "Shock"
 				float3 interp00 : TEXCOORD0;
 				float3 interp01 : TEXCOORD1;
 				float4 interp02 : TEXCOORD2;
-				float4 ase_texcoord3 : TEXCOORD3;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
@@ -2745,10 +2733,7 @@ Shader "Shock"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, outputPackedVaryingsMeshToPS);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( outputPackedVaryingsMeshToPS );
 
-				outputPackedVaryingsMeshToPS.ase_texcoord3.xy = inputMesh.ase_texcoord.xy;
 				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				outputPackedVaryingsMeshToPS.ase_texcoord3.zw = 0;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
@@ -2783,8 +2768,7 @@ Shader "Shock"
 				float3 positionOS : INTERNALTESSPOS;
 				float3 normalOS : NORMAL;
 				float4 tangentOS : TANGENT;
-				float4 ase_texcoord : TEXCOORD0;
-
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -2802,7 +2786,7 @@ Shader "Shock"
 				o.positionOS = v.positionOS;
 				o.normalOS = v.normalOS;
 				o.tangentOS = v.tangentOS;
-				o.ase_texcoord = v.ase_texcoord;
+				
 				return o;
 			}
 
@@ -2847,7 +2831,7 @@ Shader "Shock"
 				o.positionOS = patch[0].positionOS * bary.x + patch[1].positionOS * bary.y + patch[2].positionOS * bary.z;
 				o.normalOS = patch[0].normalOS * bary.x + patch[1].normalOS * bary.y + patch[2].normalOS * bary.z;
 				o.tangentOS = patch[0].tangentOS * bary.x + patch[1].tangentOS * bary.y + patch[2].tangentOS * bary.z;
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -2931,12 +2915,10 @@ Shader "Shock"
 				float3 V = GetWorldSpaceNormalizeViewDir(input.positionRWS);
 
 				SmoothSurfaceDescription surfaceDescription = (SmoothSurfaceDescription)0;
-				float RadialGradient18 = ( 1.0 - length( ( ( ( packedInput.ase_texcoord3.xy + _AnimationXY ) * float2( 1,1 ) ) - float2( 0.5,0.5 ) ) ) );
-				float mulTime22 = _TimeParameters.x * _Speed;
 				
 				surfaceDescription.Normal = float3( 0, 0, 1 );
 				surfaceDescription.Smoothness = 1;
-				surfaceDescription.Alpha = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Alpha = 1;
 
 				#ifdef _ALPHATEST_ON
 				surfaceDescription.AlphaClipThreshold = _AlphaCuttof;
@@ -3002,7 +2984,7 @@ Shader "Shock"
 			HLSLPROGRAM
 
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
-			#define _DISABLE_SSR_TRANSPARENT 1
+			#define _AMBIENT_OCCLUSION 1
 			#define ASE_SRP_VERSION 100700
 
 
@@ -3118,7 +3100,7 @@ Shader "Shock"
 				#if defined (_ADD_PRECOMPUTED_VELOCITY)
 					float3 precomputedVelocity : TEXCOORD5;
 				#endif
-				float4 ase_texcoord : TEXCOORD0;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -3128,7 +3110,7 @@ Shader "Shock"
 				float3 vmeshInterp00 : TEXCOORD0;
 				float3 vpassInterpolators0 : TEXCOORD1; //interpolators0
 				float3 vpassInterpolators1 : TEXCOORD2; //interpolators1
-				float4 ase_texcoord3 : TEXCOORD3;
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 				#if defined(SHADER_STAGE_FRAGMENT) && defined(ASE_NEED_CULLFACE)
@@ -3272,10 +3254,7 @@ Shader "Shock"
 			AttributesMesh ApplyMeshModification(AttributesMesh inputMesh, float3 timeParameters, inout PackedVaryingsMeshToPS outputPackedVaryingsMeshToPS )
 			{
 				_TimeParameters.xyz = timeParameters;
-				outputPackedVaryingsMeshToPS.ase_texcoord3.xy = inputMesh.ase_texcoord.xy;
 				
-				//setting value to unused interpolator channels and avoid initialization warnings
-				outputPackedVaryingsMeshToPS.ase_texcoord3.zw = 0;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
@@ -3368,8 +3347,7 @@ Shader "Shock"
 				#if defined (_ADD_PRECOMPUTED_VELOCITY)
 					float3 precomputedVelocity : TEXCOORD5;
 				#endif
-				float4 ase_texcoord : TEXCOORD0;
-
+				
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -3390,7 +3368,7 @@ Shader "Shock"
 				#if defined (_ADD_PRECOMPUTED_VELOCITY)
 				o.precomputedVelocity = v.precomputedVelocity;
 				#endif
-				o.ase_texcoord = v.ase_texcoord;
+				
 				return o;
 			}
 
@@ -3438,7 +3416,7 @@ Shader "Shock"
 				#if defined (_ADD_PRECOMPUTED_VELOCITY)
 					o.precomputedVelocity = patch[0].precomputedVelocity * bary.x + patch[1].precomputedVelocity * bary.y + patch[2].precomputedVelocity * bary.z;
 				#endif
-				o.ase_texcoord = patch[0].ase_texcoord * bary.x + patch[1].ase_texcoord * bary.y + patch[2].ase_texcoord * bary.z;
+				
 				#if defined(ASE_PHONG_TESSELLATION)
 				float3 pp[3];
 				for (int i = 0; i < 3; ++i)
@@ -3507,12 +3485,10 @@ Shader "Shock"
 				BuiltinData builtinData;
 
 				SmoothSurfaceDescription surfaceDescription = (SmoothSurfaceDescription)0;
-				float RadialGradient18 = ( 1.0 - length( ( ( ( packedInput.ase_texcoord3.xy + _AnimationXY ) * float2( 1,1 ) ) - float2( 0.5,0.5 ) ) ) );
-				float mulTime22 = _TimeParameters.x * _Speed;
 				
 				surfaceDescription.Normal = float3( 0, 0, 1 );
 				surfaceDescription.Smoothness = 1;
-				surfaceDescription.Alpha = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Alpha = 1;
 
 				#ifdef _ALPHATEST_ON
 				surfaceDescription.AlphaClipThreshold = _AlphaCuttof;
@@ -3586,7 +3562,7 @@ Shader "Shock"
 			HLSLPROGRAM
 
 			#define _SPECULAR_OCCLUSION_FROM_AO 1
-			#define _DISABLE_SSR_TRANSPARENT 1
+			#define _AMBIENT_OCCLUSION 1
 			#define ASE_SRP_VERSION 100700
 
 
@@ -4206,8 +4182,8 @@ Shader "Shock"
 
 				surfaceDescription.Emission = _Colour.rgb;
 				surfaceDescription.Smoothness = 0.5;
-				surfaceDescription.Occlusion = 1;
-				surfaceDescription.Alpha = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Occlusion = pow( ( 1.0 - frac( ( ( RadialGradient18 * _Tiles ) + mulTime22 ) ) ) , _Power );
+				surfaceDescription.Alpha = 1;
 
 				#ifdef _ALPHATEST_ON
 				surfaceDescription.AlphaClipThreshold = _AlphaCuttof;
@@ -4389,7 +4365,7 @@ Shader "Shock"
 }
 /*ASEBEGIN
 Version=18928
--1920;0;1920;1059;1311.127;137.767;1;True;True
+-1920;0;1920;1059;1291.127;213.767;1;True;True
 Node;AmplifyShaderEditor.TexCoordVertexDataNode;12;-1772.083,-312.4378;Inherit;True;0;2;0;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.Vector2Node;11;-1750.083,-69.43767;Inherit;False;Property;_AnimationXY;Animation XY;2;0;Create;True;0;0;0;False;0;False;0,0;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.SimpleAddOpNode;13;-1407.964,-193.4083;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
@@ -4405,8 +4381,8 @@ Node;AmplifyShaderEditor.SimpleMultiplyOpNode;23;-1366.964,256.5917;Inherit;Fals
 Node;AmplifyShaderEditor.SimpleTimeNode;22;-1369.964,401.5918;Inherit;False;1;0;FLOAT;1;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;24;-1174.965,302.5918;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FractNode;25;-972.0456,314.1369;Inherit;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.OneMinusNode;27;-781.0451,319.1369;Inherit;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;26;-733.7641,602.4504;Inherit;False;Property;_Power;Power;4;0;Create;True;0;0;0;False;0;False;6.34;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.OneMinusNode;27;-781.0451,319.1369;Inherit;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.PowerNode;28;-452.764,372.4505;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ColorNode;30;-469.06,-24.4279;Inherit;False;Property;_Colour;Colour;0;0;Create;True;0;0;0;False;0;False;0.2830189,0.2830189,0.2830189,0;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RangedFloatNode;54;-273.1272,425.233;Inherit;False;Property;_AlphaCuttof;Alpha Cuttof;5;0;Create;True;0;0;0;False;0;False;0.3;0;0;0;0;1;FLOAT;0
@@ -4438,7 +4414,7 @@ WireConnection;27;0;25;0
 WireConnection;28;0;27;0
 WireConnection;28;1;26;0
 WireConnection;42;6;30;0
-WireConnection;42;9;28;0
+WireConnection;42;8;28;0
 WireConnection;42;10;54;0
 ASEEND*/
-//CHKSM=9DA2FFEEA6E66F41B26D3F93315DCBFAC44F4378
+//CHKSM=CD007D334C09815E3AE81A5234F7A4954078674E

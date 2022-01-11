@@ -16,7 +16,9 @@ class InputManager : MonoBehaviour
     public float moveAmount;
     public float verticalInput;
     public float horizontalInput;
+
     public GrapplingHook gun;
+    public PickUpItem pickup;
 
     private AnimatorManager animator;
 
@@ -24,6 +26,7 @@ class InputManager : MonoBehaviour
     public bool glideInput;
     public bool shootInput;
     public bool aimInput;
+    public bool pickupInput = false;
     public bool runningInput = false;
     public bool flashInput = false;
 
@@ -54,6 +57,7 @@ class InputManager : MonoBehaviour
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
             playerControls.Character.Flashlight.performed += i => HandleFlashlight();
             playerControls.Character.Reset.performed += i => RestartScene();
+            playerControls.Character.Pickup.performed += i => pickup.PickUpObject();
         }
 
         playerControls.Enable();
