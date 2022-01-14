@@ -17,6 +17,6 @@ public class Sphere_Color : MonoBehaviour
     {
         float distance = Vector3.Distance(puzzle_piece.transform.position, transform.position);
         Debug.Log(distance);
-        gameObject.GetComponent<Renderer>().material.color = new Color(255 - distance*10, 0, 0, 1);
+        gameObject.GetComponent<Renderer>().material.color = new Color(255 - distance*5, 0, 0, 1);
     }
 }
