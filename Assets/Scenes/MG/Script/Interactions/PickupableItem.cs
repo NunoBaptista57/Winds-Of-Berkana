@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PickupableItem : InteractableItem
 {
+
     public override void OnInteractionBegin(Transform playerTransform)
     {
         Debug.Log("Picking Up " + this.name);

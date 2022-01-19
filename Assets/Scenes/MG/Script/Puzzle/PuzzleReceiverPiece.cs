@@ -7,17 +7,19 @@ public class PuzzleReceiverPiece : InteractableZone
 
     private Material defaultMaterial;
     public Material completedMaterial;
-    public string puzzleKey = "PuzzlePiece1";
+    public string puzzleKey = "Piece1";
 
     private MeshRenderer rend;
     private bool completed = false;
-    public Animator movableWall;
+
+    private PuzzleManager manager;
 
     // Start is called before the first frame update
     void Start()
     {
         rend = this.GetComponent<MeshRenderer>();
         defaultMaterial = rend.materials[0];
+        manager = this.GetComponentInParent<PuzzleManager>();
     }
 
 
@@ -38,9 +40,9 @@ public class PuzzleReceiverPiece : InteractableZone
                     completedMaterial
                 };
 
-                //Open a door
-                movableWall.SetTrigger("Move");
-                
+                manager.PieceReceived();
+
+
                 return true;
               
             }
