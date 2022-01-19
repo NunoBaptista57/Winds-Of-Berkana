@@ -20,6 +20,7 @@ public class PickUpItem : MonoBehaviour
         this.currentObject = obj.GetComponent<Transform>();
         currentObject.GetComponent<Rigidbody>().useGravity = false;
         currentObject.GetComponent<Collider>().enabled = false;
+        currentObject.GetComponent<Rigidbody>().isKinematic = true;
         currentObject.transform.position = this.transform.position;
         currentObject.transform.parent = this.transform;
 
@@ -27,10 +28,11 @@ public class PickUpItem : MonoBehaviour
 
     public void StopPick()
     {
-       
+        Debug.Log("Stop Picking Up");
         currentObject.transform.parent = null;
         currentObject.GetComponent<Collider>().enabled = true;
         currentObject.GetComponent<Rigidbody>().useGravity = true;
+        currentObject.GetComponent<Rigidbody>().isKinematic = false;
         currentObject = null;
     }
 
