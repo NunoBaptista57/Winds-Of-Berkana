@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    void pieceCollected()
+    void pieceCollected(int i)
     {
         puzzle_collected += 1;
         Debug.Log("puzzles:" + puzzle_collected);

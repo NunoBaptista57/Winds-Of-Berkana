@@ -8,7 +8,8 @@ public class PuzzlePiece : MonoBehaviour
     public float degreesPerSecond = 15.0f;
     public float amplitude = 0.5f;
     public float frequency = 1f;
-    public event Action Collect;
+    public event Action<int> Collect;
+    [SerializeField] int _npeca;
 
     // Position Storage Variables
     Vector3 posOffset = new Vector3();
@@ -38,7 +39,7 @@ public class PuzzlePiece : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Collect?.Invoke();
+            Collect?.Invoke(_npeca);
             gameObject.SetActive(false);
         }
     }
