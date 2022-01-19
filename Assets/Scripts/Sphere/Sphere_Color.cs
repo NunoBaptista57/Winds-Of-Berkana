@@ -9,28 +9,51 @@ public class Sphere_Color : MonoBehaviour
     private PuzzlePiece[] puzzle_piece;// = GameObject.FindGameObjectWithTag("Puzzle_Piece");
     private float[] _distance;
     private float distance_final;
+    [SerializeField] float Puzzle_distance;
+    [SerializeField] float Light_intensity;
+    [SerializeField] bool Light_Mechanic;
+    [SerializeField] bool Movement_Mechanic;
+
+    private Vector3 _centre;
+    private float _angle;
     void Start()
     {
-        puzzle_piece[0].Collect += Collected;
-        puzzle_piece[1].Collect += Collected;
+        foreach(PuzzlePiece _p in puzzle_piece)
+        {
+            _p.Collect += Collected;
+        }
         _distance = new float[puzzle_piece.Length];
     }
 
     // Update is called once per frame
     void Update()
     {
-        distance_final = 10000;
-        for (int i = 0; i < puzzle_piece.Length; i++)
+        if (Light_Mechanic)
         {
-            if (puzzle_piece[i].gameObject.activeSelf)
+            distance_final = 10000;
+            for (int i = 0; i < puzzle_piece.Length; i++)
             {
-                _distance[i] = Vector3.Distance(puzzle_piece[i].gameObject.transform.position, transform.position);
-                distance_final = Mathf.Min(distance_final, _distance[i]);
+                if (puzzle_piece[i].gameObject.activeSelf)
+                {
+                    _distance[i] = Vector3.Distance(puzzle_piece[i].gameObject.transform.position, transform.position);
+                    distance_final = Mathf.Min(distance_final, _distance[i]);
+                }
             }
+
+            Debug.Log(distance_final);
+            gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", Light_intensity + distance_final * Puzzle_distance); //color = new Color(255 - distance * 5, 0, 98, 255);
         }
 
-        gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", -5f + distance_final * 0.1f); //color = new Color(255 - distance * 5, 0, 98, 255);
-        
+        if (Movement_Mechanic)
+        {
+            //gameObject.transform.localPosition = new Vector3(1f, 1.5f, 1f);
+            Vector3 distance = (puzzle_piece[0].gameObject.transform.position - gameObject.transform.position).normalized;
+
+            _angle += 1f * Time.deltaTime;
+
+            var offset = new Vector3(Mathf.Sin(distance.x), 1.5f, Mathf.Cos(distance.z)) * 1;
+            transform.localPosition = _centre + offset;
+        }
     }
 
     private void Collected(int i)
