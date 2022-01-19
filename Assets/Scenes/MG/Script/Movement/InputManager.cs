@@ -18,7 +18,7 @@ class InputManager : MonoBehaviour
     public float horizontalInput;
 
     public GrapplingHook gun;
-    public PickUpItem pickup;
+    public Interact pickup;
 
     private AnimatorManager animator;
 
@@ -57,7 +57,7 @@ class InputManager : MonoBehaviour
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
             playerControls.Character.Flashlight.performed += i => HandleFlashlight();
             playerControls.Character.Reset.performed += i => RestartScene();
-            playerControls.Character.Pickup.performed += i => pickup.PickUpObject();
+            playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
         }
 
         playerControls.Enable();
