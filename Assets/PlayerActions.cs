@@ -41,6 +41,14 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""Value"",
+                    ""id"": ""fdcdf5c3-31ee-43d4-bc17-9a913f1111c1"",
+                    ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -197,6 +205,17 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""action"": ""Pitch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""afb312bb-1acf-4e96-90a0-3bccaffbd07f"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -648,6 +667,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         m_Boat_Turn = m_Boat.FindAction("Turn", throwIfNotFound: true);
         m_Boat_Pitch = m_Boat.FindAction("Pitch", throwIfNotFound: true);
         m_Boat_Reel = m_Boat.FindAction("Reel", throwIfNotFound: true);
+        m_Boat_Boost = m_Boat.FindAction("Boost", throwIfNotFound: true);
         // Character
         m_Character = asset.FindActionMap("Character", throwIfNotFound: true);
         m_Character_Move = m_Character.FindAction("Move", throwIfNotFound: true);
@@ -712,6 +732,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Boat_Turn;
     private readonly InputAction m_Boat_Pitch;
     private readonly InputAction m_Boat_Reel;
+    private readonly InputAction m_Boat_Boost;
     public struct BoatActions
     {
         private @PlayerActions m_Wrapper;
@@ -719,6 +740,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         public InputAction @Turn => m_Wrapper.m_Boat_Turn;
         public InputAction @Pitch => m_Wrapper.m_Boat_Pitch;
         public InputAction @Reel => m_Wrapper.m_Boat_Reel;
+        public InputAction @Boost => m_Wrapper.m_Boat_Boost;
         public InputActionMap Get() { return m_Wrapper.m_Boat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -737,6 +759,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Reel.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
                 @Reel.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
                 @Reel.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
+                @Boost.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
+                @Boost.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
+                @Boost.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
             }
             m_Wrapper.m_BoatActionsCallbackInterface = instance;
             if (instance != null)
@@ -750,6 +775,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Reel.started += instance.OnReel;
                 @Reel.performed += instance.OnReel;
                 @Reel.canceled += instance.OnReel;
+                @Boost.started += instance.OnBoost;
+                @Boost.performed += instance.OnBoost;
+                @Boost.canceled += instance.OnBoost;
             }
         }
     }
@@ -882,6 +910,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         void OnTurn(InputAction.CallbackContext context);
         void OnPitch(InputAction.CallbackContext context);
         void OnReel(InputAction.CallbackContext context);
+        void OnBoost(InputAction.CallbackContext context);
     }
     public interface ICharacterActions
     {
