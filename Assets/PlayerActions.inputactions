@@ -30,10 +30,26 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Boost",
+                    "name": "Right Harpoon",
+                    "type": "Button",
+                    "id": "568748a1-e071-4b0c-9260-705eb04ae81d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Left Harpoon",
+                    "type": "Button",
+                    "id": "2128c4cd-b47a-49ce-a6b3-1a7a7ebe3f59",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Aim",
                     "type": "Value",
-                    "id": "fdcdf5c3-31ee-43d4-bc17-9a913f1111c1",
-                    "expectedControlType": "Integer",
+                    "id": "ae7cba2a-71e9-44ac-8ae7-adf31b7c196a",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
                 }
@@ -195,12 +211,34 @@
                 },
                 {
                     "name": "",
-                    "id": "afb312bb-1acf-4e96-90a0-3bccaffbd07f",
-                    "path": "<Keyboard>/leftShift",
+                    "id": "db6b68b3-b526-4cfe-86f1-08c6882b3592",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Boost",
+                    "groups": "",
+                    "action": "Right Harpoon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b59e281e-b6c3-44a1-835e-e0111ba59084",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left Harpoon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ea481850-dadf-40f2-af29-907ecb8eed6c",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

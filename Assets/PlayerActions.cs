@@ -43,10 +43,26 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Boost"",
+                    ""name"": ""Right Harpoon"",
+                    ""type"": ""Button"",
+                    ""id"": ""568748a1-e071-4b0c-9260-705eb04ae81d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Left Harpoon"",
+                    ""type"": ""Button"",
+                    ""id"": ""2128c4cd-b47a-49ce-a6b3-1a7a7ebe3f59"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Aim"",
                     ""type"": ""Value"",
-                    ""id"": ""fdcdf5c3-31ee-43d4-bc17-9a913f1111c1"",
-                    ""expectedControlType"": ""Integer"",
+                    ""id"": ""ae7cba2a-71e9-44ac-8ae7-adf31b7c196a"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -208,12 +224,34 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""afb312bb-1acf-4e96-90a0-3bccaffbd07f"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""id"": ""db6b68b3-b526-4cfe-86f1-08c6882b3592"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Boost"",
+                    ""groups"": """",
+                    ""action"": ""Right Harpoon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b59e281e-b6c3-44a1-835e-e0111ba59084"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Left Harpoon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea481850-dadf-40f2-af29-907ecb8eed6c"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -667,7 +705,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         m_Boat_Turn = m_Boat.FindAction("Turn", throwIfNotFound: true);
         m_Boat_Pitch = m_Boat.FindAction("Pitch", throwIfNotFound: true);
         m_Boat_Reel = m_Boat.FindAction("Reel", throwIfNotFound: true);
-        m_Boat_Boost = m_Boat.FindAction("Boost", throwIfNotFound: true);
+        m_Boat_RightHarpoon = m_Boat.FindAction("Right Harpoon", throwIfNotFound: true);
+        m_Boat_LeftHarpoon = m_Boat.FindAction("Left Harpoon", throwIfNotFound: true);
+        m_Boat_Aim = m_Boat.FindAction("Aim", throwIfNotFound: true);
         // Character
         m_Character = asset.FindActionMap("Character", throwIfNotFound: true);
         m_Character_Move = m_Character.FindAction("Move", throwIfNotFound: true);
@@ -732,7 +772,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Boat_Turn;
     private readonly InputAction m_Boat_Pitch;
     private readonly InputAction m_Boat_Reel;
-    private readonly InputAction m_Boat_Boost;
+    private readonly InputAction m_Boat_RightHarpoon;
+    private readonly InputAction m_Boat_LeftHarpoon;
+    private readonly InputAction m_Boat_Aim;
     public struct BoatActions
     {
         private @PlayerActions m_Wrapper;
@@ -740,7 +782,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         public InputAction @Turn => m_Wrapper.m_Boat_Turn;
         public InputAction @Pitch => m_Wrapper.m_Boat_Pitch;
         public InputAction @Reel => m_Wrapper.m_Boat_Reel;
-        public InputAction @Boost => m_Wrapper.m_Boat_Boost;
+        public InputAction @RightHarpoon => m_Wrapper.m_Boat_RightHarpoon;
+        public InputAction @LeftHarpoon => m_Wrapper.m_Boat_LeftHarpoon;
+        public InputAction @Aim => m_Wrapper.m_Boat_Aim;
         public InputActionMap Get() { return m_Wrapper.m_Boat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -759,9 +803,15 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Reel.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
                 @Reel.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
                 @Reel.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
-                @Boost.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
-                @Boost.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
-                @Boost.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
+                @RightHarpoon.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
+                @RightHarpoon.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
+                @RightHarpoon.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
+                @LeftHarpoon.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnLeftHarpoon;
+                @LeftHarpoon.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnLeftHarpoon;
+                @LeftHarpoon.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnLeftHarpoon;
+                @Aim.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
+                @Aim.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
+                @Aim.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
             }
             m_Wrapper.m_BoatActionsCallbackInterface = instance;
             if (instance != null)
@@ -775,9 +825,15 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Reel.started += instance.OnReel;
                 @Reel.performed += instance.OnReel;
                 @Reel.canceled += instance.OnReel;
-                @Boost.started += instance.OnBoost;
-                @Boost.performed += instance.OnBoost;
-                @Boost.canceled += instance.OnBoost;
+                @RightHarpoon.started += instance.OnRightHarpoon;
+                @RightHarpoon.performed += instance.OnRightHarpoon;
+                @RightHarpoon.canceled += instance.OnRightHarpoon;
+                @LeftHarpoon.started += instance.OnLeftHarpoon;
+                @LeftHarpoon.performed += instance.OnLeftHarpoon;
+                @LeftHarpoon.canceled += instance.OnLeftHarpoon;
+                @Aim.started += instance.OnAim;
+                @Aim.performed += instance.OnAim;
+                @Aim.canceled += instance.OnAim;
             }
         }
     }
@@ -910,7 +966,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         void OnTurn(InputAction.CallbackContext context);
         void OnPitch(InputAction.CallbackContext context);
         void OnReel(InputAction.CallbackContext context);
-        void OnBoost(InputAction.CallbackContext context);
+        void OnRightHarpoon(InputAction.CallbackContext context);
+        void OnLeftHarpoon(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
     }
     public interface ICharacterActions
     {
