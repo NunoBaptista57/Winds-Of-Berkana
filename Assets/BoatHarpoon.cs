@@ -17,12 +17,14 @@ public class BoatHarpoon : MonoBehaviour
     [SerializeField, Min(0)] float TorqueStrength = 1;
 
     Transform end;
-    bool grappling;
+    public bool Grappling { get; private set; }
+    bool attached;
     float cableLength;
 
     public string AnimationState;
 
     ConfigurableJoint joint;
+    Coroutine currentCoroutine;
 
     public bool Shoot()
     {
@@ -33,7 +35,8 @@ public class BoatHarpoon : MonoBehaviour
         {
             if (targetHitMask.HasLayer(hit.collider.gameObject.layer))
             {
-                StartCoroutine(ShootCoroutine(cable.transform.position, hit.point));
+                Grappling = true;
+                currentCoroutine = StartCoroutine(ShootCoroutine(cable.transform.position, hit.point));
                 return true;
             }
         }
@@ -55,6 +58,7 @@ public class BoatHarpoon : MonoBehaviour
             end.position = Vector3.Lerp(start, target, t / ShootTime);
         }
         end.position = target;
+        attached = true;
 
         cableLength = Vector3.Distance(transform.position, target);
         joint = player.gameObject.AddComponent<ConfigurableJoint>();
@@ -64,15 +68,6 @@ public class BoatHarpoon : MonoBehaviour
         joint.xMotion = ConfigurableJointMotion.Limited;
         joint.yMotion = ConfigurableJointMotion.Limited;
         joint.zMotion = ConfigurableJointMotion.Limited;
-        /*
-        joint.spring = spring;
-        joint.damper = damper;
-        joint.massScale = massScale;
-        */
-
-        // Distance grapple will try to keep from grapple point
-        //joint.maxDistance = cableLength;
-        //joint.minDistance = 0;
 
         joint.linearLimit = new SoftJointLimit
         {
@@ -80,20 +75,27 @@ public class BoatHarpoon : MonoBehaviour
             bounciness = 0,
             contactDistance = 1f
         };
-        joint.enablePreprocessing = false;
-
-        grappling = true;
+        currentCoroutine = null;
     }
 
     public void Release()
     {
         cable.Deactivate();
-        grappling = false;
+        if (joint != null)
+        {
+            Destroy(joint);
+            joint = null;
+        }
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+        Grappling = false;
     }
 
     private void LateUpdate()
     {
-        if (grappling)
+        if (Grappling)
         {
             //Debug.Log(Vector3.Distance(end.position, transform.position));
         }
@@ -102,7 +104,7 @@ public class BoatHarpoon : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (grappling)
+        if (Grappling && attached)
         {
             var fromTarget = transform.position - end.position;
             if (fromTarget.magnitude >= cableLength - TorqueLimitMargin)

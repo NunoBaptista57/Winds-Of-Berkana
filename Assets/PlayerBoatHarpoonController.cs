@@ -42,11 +42,22 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
         {
             CameraAnimator.Play(harpoon.AnimationState);
             player.state = PlayerBoatState.Harpoon;
+            Cursor.lockState = CursorLockMode.Locked;
             currentHarpoon = harpoon;
+            if (currentHarpoon.Grappling)
+            {
+                currentHarpoon.Release();
+            }
         }
         else if (player.state == PlayerBoatState.Harpoon && currentHarpoon == harpoon && !toShoot)
         {
+            Cursor.lockState = CursorLockMode.None;
             toShoot = true;
         }
+    }
+
+    void OnRelease(InputValue value) {
+        LeftHarpoon.Release();
+        RightHarpoon.Release();
     }
 }
