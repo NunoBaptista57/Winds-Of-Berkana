@@ -12,6 +12,7 @@ namespace StarterAssets
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
+		public bool camera1;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -41,6 +42,11 @@ namespace StarterAssets
 			JumpInput(value.isPressed);
 		}
 
+		public void OnCamera1(InputValue value)
+        {
+			Camera1Input(value.isPressed);
+        }
+
 		public void OnSprint(InputValue value)
 		{
 			SprintInput(value.isPressed);
@@ -68,6 +74,11 @@ namespace StarterAssets
 		public void SprintInput(bool newSprintState)
 		{
 			sprint = newSprintState;
+		}
+
+		public void Camera1Input(bool newCamera1State)
+		{
+			camera1 = newCamera1State;
 		}
 
 #if !UNITY_IOS || !UNITY_ANDROID

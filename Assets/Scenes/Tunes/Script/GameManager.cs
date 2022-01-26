@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     int puzzle_collected = 0;
     [SerializeField] private PuzzlePiece[] _puzzlepieces;
+    [SerializeField] private Camera _main_camera;
     void Start()
     {
         foreach(PuzzlePiece puzzle in _puzzlepieces)
@@ -18,7 +19,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _main_camera.enabled = !_main_camera.enabled;
+        }
     }
 
     void pieceCollected(int i)

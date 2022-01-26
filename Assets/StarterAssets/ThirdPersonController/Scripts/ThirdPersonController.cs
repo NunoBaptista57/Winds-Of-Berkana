@@ -91,6 +91,8 @@ namespace StarterAssets
 
 		private bool _hasAnimator;
 
+		[SerializeField] Camera _camera_main;
+
 		private void Awake()
 		{
 			// get a reference to our main camera
@@ -120,6 +122,11 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+            if (_input.camera1)
+            {
+				_camera_main.enabled = !_camera_main.enabled;
+				_input.camera1 = false;
+			}
 		}
 
 		private void LateUpdate()

@@ -27,7 +27,12 @@ namespace StarterAssets
         {
             starterAssetsInputs.SprintInput(virtualSprintState);
         }
-        
+
+        public void VirtualCamera1Input(bool virtualCamera1State)
+        {
+            starterAssetsInputs.Camera1Input(virtualCamera1State);
+        }
+
     }
 
 }
