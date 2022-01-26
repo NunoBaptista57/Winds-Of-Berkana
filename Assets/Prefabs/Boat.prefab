@@ -25,8 +25,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 158024102}
-  m_LocalRotation: {x: 0.000013698939, y: -0.000009999226, z: 1.3697879e-10, w: 1}
-  m_LocalPosition: {x: 2, y: 2.74, z: -7.749998}
+  m_LocalRotation: {x: 0.000013698939, y: -0.000009999233, z: 1.3697889e-10, w: 1}
+  m_LocalPosition: {x: 2.0000007, y: 2.74, z: -7.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1825501383}
@@ -258,7 +258,7 @@ GameObject:
   - component: {fileID: 587266288}
   - component: {fileID: 587266291}
   - component: {fileID: 587266290}
-  - component: {fileID: 587266289}
+  - component: {fileID: 1090680959}
   m_Layer: 11
   m_Name: cm
   m_TagString: Untagged
@@ -354,7 +354,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_ApplyBeforeBody: 0
---- !u!114 &587266289
+--- !u!114 &1090680959
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -363,10 +363,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 587266287}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
+  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Damping: 0
+  m_BindingMode: 1
+  m_FollowOffset: {x: 0, y: 1, z: -0.5}
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
+  m_AngularDampingMode: 0
+  m_PitchDamping: 0
+  m_YawDamping: 0
+  m_RollDamping: 0
+  m_AngularDamping: 0
 --- !u!1 &622482431
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,10 +424,10 @@ MonoBehaviour:
   cableMaterial: {fileID: 2100000, guid: e20a2186cc0884c4186cd848b087703e, type: 2}
   cableLength: 3
   totalSegments: 0
-  segmentsPerUnit: 2
+  segmentsPerUnit: 0.25
   cableWidth: 0.1
-  verletIterations: 1
-  solverIterations: 2
+  verletIterations: 2
+  solverIterations: 25
   stiffness: 1
 --- !u!120 &622482434
 LineRenderer:
@@ -546,7 +555,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 628601607}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.8999996, y: 0, z: 0}
+  m_LocalPosition: {x: 0.39999962, y: 1, z: 0.000000034969077}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 587266288}
@@ -675,7 +684,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1207272945}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.8999996, y: 0, z: 0}
+  m_LocalPosition: {x: -0.39999962, y: 1, z: -0.000000034969077}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2075240746}
@@ -766,13 +775,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1581157241}
-  m_LocalRotation: {x: 0.000013698939, y: -0.000009999226, z: 1.3697879e-10, w: 1}
-  m_LocalPosition: {x: 2, y: 2.74, z: -7.749998}
+  m_LocalRotation: {x: 0.000013698939, y: -0.000009999233, z: 1.3697889e-10, w: 1}
+  m_LocalPosition: {x: 2.0000007, y: 2.74, z: -7.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 433621549544903654}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0.0015697828, y: -0.0011458269, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.0015697828, y: 179.99884, z: 0}
 --- !u!20 &1581157245
 Camera:
   m_ObjectHideFlags: 0
@@ -1077,7 +1086,7 @@ GameObject:
   - component: {fileID: 2075240746}
   - component: {fileID: 2075240749}
   - component: {fileID: 2075240748}
-  - component: {fileID: 2075240747}
+  - component: {fileID: 141924875}
   m_Layer: 11
   m_Name: cm
   m_TagString: Untagged
@@ -1173,7 +1182,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_ApplyBeforeBody: 0
---- !u!114 &2075240747
+--- !u!114 &141924875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1182,10 +1191,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2075240745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36d1163fa822e8b418a0a603ec078d5c, type: 3}
+  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Damping: 0
+  m_BindingMode: 1
+  m_FollowOffset: {x: 0, y: 1, z: -0.5}
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
+  m_AngularDampingMode: 0
+  m_PitchDamping: 0
+  m_YawDamping: 0
+  m_RollDamping: 0
+  m_AngularDamping: 0
 --- !u!1 &433621549544903655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,12 +1281,21 @@ MonoBehaviour:
   CurrentMaxVelocity: 0
   VelocityLimitingStrength: 100
   TurningTorque: 1.5
+  BoostMaxSpeedMultiplier: 1.1
+  BoostAccelerationMultiplier: 1.1
+  MaxBoostCapacity: 1
+  BoostUsagePerSecond: 0.3
+  BoostRecoveredPerSecond: 0.2
+  CurrentBoost: 0
+  Boosting: 0
+  BoostHitBottom: 0
   currentSail: 0
   currentSailMultiplier: 0
   MinVerticalAngle: 70
   MaxVerticalAngle: 70
   LimitingTorqueMultiplier: 0.5
   LimitingOffsetExponent: 1
+  ForwardStabilization: 0.2
 --- !u!114 &433621549544903651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1380,15 +1407,14 @@ MonoBehaviour:
     m_Bits: 65
   raycastMask:
     serializedVersion: 2
-    m_Bits: 2047
+    m_Bits: 2043
   RaycastLength: 1000
   ShootTime: 0.5
-  cableLengthOffset: -1
+  cableLengthOffset: -1.25
   player: {fileID: 433621549544903650}
+  TorqueLimitMargin: 1
+  TorqueStrength: 10
   AnimationState: Right Harpoon
-  spring: 0
-  damper: 0
-  massScale: 0
 --- !u!114 &6342542520907675663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1414,6 +1440,7 @@ GameObject:
   - component: {fileID: 2146660522952366766}
   - component: {fileID: 3055028010318107915}
   - component: {fileID: 973151920131793345}
+  - component: {fileID: 8526845255432060818}
   m_Layer: 11
   m_Name: Crosshair
   m_TagString: Player
@@ -1430,7 +1457,7 @@ Transform:
   m_GameObject: {fileID: 1621763106107441172}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.10000001, z: 0.1}
+  m_LocalScale: {x: 0.1, y: 0.100000024, z: 0.1}
   m_Children:
   - {fileID: 622482433}
   m_Father: {fileID: 4936819543983743238}
@@ -1485,6 +1512,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8526845255432060818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621763106107441172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f79c234c95de2a48b6e08b98c927413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  cinemachineTarget: {fileID: 628601608}
 --- !u!1 &6961471641252024660
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,10 +1574,10 @@ MonoBehaviour:
   cableMaterial: {fileID: 2100000, guid: e20a2186cc0884c4186cd848b087703e, type: 2}
   cableLength: 3
   totalSegments: 0
-  segmentsPerUnit: 2
+  segmentsPerUnit: 0.25
   cableWidth: 0.1
-  verletIterations: 1
-  solverIterations: 2
+  verletIterations: 2
+  solverIterations: 25
   stiffness: 1
 --- !u!120 &4714328230446430382
 LineRenderer:
@@ -1647,6 +1688,7 @@ GameObject:
   - component: {fileID: 8821080753916339232}
   - component: {fileID: 8942981266538718882}
   - component: {fileID: 6193677477889815715}
+  - component: {fileID: 4973671094770769394}
   m_Layer: 11
   m_Name: Crosshair
   m_TagString: Player
@@ -1663,7 +1705,7 @@ Transform:
   m_GameObject: {fileID: 7649324252845930139}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.10000001, z: 0.1}
+  m_LocalScale: {x: 0.1, y: 0.100000024, z: 0.1}
   m_Children:
   - {fileID: 8479670343732176378}
   m_Father: {fileID: 4125741063306564805}
@@ -1718,6 +1760,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4973671094770769394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7649324252845930139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f79c234c95de2a48b6e08b98c927413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  cinemachineTarget: {fileID: 1207272946}
 --- !u!1 &9078961296192384178
 GameObject:
   m_ObjectHideFlags: 0
@@ -1770,15 +1826,14 @@ MonoBehaviour:
     m_Bits: 65
   raycastMask:
     serializedVersion: 2
-    m_Bits: 2047
+    m_Bits: 2043
   RaycastLength: 1000
   ShootTime: 0.5
-  cableLengthOffset: -1
+  cableLengthOffset: -1.25
   player: {fileID: 433621549544903650}
+  TorqueLimitMargin: 1
+  TorqueStrength: 10
   AnimationState: Left Harpoon
-  spring: 0
-  damper: 0
-  massScale: 0
 --- !u!114 &7811364183269549159
 MonoBehaviour:
   m_ObjectHideFlags: 0

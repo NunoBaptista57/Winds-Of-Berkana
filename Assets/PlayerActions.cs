@@ -65,6 +65,14 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Release"",
+                    ""type"": ""Button"",
+                    ""id"": ""4f58ea53-3407-4d59-b892-1b3e177c1d24"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -252,6 +260,17 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f6862c30-5223-4e54-ba0e-8bb7d996963e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Release"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -708,6 +727,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         m_Boat_RightHarpoon = m_Boat.FindAction("Right Harpoon", throwIfNotFound: true);
         m_Boat_LeftHarpoon = m_Boat.FindAction("Left Harpoon", throwIfNotFound: true);
         m_Boat_Aim = m_Boat.FindAction("Aim", throwIfNotFound: true);
+        m_Boat_Release = m_Boat.FindAction("Release", throwIfNotFound: true);
         // Character
         m_Character = asset.FindActionMap("Character", throwIfNotFound: true);
         m_Character_Move = m_Character.FindAction("Move", throwIfNotFound: true);
@@ -775,6 +795,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Boat_RightHarpoon;
     private readonly InputAction m_Boat_LeftHarpoon;
     private readonly InputAction m_Boat_Aim;
+    private readonly InputAction m_Boat_Release;
     public struct BoatActions
     {
         private @PlayerActions m_Wrapper;
@@ -785,6 +806,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         public InputAction @RightHarpoon => m_Wrapper.m_Boat_RightHarpoon;
         public InputAction @LeftHarpoon => m_Wrapper.m_Boat_LeftHarpoon;
         public InputAction @Aim => m_Wrapper.m_Boat_Aim;
+        public InputAction @Release => m_Wrapper.m_Boat_Release;
         public InputActionMap Get() { return m_Wrapper.m_Boat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -812,6 +834,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Aim.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
                 @Aim.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
                 @Aim.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
+                @Release.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnRelease;
+                @Release.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnRelease;
+                @Release.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnRelease;
             }
             m_Wrapper.m_BoatActionsCallbackInterface = instance;
             if (instance != null)
@@ -834,6 +859,9 @@ public class @PlayerActions : IInputActionCollection, IDisposable
                 @Aim.started += instance.OnAim;
                 @Aim.performed += instance.OnAim;
                 @Aim.canceled += instance.OnAim;
+                @Release.started += instance.OnRelease;
+                @Release.performed += instance.OnRelease;
+                @Release.canceled += instance.OnRelease;
             }
         }
     }
@@ -969,6 +997,7 @@ public class @PlayerActions : IInputActionCollection, IDisposable
         void OnRightHarpoon(InputAction.CallbackContext context);
         void OnLeftHarpoon(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
+        void OnRelease(InputAction.CallbackContext context);
     }
     public interface ICharacterActions
     {
