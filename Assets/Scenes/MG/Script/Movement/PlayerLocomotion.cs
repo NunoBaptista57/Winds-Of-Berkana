@@ -40,8 +40,9 @@ public class PlayerLocomotion : MonoBehaviour
     public float jumpControlCoeficient = 20;
     public float gravityValue = -9.81f;
 
-    [Header("Glide")]
+    [Header("Glide Inverse Gravity Acceleration")]
     public float glideAcceleration = 3.0f;
+    [Header("Glide MovDirection Influence")]
     public float glideCoeficient = 30;
 
 
