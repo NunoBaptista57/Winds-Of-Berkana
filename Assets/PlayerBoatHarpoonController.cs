@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using UnityEngine.Events;
 
 public class PlayerBoatHarpoonController : PlayerBoatBehaviour
 {
@@ -11,6 +12,8 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
     [SerializeField] BoatHarpoon RightHarpoon = null;
     [SerializeField] BoatHarpoon LeftHarpoon = null;
     BoatHarpoon currentHarpoon;
+
+    [SerializeField] UnityEvent OnHarpoonShoot;
 
     bool toShoot;
 
@@ -22,6 +25,7 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
             player.state = PlayerBoatState.Idle;
             currentHarpoon.Shoot();
             currentHarpoon = null;
+            OnHarpoonShoot.Invoke();
         }
         toShoot = false;
     }
@@ -56,7 +60,8 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
         }
     }
 
-    void OnRelease(InputValue value) {
+    void OnRelease(InputValue value)
+    {
         LeftHarpoon.Release();
         RightHarpoon.Release();
     }
