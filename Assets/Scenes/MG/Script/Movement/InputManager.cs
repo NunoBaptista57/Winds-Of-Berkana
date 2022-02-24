@@ -21,12 +21,14 @@ class InputManager : MonoBehaviour
     public Interact pickup;
 
     private AnimatorManager animator;
+    private Camera _mainCamera;
 
     public bool jumpInput;
     public bool dodgeInput;
     public bool glideInput;
     public bool shootInput;
     public bool aimInput;
+    public bool visionInput;
     public bool pickupInput = false;
     public bool runningInput = false;
     public bool flashInput = false;
@@ -60,9 +62,16 @@ class InputManager : MonoBehaviour
             playerControls.Character.Flashlight.performed += i => HandleFlashlight();
             playerControls.Character.Reset.performed += i => RestartScene();
             playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
+            playerControls.Character.Vision.performed += i => HandleVision();
         }
 
         playerControls.Enable();
+
+        //stributes camera to variable
+        if (_mainCamera == null)
+        {
+            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); ;
+        }
     }
 
     private void OnDisable()
@@ -181,5 +190,10 @@ class InputManager : MonoBehaviour
 
 
        
+    }
+
+    private void HandleVision()
+    {
+        _mainCamera.enabled = !_mainCamera.enabled;
     }
 }
