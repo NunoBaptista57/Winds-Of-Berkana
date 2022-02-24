@@ -385,6 +385,15 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=1)"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Value"",
+                    ""id"": ""50863995-03f7-472e-9a60-68fad26bd4bf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -706,6 +715,28 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""action"": ""Pickup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""468494e7-6b9b-4935-b2e8-f11f84f6f013"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""147d40f6-334e-4daa-b14b-0382fd591aa8"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -766,6 +797,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Character_Flashlight = m_Character.FindAction("Flashlight", throwIfNotFound: true);
         m_Character_Reset = m_Character.FindAction("Reset", throwIfNotFound: true);
         m_Character_Pickup = m_Character.FindAction("Pickup", throwIfNotFound: true);
+        m_Character_Dodge = m_Character.FindAction("Dodge", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -916,6 +948,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Flashlight;
     private readonly InputAction m_Character_Reset;
     private readonly InputAction m_Character_Pickup;
+    private readonly InputAction m_Character_Dodge;
     public struct CharacterActions
     {
         private @PlayerActions m_Wrapper;
@@ -930,6 +963,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Flashlight => m_Wrapper.m_Character_Flashlight;
         public InputAction @Reset => m_Wrapper.m_Character_Reset;
         public InputAction @Pickup => m_Wrapper.m_Character_Pickup;
+        public InputAction @Dodge => m_Wrapper.m_Character_Dodge;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -969,6 +1003,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Pickup.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
                 @Pickup.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
                 @Pickup.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
+                @Dodge.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
+                @Dodge.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
+                @Dodge.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -1003,6 +1040,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Pickup.started += instance.OnPickup;
                 @Pickup.performed += instance.OnPickup;
                 @Pickup.canceled += instance.OnPickup;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
             }
         }
     }
@@ -1047,5 +1087,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnFlashlight(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
     }
 }

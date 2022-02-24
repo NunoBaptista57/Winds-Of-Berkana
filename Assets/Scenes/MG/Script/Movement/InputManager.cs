@@ -23,6 +23,7 @@ class InputManager : MonoBehaviour
     private AnimatorManager animator;
 
     public bool jumpInput;
+    public bool dodgeInput;
     public bool glideInput;
     public bool shootInput;
     public bool aimInput;
@@ -50,6 +51,7 @@ class InputManager : MonoBehaviour
 
             playerControls.Character.Move.performed += i => movementInput = i.ReadValue<Vector2>();
             playerControls.Character.Jump.performed += i => jumpInput = true;
+            playerControls.Character.Dodge.performed += i => dodgeInput = true;
             playerControls.Character.Glide.performed += i => HandleGliding();
             playerControls.Character.Fire.performed += i => HandleShooting();
             playerControls.Character.Aim.started += i => aimInput = true;
@@ -72,6 +74,7 @@ class InputManager : MonoBehaviour
         HandleMovementInput();
         HandleJumpingInput();
         HandleAiming();
+        HandleDodgeInput();
     }
 
     public void RestartScene()
@@ -118,6 +121,15 @@ class InputManager : MonoBehaviour
         }
     }
 
+    private void HandleDodgeInput()
+    {
+        if (dodgeInput == true)
+        {
+            dodgeInput = false;
+            playerLocomotion.HandleDodge();
+        }
+    }
+
     private void HandleGliding()
     {
 
@@ -156,6 +168,7 @@ class InputManager : MonoBehaviour
         {
             aimCamera.Priority = 15;
             aimCanvas.enabled = true;
+            Time.timeScale = 0.5f;
 
         }
 
@@ -163,6 +176,7 @@ class InputManager : MonoBehaviour
         {
             aimCanvas.enabled = false;
             aimCamera.Priority = 5;
+            Time.timeScale = 1f;
         }
 
 
