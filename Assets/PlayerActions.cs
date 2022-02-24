@@ -55,6 +55,15 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Boost"",
+                    ""type"": ""Value"",
+                    ""id"": ""fdcdf5c3-31ee-43d4-bc17-9a913f1111c1"",
+                    ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Right Harpoon"",
                     ""type"": ""Button"",
                     ""id"": ""568748a1-e071-4b0c-9260-705eb04ae81d"",
@@ -210,6 +219,17 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Pitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""afb312bb-1acf-4e96-90a0-3bccaffbd07f"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Boost"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -781,6 +801,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Boat_Turn = m_Boat.FindAction("Turn", throwIfNotFound: true);
         m_Boat_Pitch = m_Boat.FindAction("Pitch", throwIfNotFound: true);
         m_Boat_Reel = m_Boat.FindAction("Reel", throwIfNotFound: true);
+        m_Boat_Boost = m_Boat.FindAction("Boost", throwIfNotFound: true);
         m_Boat_RightHarpoon = m_Boat.FindAction("Right Harpoon", throwIfNotFound: true);
         m_Boat_LeftHarpoon = m_Boat.FindAction("Left Harpoon", throwIfNotFound: true);
         m_Boat_Aim = m_Boat.FindAction("Aim", throwIfNotFound: true);
@@ -860,6 +881,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Boat_Turn;
     private readonly InputAction m_Boat_Pitch;
     private readonly InputAction m_Boat_Reel;
+    private readonly InputAction m_Boat_Boost;
     private readonly InputAction m_Boat_RightHarpoon;
     private readonly InputAction m_Boat_LeftHarpoon;
     private readonly InputAction m_Boat_Aim;
@@ -871,6 +893,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Turn => m_Wrapper.m_Boat_Turn;
         public InputAction @Pitch => m_Wrapper.m_Boat_Pitch;
         public InputAction @Reel => m_Wrapper.m_Boat_Reel;
+        public InputAction @Boost => m_Wrapper.m_Boat_Boost;
         public InputAction @RightHarpoon => m_Wrapper.m_Boat_RightHarpoon;
         public InputAction @LeftHarpoon => m_Wrapper.m_Boat_LeftHarpoon;
         public InputAction @Aim => m_Wrapper.m_Boat_Aim;
@@ -893,6 +916,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Reel.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
                 @Reel.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
                 @Reel.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
+                @Boost.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
+                @Boost.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
+                @Boost.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
                 @RightHarpoon.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
                 @RightHarpoon.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
                 @RightHarpoon.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
@@ -918,6 +944,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Reel.started += instance.OnReel;
                 @Reel.performed += instance.OnReel;
                 @Reel.canceled += instance.OnReel;
+                @Boost.started += instance.OnBoost;
+                @Boost.performed += instance.OnBoost;
+                @Boost.canceled += instance.OnBoost;
                 @RightHarpoon.started += instance.OnRightHarpoon;
                 @RightHarpoon.performed += instance.OnRightHarpoon;
                 @RightHarpoon.canceled += instance.OnRightHarpoon;
@@ -1070,6 +1099,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnTurn(InputAction.CallbackContext context);
         void OnPitch(InputAction.CallbackContext context);
         void OnReel(InputAction.CallbackContext context);
+        void OnBoost(InputAction.CallbackContext context);
         void OnRightHarpoon(InputAction.CallbackContext context);
         void OnLeftHarpoon(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);

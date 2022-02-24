@@ -71,30 +71,30 @@ public class BoatMovement : MonoBehaviour
             Mathf.Lerp(MinSailMultiplier, 1, currentSail),
             SailEffectStrength * Time.deltaTime);
 
-        if (input.Boost && !BoostHitBottom)
-        {
-            Boosting = true;
-            CurrentBoost -= BoostUsagePerSecond * Time.deltaTime;
-            if (CurrentBoost <= 0)
-            {
-                CurrentBoost = 0;
-                Boosting = false;
-                BoostHitBottom = true;
-            }
-        } 
-        else if (CurrentBoost > MaxBoostCapacity)
-        {
-            CurrentBoost = MaxBoostCapacity;
-            BoostHitBottom = false;
-        } 
-        else if (CurrentBoost < MaxBoostCapacity)
-        {
-            CurrentBoost += BoostRecoveredPerSecond * Time.deltaTime;
-            if (CurrentBoost > MaxBoostCapacity)
-            {
-                CurrentBoost = MaxBoostCapacity;
-                BoostHitBottom = false;
-            }
+        if (input.Boost && !BoostHitBottom)
+        {
+            Boosting = true;
+            CurrentBoost -= BoostUsagePerSecond * Time.deltaTime;
+            if (CurrentBoost <= 0)
+            {
+                CurrentBoost = 0;
+                Boosting = false;
+                BoostHitBottom = true;
+            }
+        } 
+        else if (CurrentBoost > MaxBoostCapacity)
+        {
+            CurrentBoost = MaxBoostCapacity;
+            BoostHitBottom = false;
+        } 
+        else if (CurrentBoost < MaxBoostCapacity)
+        {
+            CurrentBoost += BoostRecoveredPerSecond * Time.deltaTime;
+            if (CurrentBoost > MaxBoostCapacity)
+            {
+                CurrentBoost = MaxBoostCapacity;
+                BoostHitBottom = false;
+            }
         }
     }
 
@@ -137,8 +137,8 @@ public class BoatMovement : MonoBehaviour
         input.Pitch = value.Get<float>();
     }
 
-    void OnBoost(InputValue value)
-    {
-        input.Boost = Convert.ToBoolean(value.Get());
+    void OnBoost(InputValue value)
+    {
+        input.Boost = Convert.ToBoolean(value.Get());
     }
 }
