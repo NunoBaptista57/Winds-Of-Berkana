@@ -58,7 +58,6 @@ public class Sphere_Color : MonoBehaviour
                 }
             }*/
 
-            Debug.Log(distance_final);
             gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", Light_intensity + distance_final * Puzzle_distance); //color = new Color(255 - distance * 5, 0, 98, 255);
         }
 
@@ -72,7 +71,6 @@ public class Sphere_Color : MonoBehaviour
             var offset = new Vector3(distance.x, 1.5f, distance.z);
             transform.position = Vector3.Lerp(this.transform.parent.position, puzzle_piece[closest_sphere].gameObject.transform.position, 0.01f);
             transform.localPosition = new Vector3(transform.localPosition.x, 1.5f, transform.localPosition.z);
-            Debug.Log(distance + " e " + transform.localPosition);
         }
     }
 

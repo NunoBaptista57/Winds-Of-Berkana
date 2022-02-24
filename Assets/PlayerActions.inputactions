@@ -372,6 +372,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Vision",
+                    "type": "Button",
+                    "id": "1b102920-8075-49e1-a527-45fa544282cf",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -675,7 +684,7 @@
                 {
                     "name": "",
                     "id": "2618f46f-a385-4ee8-b599-4aee6d752498",
-                    "path": "<Keyboard>/g",
+                    "path": "<Keyboard>/p",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -713,6 +722,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7cd2266c-eb69-4194-8b5e-24ebab4904d5",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vision",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -394,6 +394,15 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Vision"",
+                    ""type"": ""Button"",
+                    ""id"": ""1b102920-8075-49e1-a527-45fa544282cf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -697,7 +706,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2618f46f-a385-4ee8-b599-4aee6d752498"",
-                    ""path"": ""<Keyboard>/g"",
+                    ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -735,6 +744,17 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7cd2266c-eb69-4194-8b5e-24ebab4904d5"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vision"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -798,6 +818,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Character_Reset = m_Character.FindAction("Reset", throwIfNotFound: true);
         m_Character_Pickup = m_Character.FindAction("Pickup", throwIfNotFound: true);
         m_Character_Dodge = m_Character.FindAction("Dodge", throwIfNotFound: true);
+        m_Character_Vision = m_Character.FindAction("Vision", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -949,6 +970,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Reset;
     private readonly InputAction m_Character_Pickup;
     private readonly InputAction m_Character_Dodge;
+    private readonly InputAction m_Character_Vision;
     public struct CharacterActions
     {
         private @PlayerActions m_Wrapper;
@@ -964,6 +986,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Reset => m_Wrapper.m_Character_Reset;
         public InputAction @Pickup => m_Wrapper.m_Character_Pickup;
         public InputAction @Dodge => m_Wrapper.m_Character_Dodge;
+        public InputAction @Vision => m_Wrapper.m_Character_Vision;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1006,6 +1029,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Dodge.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
                 @Dodge.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
                 @Dodge.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
+                @Vision.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
+                @Vision.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
+                @Vision.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -1043,6 +1069,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Dodge.started += instance.OnDodge;
                 @Dodge.performed += instance.OnDodge;
                 @Dodge.canceled += instance.OnDodge;
+                @Vision.started += instance.OnVision;
+                @Vision.performed += instance.OnVision;
+                @Vision.canceled += instance.OnVision;
             }
         }
     }
@@ -1088,5 +1117,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnReset(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
+        void OnVision(InputAction.CallbackContext context);
     }
 }
