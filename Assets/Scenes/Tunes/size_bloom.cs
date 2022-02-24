@@ -5,16 +5,16 @@ using UnityEngine;
 public class size_bloom : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] Transform player;
+    private Transform _player;
     void Start()
     {
-        
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float _distance = Vector3.Distance(this.transform.position, player.position);
+        float _distance = Vector3.Distance(this.transform.position, _player.position);
         if(_distance > 40f)
         {
             _distance = 40f;

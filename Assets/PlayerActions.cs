@@ -55,6 +55,15 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Boost"",
+                    ""type"": ""Value"",
+                    ""id"": ""fdcdf5c3-31ee-43d4-bc17-9a913f1111c1"",
+                    ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Right Harpoon"",
                     ""type"": ""Button"",
                     ""id"": ""568748a1-e071-4b0c-9260-705eb04ae81d"",
@@ -210,6 +219,17 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Pitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""afb312bb-1acf-4e96-90a0-3bccaffbd07f"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Boost"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -384,6 +404,24 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=1)"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Value"",
+                    ""id"": ""50863995-03f7-472e-9a60-68fad26bd4bf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Vision"",
+                    ""type"": ""Button"",
+                    ""id"": ""1b102920-8075-49e1-a527-45fa544282cf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
@@ -688,7 +726,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2618f46f-a385-4ee8-b599-4aee6d752498"",
-                    ""path"": ""<Keyboard>/g"",
+                    ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -704,6 +742,39 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Pickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""468494e7-6b9b-4935-b2e8-f11f84f6f013"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""147d40f6-334e-4daa-b14b-0382fd591aa8"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7cd2266c-eb69-4194-8b5e-24ebab4904d5"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vision"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -750,6 +821,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Boat_Turn = m_Boat.FindAction("Turn", throwIfNotFound: true);
         m_Boat_Pitch = m_Boat.FindAction("Pitch", throwIfNotFound: true);
         m_Boat_Reel = m_Boat.FindAction("Reel", throwIfNotFound: true);
+        m_Boat_Boost = m_Boat.FindAction("Boost", throwIfNotFound: true);
         m_Boat_RightHarpoon = m_Boat.FindAction("Right Harpoon", throwIfNotFound: true);
         m_Boat_LeftHarpoon = m_Boat.FindAction("Left Harpoon", throwIfNotFound: true);
         m_Boat_Aim = m_Boat.FindAction("Aim", throwIfNotFound: true);
@@ -766,6 +838,8 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Character_Flashlight = m_Character.FindAction("Flashlight", throwIfNotFound: true);
         m_Character_Reset = m_Character.FindAction("Reset", throwIfNotFound: true);
         m_Character_Pickup = m_Character.FindAction("Pickup", throwIfNotFound: true);
+        m_Character_Dodge = m_Character.FindAction("Dodge", throwIfNotFound: true);
+        m_Character_Vision = m_Character.FindAction("Vision", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -828,6 +902,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Boat_Turn;
     private readonly InputAction m_Boat_Pitch;
     private readonly InputAction m_Boat_Reel;
+    private readonly InputAction m_Boat_Boost;
     private readonly InputAction m_Boat_RightHarpoon;
     private readonly InputAction m_Boat_LeftHarpoon;
     private readonly InputAction m_Boat_Aim;
@@ -839,6 +914,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Turn => m_Wrapper.m_Boat_Turn;
         public InputAction @Pitch => m_Wrapper.m_Boat_Pitch;
         public InputAction @Reel => m_Wrapper.m_Boat_Reel;
+        public InputAction @Boost => m_Wrapper.m_Boat_Boost;
         public InputAction @RightHarpoon => m_Wrapper.m_Boat_RightHarpoon;
         public InputAction @LeftHarpoon => m_Wrapper.m_Boat_LeftHarpoon;
         public InputAction @Aim => m_Wrapper.m_Boat_Aim;
@@ -861,6 +937,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Reel.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
                 @Reel.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
                 @Reel.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnReel;
+                @Boost.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
+                @Boost.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
+                @Boost.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnBoost;
                 @RightHarpoon.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
                 @RightHarpoon.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
                 @RightHarpoon.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnRightHarpoon;
@@ -886,6 +965,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Reel.started += instance.OnReel;
                 @Reel.performed += instance.OnReel;
                 @Reel.canceled += instance.OnReel;
+                @Boost.started += instance.OnBoost;
+                @Boost.performed += instance.OnBoost;
+                @Boost.canceled += instance.OnBoost;
                 @RightHarpoon.started += instance.OnRightHarpoon;
                 @RightHarpoon.performed += instance.OnRightHarpoon;
                 @RightHarpoon.canceled += instance.OnRightHarpoon;
@@ -916,6 +998,8 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Flashlight;
     private readonly InputAction m_Character_Reset;
     private readonly InputAction m_Character_Pickup;
+    private readonly InputAction m_Character_Dodge;
+    private readonly InputAction m_Character_Vision;
     public struct CharacterActions
     {
         private @PlayerActions m_Wrapper;
@@ -930,6 +1014,8 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Flashlight => m_Wrapper.m_Character_Flashlight;
         public InputAction @Reset => m_Wrapper.m_Character_Reset;
         public InputAction @Pickup => m_Wrapper.m_Character_Pickup;
+        public InputAction @Dodge => m_Wrapper.m_Character_Dodge;
+        public InputAction @Vision => m_Wrapper.m_Character_Vision;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -969,6 +1055,12 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Pickup.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
                 @Pickup.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
                 @Pickup.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
+                @Dodge.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
+                @Dodge.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
+                @Dodge.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
+                @Vision.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
+                @Vision.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
+                @Vision.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -1003,6 +1095,12 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Pickup.started += instance.OnPickup;
                 @Pickup.performed += instance.OnPickup;
                 @Pickup.canceled += instance.OnPickup;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
+                @Vision.started += instance.OnVision;
+                @Vision.performed += instance.OnVision;
+                @Vision.canceled += instance.OnVision;
             }
         }
     }
@@ -1030,6 +1128,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnTurn(InputAction.CallbackContext context);
         void OnPitch(InputAction.CallbackContext context);
         void OnReel(InputAction.CallbackContext context);
+        void OnBoost(InputAction.CallbackContext context);
         void OnRightHarpoon(InputAction.CallbackContext context);
         void OnLeftHarpoon(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
@@ -1047,5 +1146,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnFlashlight(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
+        void OnVision(InputAction.CallbackContext context);
     }
 }

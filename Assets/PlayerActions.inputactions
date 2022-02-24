@@ -11,7 +11,8 @@
                     "id": "bbd8d495-e372-4f00-87cc-d48fa451e7ee",
                     "expectedControlType": "Axis",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Pitch",
@@ -19,7 +20,8 @@
                     "id": "c71ea77c-28d1-4d42-8f47-5407a539a981",
                     "expectedControlType": "Axis",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Reel",
@@ -27,7 +29,17 @@
                     "id": "a15dc563-3eb5-4a9a-abb2-5628aaad3cb9",
                     "expectedControlType": "Axis",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Boost",
+                    "type": "Value",
+                    "id": "fdcdf5c3-31ee-43d4-bc17-9a913f1111c1",
+                    "expectedControlType": "Integer",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Right Harpoon",
@@ -35,7 +47,8 @@
                     "id": "568748a1-e071-4b0c-9260-705eb04ae81d",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Left Harpoon",
@@ -43,7 +56,8 @@
                     "id": "2128c4cd-b47a-49ce-a6b3-1a7a7ebe3f59",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Aim",
@@ -51,7 +65,8 @@
                     "id": "ae7cba2a-71e9-44ac-8ae7-adf31b7c196a",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Release",
@@ -59,7 +74,8 @@
                     "id": "4f58ea53-3407-4d59-b892-1b3e177c1d24",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -185,6 +201,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "afb312bb-1acf-4e96-90a0-3bccaffbd07f",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "Keyboard S/W",
                     "id": "cd3089a4-0432-4bd3-87cb-bccf39f5342c",
                     "path": "1DAxis",
@@ -273,7 +300,8 @@
                     "id": "3f57e1df-5301-4eac-87c1-b3bbaa8f36f5",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Jump",
@@ -281,7 +309,8 @@
                     "id": "918ea663-054e-4297-a538-131ddeb2c564",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Glide",
@@ -289,7 +318,8 @@
                     "id": "04c32b65-dfc5-4550-8789-8e74bf557716",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=1)"
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Look",
@@ -297,7 +327,8 @@
                     "id": "f3cf9c01-e022-408e-8e62-15b5a887417d",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Fire",
@@ -305,7 +336,8 @@
                     "id": "0157ab3a-8a46-4d4f-8bf8-a5e7ece3ebfb",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=1)"
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Aim",
@@ -313,7 +345,8 @@
                     "id": "11afffa7-695b-407e-9af3-584e948e73ec",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold"
+                    "interactions": "Hold",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Run",
@@ -321,7 +354,8 @@
                     "id": "aac0294c-8625-4f08-af83-f996c4bc575c",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=1)"
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Flashlight",
@@ -329,7 +363,8 @@
                     "id": "0f99cc6e-ebf6-411a-b8e0-4b20674206ed",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=1)"
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Reset",
@@ -337,7 +372,8 @@
                     "id": "cf4e92bc-442d-4a1a-ba1c-33ecb5bb7a74",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=1)"
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Pickup",
@@ -345,7 +381,26 @@
                     "id": "4e35e6e3-1e27-4bdf-94ab-0e06e420ddbb",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=1)"
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dodge",
+                    "type": "Value",
+                    "id": "50863995-03f7-472e-9a60-68fad26bd4bf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Vision",
+                    "type": "Button",
+                    "id": "1b102920-8075-49e1-a527-45fa544282cf",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -649,7 +704,7 @@
                 {
                     "name": "",
                     "id": "2618f46f-a385-4ee8-b599-4aee6d752498",
-                    "path": "<Keyboard>/g",
+                    "path": "<Keyboard>/p",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -665,6 +720,39 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Pickup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "468494e7-6b9b-4935-b2e8-f11f84f6f013",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "147d40f6-334e-4daa-b14b-0382fd591aa8",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7cd2266c-eb69-4194-8b5e-24ebab4904d5",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vision",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

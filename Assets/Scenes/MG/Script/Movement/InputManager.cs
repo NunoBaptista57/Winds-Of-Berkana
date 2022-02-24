@@ -21,11 +21,14 @@ class InputManager : MonoBehaviour
     public Interact pickup;
 
     private AnimatorManager animator;
+    private Camera _mainCamera;
 
     public bool jumpInput;
+    public bool dodgeInput;
     public bool glideInput;
     public bool shootInput;
     public bool aimInput;
+    public bool visionInput;
     public bool pickupInput = false;
     public bool runningInput = false;
     public bool flashInput = false;
@@ -50,6 +53,7 @@ class InputManager : MonoBehaviour
 
             playerControls.Character.Move.performed += i => movementInput = i.ReadValue<Vector2>();
             playerControls.Character.Jump.performed += i => jumpInput = true;
+            playerControls.Character.Dodge.performed += i => dodgeInput = true;
             playerControls.Character.Glide.performed += i => HandleGliding();
             playerControls.Character.Fire.performed += i => HandleShooting();
             playerControls.Character.Aim.started += i => aimInput = true;
@@ -58,9 +62,16 @@ class InputManager : MonoBehaviour
             playerControls.Character.Flashlight.performed += i => HandleFlashlight();
             playerControls.Character.Reset.performed += i => RestartScene();
             playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
+            playerControls.Character.Vision.performed += i => HandleVision();
         }
 
         playerControls.Enable();
+
+        //stributes camera to variable
+        if (_mainCamera == null)
+        {
+            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); ;
+        }
     }
 
     private void OnDisable()
@@ -72,6 +83,7 @@ class InputManager : MonoBehaviour
         HandleMovementInput();
         HandleJumpingInput();
         HandleAiming();
+        HandleDodgeInput();
     }
 
     public void RestartScene()
@@ -118,6 +130,15 @@ class InputManager : MonoBehaviour
         }
     }
 
+    private void HandleDodgeInput()
+    {
+        if (dodgeInput == true)
+        {
+            dodgeInput = false;
+            playerLocomotion.HandleDodge();
+        }
+    }
+
     private void HandleGliding()
     {
 
@@ -156,6 +177,7 @@ class InputManager : MonoBehaviour
         {
             aimCamera.Priority = 15;
             aimCanvas.enabled = true;
+            Time.timeScale = 0.5f;
 
         }
 
@@ -163,9 +185,15 @@ class InputManager : MonoBehaviour
         {
             aimCanvas.enabled = false;
             aimCamera.Priority = 5;
+            Time.timeScale = 1f;
         }
 
 
        
+    }
+
+    private void HandleVision()
+    {
+        _mainCamera.enabled = !_mainCamera.enabled;
     }
 }

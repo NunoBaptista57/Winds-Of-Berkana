@@ -10,7 +10,7 @@ public class PlayerLocomotion : MonoBehaviour
 
     private Vector3 moveDirection;
 
-    private Rigidbody rb;
+    public Rigidbody playerRigidBody;
 
     [Header("Movement Settings")]
     public bool doubleJumpAbility;
@@ -40,6 +40,9 @@ public class PlayerLocomotion : MonoBehaviour
     public float jumpControlCoeficient = 20;
     public float gravityValue = -9.81f;
 
+    [Header("Dodge")]
+    public float dodgeDistance = 3.0f;
+
     [Header("Glide Inverse Gravity Acceleration")]
     public float glideAcceleration = 3.0f;
     [Header("Glide MovDirection Influence")]
@@ -57,7 +60,7 @@ public class PlayerLocomotion : MonoBehaviour
         inputManager = GetComponent<InputManager>();
         playerManager = GetComponent<PlayerManager>();
         animatorManager = GetComponent<AnimatorManager>();
-        rb = GetComponent<Rigidbody>();
+        playerRigidBody = GetComponent<Rigidbody>();
         cam = Camera.main;
       //  currentFallingVelocity = fallingVelocity;
     }
@@ -111,7 +114,7 @@ public class PlayerLocomotion : MonoBehaviour
         }
 
         Vector3 movementVelocity = moveDirection;
-        rb.velocity = movementVelocity;
+        playerRigidBody.velocity = movementVelocity;
 
 
     }
@@ -154,6 +157,8 @@ public class PlayerLocomotion : MonoBehaviour
             }
 
 
+            animatorManager.animator.SetBool("isUsingRootMotion", false);
+
             //  inAirTimer += + Time.deltaTime;
             // rb.AddForce(transform.forward * leapingVelocity);
             //rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
@@ -165,12 +170,12 @@ public class PlayerLocomotion : MonoBehaviour
 
             if (isGliding)
             {
-                rb.AddForce(moveDirection.x * glideCoeficient, glideAcceleration, moveDirection.z * glideCoeficient, ForceMode.Acceleration);
+                playerRigidBody.AddForce(moveDirection.x * glideCoeficient, glideAcceleration, moveDirection.z * glideCoeficient, ForceMode.Acceleration);
 
             }
             else
             {
-                rb.AddForce(moveDirection.x * jumpControlCoeficient, 0.0f, moveDirection.z * jumpControlCoeficient, ForceMode.Acceleration);
+                playerRigidBody.AddForce(moveDirection.x * jumpControlCoeficient, 0.0f, moveDirection.z * jumpControlCoeficient, ForceMode.Acceleration);
             }
 
             //Rotation while falling
@@ -229,7 +234,18 @@ public class PlayerLocomotion : MonoBehaviour
         animatorManager.animator.SetBool("Gliding", false);
 
         float jumpingVelocity = Mathf.Sqrt(-2 * gravityValue * jumpHeight);
-        rb.AddForce(moveDirection.x * jumpCoeficient, jumpingVelocity, moveDirection.z * jumpCoeficient, ForceMode.Impulse);
+        playerRigidBody.AddForce(moveDirection.x * jumpCoeficient, jumpingVelocity, moveDirection.z * jumpCoeficient, ForceMode.Impulse);
+    }
+
+    public void HandleDodge()
+    {
+        if (playerManager.isInteracting)
+            return;
+
+        animatorManager.PlayTargetAnimation("Dodge", true, true);
+        // TOGGLE INVULNERABILITY FOR NO HP DMG DURING ANIMATION
+         
+
     }
 
 
