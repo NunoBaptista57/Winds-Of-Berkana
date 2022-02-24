@@ -128,7 +128,7 @@ public class WindCurrent : MonoBehaviour, IWindEffector
         {
             float t = i / (float)steps;
             WindCurrentCollider collider = Instantiate(ColliderPrefab, transform.position + GetCurvePoint(t), Quaternion.identity, transform);
-            collider.gameObject.hideFlags = HideFlags.NotEditable;
+            collider.gameObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector | HideFlags.NotEditable;
             collider.Radius = radius;
             collider.t = t;
             if (UseCustomDirections)

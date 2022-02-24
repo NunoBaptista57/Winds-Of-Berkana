@@ -10,7 +10,7 @@ public class BoatHarpoon : MonoBehaviour
     [SerializeField] LayerMask targetHitMask;
     [SerializeField] LayerMask raycastMask;
     [SerializeField] [Min(0)] float RaycastLength = 1000;
-    [SerializeField] float ShootTime = 0.5f;
+    [SerializeField] float ShootSpeed = 10f;
     [SerializeField] float cableLengthOffset;
     [SerializeField] PlayerBoatEntity player;
     [SerializeField] float TorqueLimitMargin = 1;
@@ -48,14 +48,15 @@ public class BoatHarpoon : MonoBehaviour
         end = new GameObject(name + " Target").transform;
         end.position = start;
         cable.endPoint = end;
-        cable.cableLength = Mathf.Max(0, Vector3.Distance(start, target) + cableLengthOffset);
+        float distance = Vector3.Distance(start, target);
+        cable.cableLength = Mathf.Max(0, distance + cableLengthOffset);
         cable.Activate();
-        float t = 0;
-        while (t < ShootTime)
+        float k = 0;
+        while (k < distance)
         {
             yield return 0;
-            t += Time.deltaTime;
-            end.position = Vector3.Lerp(start, target, t / ShootTime);
+            k += ShootSpeed * Time.deltaTime;
+            end.position = Vector3.MoveTowards(start, target, k);
         }
         end.position = target;
         attached = true;
