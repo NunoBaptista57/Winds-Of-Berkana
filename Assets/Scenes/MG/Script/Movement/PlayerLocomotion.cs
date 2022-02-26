@@ -166,16 +166,20 @@ public class PlayerLocomotion : MonoBehaviour
             {
                 //RaycastHit hit;
                
-                var RayTop = new Ray(this.transform.position + new Vector3(0.0f, 1.0f, 0.0f), transform.forward);
+                var RayTop = new Ray(this.transform.position + new Vector3(0.0f, 0.6f, 0.0f), transform.forward);
                 Debug.DrawRay(RayTop.origin, RayTop.direction, Color.red, 2);
-                var RayBot = new Ray(this.transform.position + new Vector3(0.0f, -1.0f, 0.0f), transform.forward);
+                var RayBot = new Ray(this.transform.position + new Vector3(0.0f, -0.6f, 0.0f), transform.forward);
                 Debug.DrawRay(RayBot.origin, RayBot.direction, Color.green, 3);
                 RaycastHit hittop, hitbot;
                 var toprayresult = Physics.Raycast(RayTop, out hittop, wallRaycastDistance, climbLayer);
                 var botrayresult = Physics.Raycast(RayBot, out hitbot, wallRaycastDistance, climbLayer);
                
-                    if (toprayresult || botrayresult)
-                    {
+                if(!toprayresult && !botrayresult)
+                {
+                    Debug.Log("No Wall");
+                    isClimbing = false;
+                }
+                else { 
                         Debug.Log("Wall ahead");
                         moveDirection = new Vector3(0.0f, 2.0f, 0.0f) * inputManager.horizontalInput;
 
@@ -183,12 +187,6 @@ public class PlayerLocomotion : MonoBehaviour
                         playerRigidBody.velocity = movementVelocity;
 
                     }
-                    else
-                    {
-                        Debug.Log("No Wall");
-                        isClimbing = false;
-                    }
-                
             }
             else
             {
