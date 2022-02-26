@@ -368,6 +368,7 @@ GameObject:
   - component: {fileID: 8724656750544235625}
   - component: {fileID: 8724656750544235626}
   - component: {fileID: 8724656750544235629}
+  - component: {fileID: 5329311462064167636}
   m_Layer: 0
   m_Name: MainCharacter
   m_TagString: Player
@@ -503,11 +504,12 @@ MonoBehaviour:
   verticalInput: 0
   horizontalInput: 0
   gun: {fileID: 8724656748942700841}
-  pickup: {fileID: 8724656750194678748}
   jumpInput: 0
+  dodgeInput: 0
   glideInput: 0
   shootInput: 0
   aimInput: 0
+  visionInput: 0
   pickupInput: 0
   runningInput: 0
   flashInput: 0
@@ -527,6 +529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInteracting: 0
+  isUsingRootMotion: 0
 --- !u!114 &8724656750544235626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -539,6 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73167742af30a97468d54e726afb5c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerRigidBody: {fileID: 0}
   doubleJumpAbility: 1
   glideAbility: 1
   sprintAbility: 1
@@ -557,6 +561,7 @@ MonoBehaviour:
   jumpCoeficient: 0.1
   jumpControlCoeficient: 4
   gravityValue: -9.8
+  dodgeDistance: 3
   glideAcceleration: 8
   glideCoeficient: 6
   groundLayer:
@@ -576,6 +581,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
+--- !u!114 &5329311462064167636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7330490509537886231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fff93bb45632942bedd0934bc09d89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxGroundAngle: 140
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  stairsMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  climbMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &7330490509537886233
 GameObject:
   m_ObjectHideFlags: 0
@@ -2980,10 +3007,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8724656750194678746}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2144e4f4fb7154945b27a89768f7a195, type: 3}
+  m_Script: {fileID: 11500000, guid: 39ca54ab5fa216e4b890f4afc92472d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupRange: 3
 --- !u!1 &8724656750730807102
 GameObject:
   m_ObjectHideFlags: 0

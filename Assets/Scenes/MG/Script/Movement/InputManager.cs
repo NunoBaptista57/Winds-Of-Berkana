@@ -166,6 +166,7 @@ class InputManager : MonoBehaviour
         {
             shootInput = true;
             gun.StartGrapple();
+            Time.timeScale = 1f;
         }
     }
 
