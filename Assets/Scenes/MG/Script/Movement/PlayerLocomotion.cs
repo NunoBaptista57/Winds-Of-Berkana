@@ -164,29 +164,33 @@ public class PlayerLocomotion : MonoBehaviour
 
             if (isClimbing)
             {
+
+                Debug.Log("IsClimbing" + isClimbing);
                 //RaycastHit hit;
-               
-                var RayTop = new Ray(this.transform.position + new Vector3(0.0f, 0.6f, 0.0f), transform.forward);
-                Debug.DrawRay(RayTop.origin, RayTop.direction, Color.red, 2);
-                var RayBot = new Ray(this.transform.position + new Vector3(0.0f, -0.6f, 0.0f), transform.forward);
-                Debug.DrawRay(RayBot.origin, RayBot.direction, Color.green, 3);
-                RaycastHit hittop, hitbot;
-                var toprayresult = Physics.Raycast(RayTop, out hittop, wallRaycastDistance, climbLayer);
-                var botrayresult = Physics.Raycast(RayBot, out hitbot, wallRaycastDistance, climbLayer);
-               
-                if(!toprayresult && !botrayresult)
-                {
-                    Debug.Log("No Wall");
-                    isClimbing = false;
-                }
-                else { 
-                        Debug.Log("Wall ahead");
-                        moveDirection = new Vector3(0.0f, 2.0f, 0.0f) * inputManager.horizontalInput;
 
-                        Vector3 movementVelocity = moveDirection;
-                        playerRigidBody.velocity = movementVelocity;
+                /* var RayTop = new Ray(this.transform.position + new Vector3(0.0f, 0.6f, 0.0f), transform.forward);
+                 Debug.DrawRay(RayTop.origin, RayTop.direction, Color.red, 2);
+                 var RayBot = new Ray(this.transform.position + new Vector3(0.0f, -0.6f, 0.0f), transform.forward);
+                 Debug.DrawRay(RayBot.origin, RayBot.direction, Color.green, 3);
+                 RaycastHit hittop, hitbot;
+                 var toprayresult = Physics.Raycast(RayTop, out hittop, wallRaycastDistance, climbLayer);
+                 var botrayresult = Physics.Raycast(RayBot, out hitbot, wallRaycastDistance, climbLayer);
 
-                    }
+                 if(!toprayresult && !botrayresult)
+                 {
+                     Debug.Log("No Wall");
+                     isClimbing = false;
+                 }
+                 else { 
+                         Debug.Log("Wall ahead");
+                         moveDirection = new Vector3(0.0f, 2.0f, 0.0f) * inputManager.horizontalInput;
+
+                         Vector3 movementVelocity = moveDirection;
+                         playerRigidBody.velocity = movementVelocity;
+
+                     }*/
+                playerRigidBody.velocity = Vector3.zero;
+                moveDirection = Vector3.zero;
             }
             else
             {
