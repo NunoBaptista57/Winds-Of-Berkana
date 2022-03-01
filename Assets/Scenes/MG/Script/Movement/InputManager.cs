@@ -22,6 +22,7 @@ class InputManager : MonoBehaviour
 
     private AnimatorManager animator;
     private Camera _mainCamera;
+    private Puzzle _puzzle;
 
     public bool jumpInput;
     public bool dodgeInput;
@@ -32,6 +33,7 @@ class InputManager : MonoBehaviour
     public bool pickupInput = false;
     public bool runningInput = false;
     public bool flashInput = false;
+    public bool SolvingPuzzle = false;
 
     public Light flashlight;
 
@@ -63,6 +65,7 @@ class InputManager : MonoBehaviour
             playerControls.Character.Reset.performed += i => RestartScene();
             playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
             playerControls.Character.Vision.performed += i => HandleVision();
+            playerControls.Character.Interact.performed += i => HandleInteract();
         }
 
         playerControls.Enable();
@@ -72,6 +75,8 @@ class InputManager : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); ;
         }
+
+        _puzzle = Puzzle.Instance;
     }
 
     private void OnDisable()
@@ -94,12 +99,25 @@ class InputManager : MonoBehaviour
 
     public void HandleMovementInput()
     {
-        verticalInput = movementInput.x;
-        horizontalInput = movementInput.y;
+        if (!SolvingPuzzle)
+        {
+            verticalInput = movementInput.x;
+            horizontalInput = movementInput.y;
 
-        moveAmount = Mathf.Clamp01(Math.Abs(horizontalInput) + Mathf.Abs(verticalInput));
+            moveAmount = Mathf.Clamp01(Math.Abs(horizontalInput) + Mathf.Abs(verticalInput));
 
-        animator.UpdateAnimatorValues(horizontalInput, verticalInput);
+            animator.UpdateAnimatorValues(horizontalInput, verticalInput);
+        }
+        else
+        {
+            horizontalInput = movementInput.x;
+
+            if (horizontalInput != 0)
+            {
+                _puzzle.RotatePiece(horizontalInput);
+            }
+        }
+        
 
     }
 
@@ -195,6 +213,19 @@ class InputManager : MonoBehaviour
 
     private void HandleVision()
     {
-        _mainCamera.enabled = !_mainCamera.enabled;
+        if (!SolvingPuzzle)
+        {
+            _mainCamera.enabled = !_mainCamera.enabled;
+        }
+        else
+        {
+            _puzzle.SelectPiece();
+        }
+        
+    }
+
+    private void HandleInteract()
+    {
+        SolvingPuzzle = !SolvingPuzzle;
     }
 }

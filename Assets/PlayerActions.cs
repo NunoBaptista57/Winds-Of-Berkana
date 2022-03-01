@@ -423,6 +423,15 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""aefb51fa-6f79-4fa7-a93f-6fa5c04f734e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -777,6 +786,17 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""action"": ""Vision"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8ed739e7-6ad0-40c2-b07a-239bcd685c06"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -840,6 +860,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Character_Pickup = m_Character.FindAction("Pickup", throwIfNotFound: true);
         m_Character_Dodge = m_Character.FindAction("Dodge", throwIfNotFound: true);
         m_Character_Vision = m_Character.FindAction("Vision", throwIfNotFound: true);
+        m_Character_Interact = m_Character.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1000,6 +1021,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Pickup;
     private readonly InputAction m_Character_Dodge;
     private readonly InputAction m_Character_Vision;
+    private readonly InputAction m_Character_Interact;
     public struct CharacterActions
     {
         private @PlayerActions m_Wrapper;
@@ -1016,6 +1038,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Pickup => m_Wrapper.m_Character_Pickup;
         public InputAction @Dodge => m_Wrapper.m_Character_Dodge;
         public InputAction @Vision => m_Wrapper.m_Character_Vision;
+        public InputAction @Interact => m_Wrapper.m_Character_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1061,6 +1084,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Vision.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
                 @Vision.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
                 @Vision.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnVision;
+                @Interact.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -1101,6 +1127,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Vision.started += instance.OnVision;
                 @Vision.performed += instance.OnVision;
                 @Vision.canceled += instance.OnVision;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -1148,5 +1177,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnPickup(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
         void OnVision(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

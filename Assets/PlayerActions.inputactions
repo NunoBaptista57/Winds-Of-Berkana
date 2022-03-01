@@ -401,6 +401,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "aefb51fa-6f79-4fa7-a93f-6fa5c04f734e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -753,6 +762,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Vision",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8ed739e7-6ad0-40c2-b07a-239bcd685c06",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
