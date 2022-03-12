@@ -6886,53 +6886,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 158024104, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 158024104, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.7399998
-      objectReference: {fileID: 0}
-    - target: {fileID: 158024104, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -7.749998
-      objectReference: {fileID: 0}
-    - target: {fileID: 158024104, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.000013698938
-      objectReference: {fileID: 0}
-    - target: {fileID: 158024104, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.000009999226
-      objectReference: {fileID: 0}
-    - target: {fileID: 158024104, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 1.3697878e-10
-      objectReference: {fileID: 0}
     - target: {fileID: 307592433, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
       propertyPath: m_ChildCameras.Array.size
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 628601609, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.39999962
+    - target: {fileID: 1581157245, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
+      propertyPath: field of view
+      value: 60
       objectReference: {fileID: 0}
-    - target: {fileID: 628601609, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
+    - target: {fileID: 1581157245, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
+      propertyPath: far clip plane
+      value: 1000
       objectReference: {fileID: 0}
-    - target: {fileID: 1207272947, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.39999962
-      objectReference: {fileID: 0}
-    - target: {fileID: 1207272947, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1207272947, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
+    - target: {fileID: 1581157245, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
+      propertyPath: near clip plane
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1581157246, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6957,10 +6925,6 @@ PrefabInstance:
     - target: {fileID: 1581157246, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
       propertyPath: m_LocalRotation.z
       value: 1.3697878e-10
-      objectReference: {fileID: 0}
-    - target: {fileID: 418377566680987741, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: ShootSpeed
-      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 433621549544903654, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
       propertyPath: m_RootOrder
@@ -7009,10 +6973,6 @@ PrefabInstance:
     - target: {fileID: 433621549544903655, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
       propertyPath: m_Name
       value: Boat
-      objectReference: {fileID: 0}
-    - target: {fileID: 8399694483163200049, guid: 9f7eccbb908513e4387fca9000516612, type: 3}
-      propertyPath: ShootSpeed
-      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f7eccbb908513e4387fca9000516612, type: 3}

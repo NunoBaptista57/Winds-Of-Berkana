@@ -82,6 +82,24 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Shoot Harpoon"",
+                    ""type"": ""Button"",
+                    ""id"": ""afbe8449-f9ac-4369-8ff1-29749f74c58f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cancel Harpoon"",
+                    ""type"": ""Button"",
+                    ""id"": ""70acd95b-b063-4463-a004-a82d63caedc9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Aim"",
                     ""type"": ""Value"",
                     ""id"": ""ae7cba2a-71e9-44ac-8ae7-adf31b7c196a"",
@@ -307,6 +325,28 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Release"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b6ef5737-54ac-4cbe-877c-11fe13831836"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot Harpoon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69155ee9-4c2f-42f9-9133-fa0a11056e02"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel Harpoon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -844,6 +884,8 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Boat_Boost = m_Boat.FindAction("Boost", throwIfNotFound: true);
         m_Boat_RightHarpoon = m_Boat.FindAction("Right Harpoon", throwIfNotFound: true);
         m_Boat_LeftHarpoon = m_Boat.FindAction("Left Harpoon", throwIfNotFound: true);
+        m_Boat_ShootHarpoon = m_Boat.FindAction("Shoot Harpoon", throwIfNotFound: true);
+        m_Boat_CancelHarpoon = m_Boat.FindAction("Cancel Harpoon", throwIfNotFound: true);
         m_Boat_Aim = m_Boat.FindAction("Aim", throwIfNotFound: true);
         m_Boat_Release = m_Boat.FindAction("Release", throwIfNotFound: true);
         // Character
@@ -926,6 +968,8 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Boat_Boost;
     private readonly InputAction m_Boat_RightHarpoon;
     private readonly InputAction m_Boat_LeftHarpoon;
+    private readonly InputAction m_Boat_ShootHarpoon;
+    private readonly InputAction m_Boat_CancelHarpoon;
     private readonly InputAction m_Boat_Aim;
     private readonly InputAction m_Boat_Release;
     public struct BoatActions
@@ -938,6 +982,8 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Boost => m_Wrapper.m_Boat_Boost;
         public InputAction @RightHarpoon => m_Wrapper.m_Boat_RightHarpoon;
         public InputAction @LeftHarpoon => m_Wrapper.m_Boat_LeftHarpoon;
+        public InputAction @ShootHarpoon => m_Wrapper.m_Boat_ShootHarpoon;
+        public InputAction @CancelHarpoon => m_Wrapper.m_Boat_CancelHarpoon;
         public InputAction @Aim => m_Wrapper.m_Boat_Aim;
         public InputAction @Release => m_Wrapper.m_Boat_Release;
         public InputActionMap Get() { return m_Wrapper.m_Boat; }
@@ -967,6 +1013,12 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @LeftHarpoon.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnLeftHarpoon;
                 @LeftHarpoon.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnLeftHarpoon;
                 @LeftHarpoon.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnLeftHarpoon;
+                @ShootHarpoon.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnShootHarpoon;
+                @ShootHarpoon.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnShootHarpoon;
+                @ShootHarpoon.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnShootHarpoon;
+                @CancelHarpoon.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnCancelHarpoon;
+                @CancelHarpoon.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnCancelHarpoon;
+                @CancelHarpoon.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnCancelHarpoon;
                 @Aim.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
                 @Aim.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
                 @Aim.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnAim;
@@ -995,6 +1047,12 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @LeftHarpoon.started += instance.OnLeftHarpoon;
                 @LeftHarpoon.performed += instance.OnLeftHarpoon;
                 @LeftHarpoon.canceled += instance.OnLeftHarpoon;
+                @ShootHarpoon.started += instance.OnShootHarpoon;
+                @ShootHarpoon.performed += instance.OnShootHarpoon;
+                @ShootHarpoon.canceled += instance.OnShootHarpoon;
+                @CancelHarpoon.started += instance.OnCancelHarpoon;
+                @CancelHarpoon.performed += instance.OnCancelHarpoon;
+                @CancelHarpoon.canceled += instance.OnCancelHarpoon;
                 @Aim.started += instance.OnAim;
                 @Aim.performed += instance.OnAim;
                 @Aim.canceled += instance.OnAim;
@@ -1160,6 +1218,8 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnBoost(InputAction.CallbackContext context);
         void OnRightHarpoon(InputAction.CallbackContext context);
         void OnLeftHarpoon(InputAction.CallbackContext context);
+        void OnShootHarpoon(InputAction.CallbackContext context);
+        void OnCancelHarpoon(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnRelease(InputAction.CallbackContext context);
     }

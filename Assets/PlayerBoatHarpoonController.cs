@@ -14,6 +14,7 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
     BoatHarpoon currentHarpoon;
 
     [SerializeField] UnityEvent OnHarpoonShoot;
+    [SerializeField] UnityEvent OnHarpoonCanceled;
 
     bool toShoot;
 
@@ -22,7 +23,7 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
         if (toShoot)
         {
             CameraAnimator.Play("Idle");
-            player.state = PlayerBoatState.Idle;
+            player.state = PlayerBoatState.Transition;
             currentHarpoon.Shoot();
             currentHarpoon = null;
             OnHarpoonShoot.Invoke();
@@ -42,10 +43,10 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
 
     void OnHarpoon(InputValue value, BoatHarpoon harpoon)
     {
-        if (player.state == PlayerBoatState.Idle)
+        if (player.state == PlayerBoatState.Idle && !currentHarpoon)
         {
             CameraAnimator.Play(harpoon.AnimationState);
-            player.state = PlayerBoatState.Harpoon;
+            player.state = PlayerBoatState.Transition;
             Cursor.lockState = CursorLockMode.Locked;
             currentHarpoon = harpoon;
             if (currentHarpoon.Grappling)
@@ -53,11 +54,39 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
                 currentHarpoon.Release();
             }
         }
-        else if (player.state == PlayerBoatState.Harpoon && currentHarpoon == harpoon && !toShoot)
+    }
+
+    void OnShootHarpoon(InputValue value)
+    {
+        if (player.state == PlayerBoatState.Harpoon && currentHarpoon && !toShoot)
         {
             Cursor.lockState = CursorLockMode.None;
             toShoot = true;
         }
+    }
+
+    void OnCancelHarpoon(InputValue value)
+    {
+        if (player.state == PlayerBoatState.Harpoon && currentHarpoon && !toShoot)
+        {
+            CameraAnimator.Play("Idle");
+            player.state = PlayerBoatState.Transition;
+            Cursor.lockState = CursorLockMode.None;
+            currentHarpoon = null;
+            OnHarpoonCanceled.Invoke();
+        }
+    }
+
+    public void TransitionToIdle()
+    {
+        player.state = PlayerBoatState.Idle;
+        Debug.Log(player.state);
+    }
+
+    public void TransitionToHarpoon()
+    {
+        player.state = PlayerBoatState.Harpoon;
+        Debug.Log(player.state);
     }
 
     void OnRelease(InputValue value)
