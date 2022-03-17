@@ -60,6 +60,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Shoot Harpoon",
+                    "type": "Button",
+                    "id": "afbe8449-f9ac-4369-8ff1-29749f74c58f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cancel Harpoon",
+                    "type": "Button",
+                    "id": "70acd95b-b063-4463-a004-a82d63caedc9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Aim",
                     "type": "Value",
                     "id": "ae7cba2a-71e9-44ac-8ae7-adf31b7c196a",
@@ -285,6 +303,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Release",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b6ef5737-54ac-4cbe-877c-11fe13831836",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot Harpoon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "69155ee9-4c2f-42f9-9133-fa0a11056e02",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel Harpoon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

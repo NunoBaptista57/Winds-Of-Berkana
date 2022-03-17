@@ -100,7 +100,6 @@ public class BoatHarpoon : MonoBehaviour
         {
             //Debug.Log(Vector3.Distance(end.position, transform.position));
         }
-        Debug.Log(player.rigidbody.velocity.magnitude);
     }
 
     private void FixedUpdate()

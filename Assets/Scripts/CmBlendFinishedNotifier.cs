@@ -9,13 +9,16 @@ public class CmBlendFinishedNotifier : MonoBehaviour
     CinemachineStateDrivenCamera parentCamera;
     [Serializable] public class BlendFinishedEvent : UnityEvent<CinemachineVirtualCameraBase> { }
     public BlendFinishedEvent OnBlendFinished;
+    bool usingEvent;
+    bool wasLive = false;
 
     void Start()
     {
         vcamBase = GetComponent<CinemachineVirtualCameraBase>();
         parentCamera = GetComponentInParent<CinemachineStateDrivenCamera>();
         ConnectToVcam(true);
-        enabled = false;
+        if (usingEvent)
+            enabled = false;
     }
 
     void ConnectToVcam(bool connect)
@@ -25,14 +28,20 @@ public class CmBlendFinishedNotifier : MonoBehaviour
         {
             vcam.m_Transitions.m_OnCameraLive.RemoveListener(OnCameraLive);
             if (connect)
+            {
                 vcam.m_Transitions.m_OnCameraLive.AddListener(OnCameraLive);
+                usingEvent = true;
+            }
         }
         var freeLook = vcamBase as CinemachineFreeLook;
         if (freeLook != null)
         {
             freeLook.m_Transitions.m_OnCameraLive.RemoveListener(OnCameraLive);
             if (connect)
+            {
                 freeLook.m_Transitions.m_OnCameraLive.AddListener(OnCameraLive);
+                usingEvent = true;
+            }
         }
     }
 
@@ -44,14 +53,20 @@ public class CmBlendFinishedNotifier : MonoBehaviour
     void Update()
     {
         var brain = CinemachineCore.Instance.FindPotentialTargetBrain(vcamBase);
-        if (brain == null)
+        if (usingEvent && brain == null)
             enabled = false;
-
-        else if (!brain.IsBlending && (parentCamera == null || !parentCamera.IsBlending))
+        else if (brain && !brain.IsBlending && (parentCamera == null || !parentCamera.IsBlending))
         {
-            if (brain.IsLive(vcamBase) && (parentCamera == null || parentCamera.IsLiveChild(vcamBase)))
+            bool live = brain.IsLive(vcamBase) && (parentCamera == null || parentCamera.IsLiveChild(vcamBase));
+            if (live && !wasLive)
                 OnBlendFinished.Invoke(vcamBase);
-            enabled = false;
+            wasLive = live;
+            if (usingEvent)
+                enabled = false;
+        }
+        else
+        {
+            wasLive = false;
         }
     }
 }
