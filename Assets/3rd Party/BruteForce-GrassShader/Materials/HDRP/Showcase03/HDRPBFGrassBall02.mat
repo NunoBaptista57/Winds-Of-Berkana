@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: HDRPBFGrassBall02
   m_Shader: {fileID: 4800000, guid: 26cee2a83feb2624c898843862b23f88, type: 3}
-  m_ShaderKeywords: USE_RT USE_S USE_SC USE_SS _RTEFFECT_ON
+  m_ShaderKeywords: USE_CS USE_RT USE_S USE_SC USE_SS _RTEFFECT_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -94,24 +94,24 @@ Material:
     - _FadeAmplitude: 28
     - _FadeDistance: 16
     - _FadeDistanceEnd: 50
-    - _FadeDistanceStart: 30
+    - _FadeDistanceStart: 5
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _GrassCut: 0
     - _GrassSaturation: 3.55
     - _GrassShading: 0
-    - _GrassThinness: 0.78
+    - _GrassThinness: 1
     - _GrassThinnessIntersection: 0.45
     - _LightIntensity: 1
     - _Metallic: 0
     - _MinimumNumberStacks: 2
     - _Mode: 0
-    - _NearCameraSmoosh: 1
+    - _NearCameraSmoosh: 5
     - _NoisePower: 1.24
-    - _NumberOfStacks: 15
+    - _NumberOfStacks: 5
     - _OcclusionStrength: 1
-    - _OffsetValue: 0.75
+    - _OffsetValue: 1
     - _Parallax: 0.02
     - _ProceduralDistance: 5.5
     - _ProceduralStrength: 1.5
@@ -135,7 +135,7 @@ Material:
     - _StencilWriteMaskGBuffer: 3
     - _StencilWriteMaskMV: 32
     - _SurfaceType: 0
-    - _TilingN1: 2.62
+    - _TilingN1: 1
     - _TilingN2: 0.05
     - _TilingN3: 0.4
     - _TransparentCullMode: 2
@@ -151,8 +151,8 @@ Material:
     - _UseTP: 0
     - _UseVR: 0
     - _UseWC: 0
-    - _WindForce: 0.3
-    - _WindMovement: 0.2
+    - _WindForce: 0.1
+    - _WindMovement: 0.1
     - _WorldRotation: 0
     - _WorldScale: 10
     - _ZTestDepthEqualForOpaque: 4
@@ -171,3 +171,4 @@ Material:
     - _ProjectedShadowColor: {r: 0.4509804, g: 0.35963517, b: 0.2782549, a: 1}
     - _RimColor: {r: 0.277, g: 0.25819692, b: 0.1355532, a: 1}
     - _SelfShadowColor: {r: 0.199, g: 0.19627397, b: 0.13221233, a: 1}
+  m_BuildTextureStacks: []
