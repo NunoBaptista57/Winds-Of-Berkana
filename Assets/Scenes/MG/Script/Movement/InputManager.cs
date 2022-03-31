@@ -103,19 +103,14 @@ class InputManager : MonoBehaviour
         {
             verticalInput = movementInput.x;
             horizontalInput = movementInput.y;
-
             moveAmount = Mathf.Clamp01(Math.Abs(horizontalInput) + Mathf.Abs(verticalInput));
 
             animator.UpdateAnimatorValues(horizontalInput, verticalInput);
         }
         else
         {
-            horizontalInput = movementInput.x;
-
-            if (horizontalInput != 0)
-            {
-                _puzzle.RotatePiece(horizontalInput);
-            }
+            //horizontalInput = movementInput.x;
+            _puzzle.RotatePiece(movementInput.x);
         }
         
 

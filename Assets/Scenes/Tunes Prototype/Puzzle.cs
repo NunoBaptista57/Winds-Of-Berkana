@@ -36,12 +36,12 @@ public class Puzzle : MonoBehaviour
     {
         if(_pieceSelected == puzzlePieces.Length - 1)
         {
-            puzzlePieces[_pieceSelected].gameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 127, 177);
+            puzzlePieces[_pieceSelected].gameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 127, 0.7f);
             _pieceSelected = 0;
         }
         else
         {
-            puzzlePieces[_pieceSelected].gameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 127, 177);
+            puzzlePieces[_pieceSelected].gameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 127, 0.7f);
             _pieceSelected += 1;
         }
 
