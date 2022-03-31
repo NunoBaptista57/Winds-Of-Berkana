@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: WaterLowPoly HDRP
   m_Shader: {fileID: 4800000, guid: 3313b7cc2ca176349a5301e7ff1d0fda, type: 3}
-  m_ShaderKeywords: _ADD_PRECOMPUTED_VELOCITY _BLENDMODE_ALPHA _ENABLE_FOG_ON_TRANSPARENT
+  m_ShaderKeywords: _ADD_PRECOMPUTED_VELOCITY _ALPHATEST_ON _BLENDMODE_ALPHA _ENABLE_FOG_ON_TRANSPARENT
     _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -26,11 +26,11 @@ Material:
     - _Noise:
         m_Texture: {fileID: 2800000, guid: eaa1c5562af66424092dc5b1f37208e9, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Offset: {x: 1, y: 0}
     m_Floats:
     - _AddPrecomputedVelocity: 1
     - _AlphaCutoff: 0.5
-    - _AlphaCutoffEnable: 0
+    - _AlphaCutoffEnable: 1
     - _AlphaDstBlend: 10
     - _AlphaSrcBlend: 1
     - _BlendMode: 0
@@ -47,8 +47,8 @@ Material:
     - _Float0: 20.58
     - _Gloss: 0.852
     - _Lerp_: 0.998
-    - _LowPolyToFlat1: 0.827
-    - _NoiseIntensity: 0.15
+    - _LowPolyToFlat1: 0.7
+    - _NoiseIntensity: 0.1
     - _OpasityIntensity: 0.403
     - _ReceivesSSR: 1
     - _Refraction: 0
@@ -57,7 +57,7 @@ Material:
     - _ScaleNoise: 0.1
     - _SizeFoam: 0.05
     - _Specular: 0.2
-    - _Speed: 0.2
+    - _Speed: 1
     - _SrcBlend: 1
     - _StencilRef: 0
     - _StencilRefDepth: 0
@@ -73,12 +73,12 @@ Material:
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentSortPriority: 0
-    - _TransparentZWrite: 0
+    - _TransparentZWrite: 1
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 2
-    - _ZTestGBuffer: 4
+    - _ZTestGBuffer: 3
     - _ZTestTransparent: 2
-    - _ZWrite: 0
+    - _ZWrite: 1
     - __dirty: 0
     m_Colors:
     - _Color0: {r: 0.15294108, g: 0.49964565, b: 0.5294118, a: 0}
