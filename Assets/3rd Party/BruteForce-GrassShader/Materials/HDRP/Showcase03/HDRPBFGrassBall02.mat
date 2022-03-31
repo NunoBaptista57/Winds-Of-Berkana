@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: HDRPBFGrassBall02
   m_Shader: {fileID: 4800000, guid: 26cee2a83feb2624c898843862b23f88, type: 3}
-  m_ShaderKeywords: USE_CS USE_RT USE_S USE_SC USE_SS _RTEFFECT_ON
+  m_ShaderKeywords: USE_CS USE_S USE_SC USE_SS USE_WC _RTEFFECT_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -93,28 +93,28 @@ Material:
     - _DstBlend: 0
     - _FadeAmplitude: 28
     - _FadeDistance: 16
-    - _FadeDistanceEnd: 50
+    - _FadeDistanceEnd: 100
     - _FadeDistanceStart: 5
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _GrassCut: 0
     - _GrassSaturation: 3.55
-    - _GrassShading: 0
-    - _GrassThinness: 1
+    - _GrassShading: 0.182
+    - _GrassThinness: 0.8
     - _GrassThinnessIntersection: 0.45
     - _LightIntensity: 1
     - _Metallic: 0
-    - _MinimumNumberStacks: 2
+    - _MinimumNumberStacks: 0
     - _Mode: 0
-    - _NearCameraSmoosh: 5
+    - _NearCameraSmoosh: 10
     - _NoisePower: 1.24
     - _NumberOfStacks: 5
     - _OcclusionStrength: 1
     - _OffsetValue: 1
     - _Parallax: 0.02
-    - _ProceduralDistance: 5.5
-    - _ProceduralStrength: 1.5
+    - _ProceduralDistance: 20
+    - _ProceduralStrength: 10
     - _RTEffect: 1
     - _RimMax: 0.591
     - _RimMin: 0.11
@@ -135,7 +135,7 @@ Material:
     - _StencilWriteMaskGBuffer: 3
     - _StencilWriteMaskMV: 32
     - _SurfaceType: 0
-    - _TilingN1: 1
+    - _TilingN1: 2
     - _TilingN2: 0.05
     - _TilingN3: 0.4
     - _TransparentCullMode: 2
@@ -144,13 +144,13 @@ Material:
     - _UseAmbientLight: 0
     - _UseCS: 1
     - _UsePR: 0
-    - _UseRT: 1
+    - _UseRT: 0
     - _UseShadow: 1
     - _UseShadowCast: 1
     - _UseSuperStack: 1
     - _UseTP: 0
     - _UseVR: 0
-    - _UseWC: 0
+    - _UseWC: 1
     - _WindForce: 0.1
     - _WindMovement: 0.1
     - _WorldRotation: 0
@@ -158,7 +158,7 @@ Material:
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
     - _ZTestModeDistortion: 8
-    - _ZTestTransparent: 4
+    - _ZTestTransparent: 1
     - _ZWrite: 1
     - __NumberOfStacks: 17
     m_Colors:
