@@ -263,7 +263,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
+                    ""name"": ""positive"",
                     ""id"": ""135762f7-4fa8-41bf-b8db-42a50fb70c8c"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
@@ -274,7 +274,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""positive"",
+                    ""name"": ""negative"",
                     ""id"": ""fb2fe90d-d786-46a9-9413-ff02840a9b9f"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
