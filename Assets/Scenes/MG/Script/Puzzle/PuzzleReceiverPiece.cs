@@ -12,17 +12,18 @@ public class PuzzleReceiverPiece : InteractableZone
     private MeshRenderer rend;
     private bool completed = false;
 
-    private PuzzleManager manager;
+    private GameManager manager;
 
     // Start is called before the first frame update
     void Start()
     {
         rend = this.GetComponent<MeshRenderer>();
         defaultMaterial = rend.materials[0];
-        manager = this.GetComponentInParent<PuzzleManager>();
+        manager = GameManager.Instance;
     }
 
 
+    // Main function to determine if the correct piece was inserted into the receiver 
     public override bool OnInteractionBegin(GameObject currentObject)
     {
         if (completed || currentObject == null) return false;
@@ -40,7 +41,7 @@ public class PuzzleReceiverPiece : InteractableZone
                     completedMaterial
                 };
 
-                manager.PieceReceived();
+                manager.pieceCollected();
 
 
                 return true;

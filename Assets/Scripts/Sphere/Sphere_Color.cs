@@ -20,10 +20,6 @@ public class Sphere_Color : MonoBehaviour
     private float _angle;
     void Start()
     {
-        foreach(PuzzlePiece _p in puzzle_piece)
-        {
-            _p.Collect += Collected;
-        }
         _distance = new float[puzzle_piece.Length];
 
         _centre = this.transform.parent.position;
@@ -76,10 +72,5 @@ public class Sphere_Color : MonoBehaviour
         }
     }
 
-    private void Collected(int i)
-    {
-        Debug.Log("coleccionou peca: " + i);
-        _distance[i] = 10000;
-        gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", 1f);
-    }
+
 }

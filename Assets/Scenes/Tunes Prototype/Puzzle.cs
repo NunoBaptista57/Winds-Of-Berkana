@@ -10,9 +10,10 @@ public class Puzzle : MonoBehaviour
     private int _pieceSelected = 0;
 
     private bool isNear = false;
-    private bool isSolving = true;
 
     private GameManager _gameManager;
+
+    [Header("Canvas Objects")]
     public GameObject startInteractionText;
     public GameObject directionText;
     public GameObject puzzlePiecesText;
@@ -28,12 +29,15 @@ public class Puzzle : MonoBehaviour
         
     }
 
+    // Increase the Number of Puzzle Pieces Colled
     public void PuzzleCollected()
     {
         puzzlePieces[_piecesCollected].gameObject.SetActive(true);
         _piecesCollected += 1;
+
     }
 
+    // Rotating the Vitral using movement controls
     public void RotatePiece(float rotation)
     {
         if (isNear)
@@ -42,13 +46,14 @@ public class Puzzle : MonoBehaviour
         }
     }
 
+    // If players Press E they start trying to solve the Vitral
     public void SolvingPuzzle()
     {
-       // startInteractionText.SetActive(false);
         directionText.SetActive(true);
-       // puzzlePiecesText.SetActive(true);
     }
 
+
+    // Select which Piece of the Vitral is being controlled
     public void SelectPiece()
     {
         if(_pieceSelected == puzzlePieces.Length - 1)
@@ -66,6 +71,8 @@ public class Puzzle : MonoBehaviour
     }
 
 
+
+    //  Triger Enter and Exit to check if Player is near the Vitral
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")

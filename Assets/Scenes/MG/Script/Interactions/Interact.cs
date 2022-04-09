@@ -35,6 +35,7 @@ public class Interact : MonoBehaviour
 
     public void HandleInteraction()
     {
+        Debug.Log("Handle Interaction");
         if(currentObject != null && currentZone != null)
         {
             StartZoneInteraction();
@@ -63,7 +64,7 @@ public class Interact : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Interactable Item")
+        if(other.gameObject.tag == "Interactable Item" || other.gameObject.tag == "Puzzle_Piece")
         {
             nearbyObject = other.gameObject;
         }
@@ -75,7 +76,7 @@ public class Interact : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Interactable Item")
+        if (other.gameObject.tag == "Interactable Item" || other.gameObject.tag == "Puzzle_Piece")
         {
             nearbyObject = null;
         }
