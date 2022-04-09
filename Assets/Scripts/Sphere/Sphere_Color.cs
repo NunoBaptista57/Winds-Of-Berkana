@@ -7,48 +7,63 @@ public class Sphere_Color : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField]
     private GameObject[] puzzle_piece;// = GameObject.FindGameObjectWithTag("Puzzle_Piece");
-    private float[] _distance;
-    private float distance_final;
 
     [Header("Light Variables")]
-    [SerializeField] float Puzzle_distance;
     [SerializeField] float Light_intensity;
     [SerializeField] bool Light_Mechanic;
     [SerializeField] bool Movement_Mechanic;
 
     private Vector3 _centre;
-    
-    public int currentPuzzleIndex = 0;
+
+    private GameObject closestSphere;
+
     private float _angle;
 
     void Start()
     {
-        _distance = new float[puzzle_piece.Length];
-
         _centre = this.transform.parent.position;
+        GetClosestSphere();
     }
 
     // Change this to check which sphere was caught
     public void NextSphere()
     {
-        currentPuzzleIndex += 1;
+        GetClosestSphere();
     }
 
     // Get Closest Sphere from the List
-    public void ClosestSphere()
+    public void GetClosestSphere()
     {
+        float maxDistance = float.MaxValue;
+
+        foreach(var p in puzzle_piece)
+        {
+            if (p.activeSelf)
+            {
+                var distance = Vector3.Distance(p.transform.position, transform.position);
+
+                if(distance < maxDistance)
+                {
+                    closestSphere = p;
+                }
+            }
+          
+
+
+        }
 
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
 
-        distance_final = 10000;
-        int closest_sphere = 0;
+        
+        // Get Distance
+        var currentDistance = Vector3.Distance(closestSphere.transform.position, this.transform.position);
 
-        // Need to check for closest afterwards
-        _distance[currentPuzzleIndex] = Vector3.Distance(puzzle_piece[currentPuzzleIndex].gameObject.transform.position, transform.position);
+        // Invert it
+        var invertedDistance = 1 / currentDistance;
 
      /*   for (int i = 0; i < puzzle_piece.Length; i++)
         {
@@ -65,7 +80,7 @@ public class Sphere_Color : MonoBehaviour
 
         if (Light_Mechanic)
         {
-            distance_final = 10000;
+            /*distance_final = 10000;
             for (int i = 0; i < puzzle_piece.Length; i++)
             {
                 if (puzzle_piece[i].gameObject.activeSelf)
@@ -75,18 +90,26 @@ public class Sphere_Color : MonoBehaviour
                 }
             }
 
-            gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", Light_intensity + distance_final * Puzzle_distance); //color = new Color(255 - distance * 5, 0, 98, 255);
+            gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", Light_intensity + distance_final * Puzzle_distance); //color = new Color(255 - distance * 5, 0, 98, 255);*/
+
+           
+            var actualIntensity = Light_intensity * invertedDistance;
+          //  Debug.Log(actualIntensity);
+            gameObject.GetComponent<Renderer>().material.SetFloat("Emissive Intensity", actualIntensity);
+
+           Debug.Log(" Intensity: " + gameObject.GetComponent<Renderer>().material.GetFloat("Emissive Intensity"));
+         //   Debug.Log(" HasPropery: " + gameObject.GetComponent<Renderer>().material.HasProperty("_EmissionIntensity"));
         }
 
         if (Movement_Mechanic)
         {
             //gameObject.transform.localPosition = new Vector3(1f, 1.5f, 1f);
-            Vector3 distance = (puzzle_piece[closest_sphere].gameObject.transform.position - this.transform.parent.position).normalized;
+            Vector3 distance = (closestSphere.transform.position - this.transform.parent.position).normalized;
 
             _angle += 1f * Time.deltaTime;
 
             var offset = new Vector3(distance.x, 1.5f, distance.z);
-            transform.position = Vector3.Lerp(this.transform.parent.position, puzzle_piece[closest_sphere].gameObject.transform.position, 0.01f);
+            transform.position = Vector3.Lerp(this.transform.parent.position, closestSphere.transform.position, 0.01f);
             transform.localPosition = new Vector3(transform.localPosition.x, 1.5f, transform.localPosition.z);
         }
     }
