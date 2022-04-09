@@ -9,9 +9,16 @@ public class Puzzle : MonoBehaviour
 
     private int _pieceSelected = 0;
 
+    private bool isNear = false;
+    private bool isSolving = true;
+
     private GameManager _gameManager;
+    public GameObject startInteractionText;
+    public GameObject directionText;
+    public GameObject puzzlePiecesText;
     void Start()
     {
+       
         _gameManager = GameManager.Instance;
         _gameManager.PieceCollected += PuzzleCollected;
     }
@@ -29,7 +36,17 @@ public class Puzzle : MonoBehaviour
 
     public void RotatePiece(float rotation)
     {
-        puzzlePieces[_pieceSelected].gameObject.transform.Rotate(0, 0, rotation);
+        if (isNear)
+        {
+            puzzlePieces[_pieceSelected].gameObject.transform.Rotate(0, 0, rotation);
+        }
+    }
+
+    public void SolvingPuzzle()
+    {
+       // startInteractionText.SetActive(false);
+        directionText.SetActive(true);
+       // puzzlePiecesText.SetActive(true);
     }
 
     public void SelectPiece()
@@ -46,6 +63,29 @@ public class Puzzle : MonoBehaviour
         }
 
         puzzlePieces[_pieceSelected].gameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 127, 255);
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Player")
+        {
+            startInteractionText.gameObject.SetActive(true);
+            puzzlePiecesText.SetActive(true);
+            puzzlePiecesText.GetComponent<UnityEngine.UI.Text>().text = "Collected " + _piecesCollected + "/3 Puzzle Pieces";
+            isNear = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            startInteractionText.gameObject.SetActive(false);
+            puzzlePiecesText.SetActive(false);
+            directionText.SetActive(false);
+            isNear = false;
+        }
     }
 
     #region Singleton

@@ -35,12 +35,12 @@ public class PuzzlePiece : MonoBehaviour
         transform.position = tempPos;
     }
 
-    private void OnTriggerEnter(Collider other)
+   /* private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
             Collect?.Invoke(_npeca);
             gameObject.SetActive(false);
         }
-    }
+    }*/
 }

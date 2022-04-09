@@ -9,6 +9,8 @@ public class Sphere_Color : MonoBehaviour
     private PuzzlePiece[] puzzle_piece;// = GameObject.FindGameObjectWithTag("Puzzle_Piece");
     private float[] _distance;
     private float distance_final;
+
+    [Header("Light Variables")]
     [SerializeField] float Puzzle_distance;
     [SerializeField] float Light_intensity;
     [SerializeField] bool Light_Mechanic;

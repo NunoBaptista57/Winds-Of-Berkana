@@ -50,7 +50,6 @@ class InputManager : MonoBehaviour
         aimCanvas.enabled = false;
         if (playerControls == null)
         {
-            Debug.Log("Awaken");
             playerControls = new PlayerActions();
 
             playerControls.Character.Move.performed += i => movementInput = i.ReadValue<Vector2>();
@@ -211,6 +210,7 @@ class InputManager : MonoBehaviour
         if (!SolvingPuzzle)
         {
             _mainCamera.enabled = !_mainCamera.enabled;
+            _puzzle.SolvingPuzzle();
         }
         else
         {

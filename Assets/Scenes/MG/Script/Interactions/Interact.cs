@@ -63,7 +63,6 @@ public class Interact : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("On trigger enter " + other.gameObject.name);
         if(other.gameObject.tag == "Interactable Item")
         {
             nearbyObject = other.gameObject;
