@@ -560,12 +560,12 @@ GameObject:
   - component: {fileID: 73314703}
   - component: {fileID: 73314704}
   m_Layer: 0
-  m_Name: 1-vitral (1)
+  m_Name: EndVitral
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &73314703
 Transform:
   m_ObjectHideFlags: 0
@@ -574,8 +574,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 73314702}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.9739485, y: 13.58, z: 1.93}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 11.9739485, y: 13.58, z: 0.09}
+  m_LocalScale: {x: 0.7, y: 1, z: 0.2}
   m_Children: []
   m_Father: {fileID: 1022423864}
   m_RootOrder: 4
@@ -3061,7 +3061,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633206454}
   m_LocalRotation: {x: 0, y: 0, z: 0.052161667, w: 0.9986387}
-  m_LocalPosition: {x: 11.982292, y: 13.574826, z: 0}
+  m_LocalPosition: {x: 11.982292, y: 13.574826, z: 0.19}
   m_LocalScale: {x: 1.432912, y: 1.3687439, z: 1}
   m_Children: []
   m_Father: {fileID: 1022423864}
@@ -3279,7 +3279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 691180622}
   m_Layer: 0
-  m_Name: PuzzleManager
+  m_Name: PuzzleReceiver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4671,8 +4671,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1022423863}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.732292, y: -7.81, z: 48.19}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.192292, y: -11.330227, z: 13.239998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1024553422}
@@ -4681,8 +4681,8 @@ Transform:
   - {fileID: 633206455}
   - {fileID: 73314703}
   - {fileID: 1700925466}
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 1816249557}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1024553421
 GameObject:
@@ -6106,7 +6106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.47771215
+      value: -0.06633031
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6444,7 +6444,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422830781}
   m_LocalRotation: {x: 0, y: 0, z: 0.66131186, w: 0.75011104}
-  m_LocalPosition: {x: 11.972292, y: 13.581536, z: 0}
+  m_LocalPosition: {x: 11.972292, y: 13.581536, z: 0.18999863}
   m_LocalScale: {x: 1.3778, y: 1.3161, z: 1}
   m_Children: []
   m_Father: {fileID: 1022423864}
@@ -6860,7 +6860,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1557824441 stripped
 MonoBehaviour:
@@ -7476,7 +7476,7 @@ GameObject:
   - component: {fileID: 1700925465}
   - component: {fileID: 1700925463}
   m_Layer: 0
-  m_Name: Circle Puzzle
+  m_Name: VitralManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7502,6 +7502,7 @@ MonoBehaviour:
   startInteractionText: {fileID: 888242890}
   directionText: {fileID: 1484596668}
   puzzlePiecesText: {fileID: 897349674}
+  completedPanel: {fileID: 73314702}
 --- !u!65 &1700925465
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7924,7 +7925,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1816249557}
   m_Layer: 0
-  m_Name: Puzzles
+  m_Name: PuzzleComponents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7945,8 +7946,10 @@ Transform:
   - {fileID: 1462130233}
   - {fileID: 1943886113}
   - {fileID: 521480823}
+  - {fileID: 1022423864}
+  - {fileID: 1819419018}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1819419014
 GameObject:
@@ -8042,8 +8045,8 @@ RectTransform:
   - {fileID: 888242891}
   - {fileID: 1484596669}
   - {fileID: 897349675}
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_Father: {fileID: 1816249557}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -9354,7 +9357,7 @@ PrefabInstance:
       objectReference: {fileID: 2059125668}
     - target: {fileID: 3301746214839453375, guid: c66bcf5dcdfa0f145aba6eff135764fd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.3221833
+      value: -0.017843187
       objectReference: {fileID: 0}
     - target: {fileID: 3301746214839453375, guid: c66bcf5dcdfa0f145aba6eff135764fd, type: 3}
       propertyPath: m_LocalRotation.x
@@ -9362,15 +9365,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3301746214839453375, guid: c66bcf5dcdfa0f145aba6eff135764fd, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1.5140379e-10
+      value: -6.0561517e-10
       objectReference: {fileID: 0}
     - target: {fileID: 3301746214839453375, guid: c66bcf5dcdfa0f145aba6eff135764fd, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.8338487e-19
+      value: 7.335395e-19
       objectReference: {fileID: 0}
     - target: {fileID: 3301746214991790432, guid: c66bcf5dcdfa0f145aba6eff135764fd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.7863254
+      value: 0.24228293
       objectReference: {fileID: 0}
     - target: {fileID: 3301746214991790438, guid: c66bcf5dcdfa0f145aba6eff135764fd, type: 3}
       propertyPath: m_Follow
@@ -10161,7 +10164,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2126206627}
   m_LocalRotation: {x: 0, y: 0, z: -0.5365634, w: 0.84386003}
-  m_LocalPosition: {x: 11.982292, y: 13.574826, z: 0}
+  m_LocalPosition: {x: 11.982292, y: 13.574826, z: 0.18999863}
   m_LocalScale: {x: 1.4053559, y: 1.342422, z: 1}
   m_Children: []
   m_Father: {fileID: 1022423864}

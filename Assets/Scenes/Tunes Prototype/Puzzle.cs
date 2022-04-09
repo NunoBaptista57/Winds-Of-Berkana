@@ -17,6 +17,9 @@ public class Puzzle : MonoBehaviour
     public GameObject startInteractionText;
     public GameObject directionText;
     public GameObject puzzlePiecesText;
+
+    [Header("CompleteImage")]
+    public GameObject completedPanel;
     void Start()
     {
        
@@ -43,6 +46,7 @@ public class Puzzle : MonoBehaviour
         if (isNear)
         {
             puzzlePieces[_pieceSelected].gameObject.transform.Rotate(0, 0, rotation);
+            CheckPosition();
         }
     }
 
@@ -94,6 +98,31 @@ public class Puzzle : MonoBehaviour
             isNear = false;
         }
     }
+
+
+    // The objective of this function is to Check if the panels are in the correct Position
+    public void CheckPosition()
+    {
+        if (_piecesCollected == 3)
+        {
+            foreach (var p in puzzlePieces)
+            {
+                if (p.transform.rotation.z <= -5 && p.transform.rotation.z >= 5)
+                    return;
+
+            }
+            // Completed the panel
+            CompletedVitral();
+        }
+
+    }
+
+    // Show the final panel, animations and walls going up should be called here
+    public void CompletedVitral()
+    {
+        completedPanel.SetActive(true);
+    }
+
 
     #region Singleton
 
