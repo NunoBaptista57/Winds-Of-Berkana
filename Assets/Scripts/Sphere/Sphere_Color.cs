@@ -6,7 +6,7 @@ public class Sphere_Color : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField]
-    private PuzzlePiece[] puzzle_piece;// = GameObject.FindGameObjectWithTag("Puzzle_Piece");
+    private GameObject[] puzzle_piece;// = GameObject.FindGameObjectWithTag("Puzzle_Piece");
     private float[] _distance;
     private float distance_final;
 
@@ -17,7 +17,10 @@ public class Sphere_Color : MonoBehaviour
     [SerializeField] bool Movement_Mechanic;
 
     private Vector3 _centre;
+    
+    public int currentPuzzleIndex = 0;
     private float _angle;
+
     void Start()
     {
         _distance = new float[puzzle_piece.Length];
@@ -25,15 +28,31 @@ public class Sphere_Color : MonoBehaviour
         _centre = this.transform.parent.position;
     }
 
+    // Change this to check which sphere was caught
+    public void NextSphere()
+    {
+        currentPuzzleIndex += 1;
+    }
+
+    // Get Closest Sphere from the List
+    public void ClosestSphere()
+    {
+
+    }
+
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 
         distance_final = 10000;
         int closest_sphere = 0;
-        for (int i = 0; i < puzzle_piece.Length; i++)
+
+        // Need to check for closest afterwards
+        _distance[currentPuzzleIndex] = Vector3.Distance(puzzle_piece[currentPuzzleIndex].gameObject.transform.position, transform.position);
+
+     /*   for (int i = 0; i < puzzle_piece.Length; i++)
         {
-            if (puzzle_piece[i].gameObject.activeSelf)
+            if (puzzle_piece[i].activeSelf)
             {
                 _distance[i] = Vector3.Distance(puzzle_piece[i].gameObject.transform.position, transform.position);
                 if(_distance[i] < distance_final)
@@ -42,11 +61,11 @@ public class Sphere_Color : MonoBehaviour
                     distance_final = Mathf.Min(distance_final, _distance[i]);
                 }
             }
-        }
+        }*/
 
         if (Light_Mechanic)
         {
-            /*distance_final = 10000;
+            distance_final = 10000;
             for (int i = 0; i < puzzle_piece.Length; i++)
             {
                 if (puzzle_piece[i].gameObject.activeSelf)
@@ -54,7 +73,7 @@ public class Sphere_Color : MonoBehaviour
                     _distance[i] = Vector3.Distance(puzzle_piece[i].gameObject.transform.position, transform.position);
                     distance_final = Mathf.Min(distance_final, _distance[i]);
                 }
-            }*/
+            }
 
             gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", Light_intensity + distance_final * Puzzle_distance); //color = new Color(255 - distance * 5, 0, 98, 255);
         }

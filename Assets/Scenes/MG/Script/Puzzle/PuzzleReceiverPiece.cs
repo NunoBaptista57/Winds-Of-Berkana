@@ -12,14 +12,14 @@ public class PuzzleReceiverPiece : InteractableZone
     private MeshRenderer rend;
     private bool completed = false;
 
-    private GameManager manager;
+    private VitralPuzzleManager manager;
 
     // Start is called before the first frame update
     void Start()
     {
         rend = this.GetComponent<MeshRenderer>();
         defaultMaterial = rend.materials[0];
-        manager = GameManager.Instance;
+        manager = GameObject.Find("VitralManager").GetComponent<VitralPuzzleManager>();
     }
 
 
@@ -41,7 +41,7 @@ public class PuzzleReceiverPiece : InteractableZone
                     completedMaterial
                 };
 
-                manager.pieceCollected();
+                manager.PuzzleCollected();
 
 
                 return true;

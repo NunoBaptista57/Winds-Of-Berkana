@@ -22,7 +22,7 @@ class InputManager : MonoBehaviour
 
     private AnimatorManager animator;
     private Camera _mainCamera;
-    private Puzzle _puzzle;
+    private VitralPuzzleManager _puzzle;
 
     public bool jumpInput;
     public bool dodgeInput;
@@ -75,7 +75,7 @@ class InputManager : MonoBehaviour
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); ;
         }
 
-        _puzzle = Puzzle.Instance;
+        _puzzle = VitralPuzzleManager.Instance;
     }
 
     private void OnDisable()

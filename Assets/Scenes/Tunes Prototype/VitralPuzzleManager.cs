@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class Puzzle : MonoBehaviour
+public class VitralPuzzleManager : MonoBehaviour
 {
     [SerializeField] GameObject[] puzzlePieces;
     [SerializeField] GameObject puzzle;
@@ -11,8 +11,6 @@ public class Puzzle : MonoBehaviour
 
     private bool isNear = false;
 
-    private GameManager _gameManager;
-
     [Header("Canvas Objects")]
     public GameObject startInteractionText;
     public GameObject directionText;
@@ -20,23 +18,22 @@ public class Puzzle : MonoBehaviour
 
     [Header("CompleteImage")]
     public GameObject completedPanel;
+
+    private Sphere_Color sphereController;
+
+
     void Start()
     {
-       
-        _gameManager = GameManager.Instance;
-        _gameManager.PieceCollected += PuzzleCollected;
+        sphereController = GameObject.Find("PuzzleSphere").GetComponent<Sphere_Color>();    
     }
 
-    void Update()
-    {
-        
-    }
 
-    // Increase the Number of Puzzle Pieces Colled
+    // Increase the Number of Puzzle Pieces Collected
     public void PuzzleCollected()
     {
         puzzlePieces[_piecesCollected].gameObject.SetActive(true);
         _piecesCollected += 1;
+        sphereController.NextSphere();
 
     }
 
@@ -126,12 +123,12 @@ public class Puzzle : MonoBehaviour
 
     #region Singleton
 
-    private static Puzzle _instance;
-    public static Puzzle Instance
+    private static VitralPuzzleManager _instance;
+    public static VitralPuzzleManager Instance
     {
         get
         {
-            if (_instance == null) _instance = FindObjectOfType<Puzzle>();
+            if (_instance == null) _instance = FindObjectOfType<VitralPuzzleManager>();
             return _instance;
         }
     }
