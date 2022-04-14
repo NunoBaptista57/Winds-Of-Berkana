@@ -109,7 +109,7 @@ class InputManager : MonoBehaviour
         else
         {
             //horizontalInput = movementInput.x;
-            _puzzle.RotatePiece(movementInput.x);
+          //  _puzzle.RotatePiece(movementInput.x);
         }
         
 
