@@ -152,9 +152,9 @@ MonoBehaviour:
   m_LayerIndex: 0
   m_ShowDebugText: 0
   m_ChildCameras:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 7900011370150627045}
+  - {fileID: 628601608}
+  - {fileID: 1207272946}
   m_Instructions:
   - m_FullHash: 1432961145
     m_VirtualCamera: {fileID: 7900011370150627045}
@@ -1286,6 +1286,8 @@ GameObject:
   - component: {fileID: 433621549544903654}
   - component: {fileID: 433621549544903652}
   - component: {fileID: 433621549544903653}
+  - component: {fileID: 8652630760982400913}
+  - component: {fileID: 7440520526741870723}
   - component: {fileID: 433621549544903651}
   - component: {fileID: 433621549544903650}
   - component: {fileID: 4104963896124392918}
@@ -1368,6 +1370,45 @@ MonoBehaviour:
   LimitingTorqueMultiplier: 0.5
   LimitingOffsetExponent: 1
   ForwardStabilization: 0.2
+--- !u!114 &8652630760982400913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433621549544903655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd78f9322f78e4b478992f50f7e92c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7440520526741870723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433621549544903655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a160dc4cd10f34ba17aa427107bedf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _modeParams:
+  - name: Open
+    mode: 0
+    GravityTorqueMultiplier: 0
+    GravityForceMultiplier: 0
+  - name: Closed
+    mode: 1
+    GravityTorqueMultiplier: 0.1
+    GravityForceMultiplier: 0.1
+  - name: Off
+    mode: 2
+    GravityTorqueMultiplier: 1
+    GravityForceMultiplier: 1
+  GravityTorque: 100
+  GravityForce: 1
 --- !u!114 &433621549544903651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1410,6 +1451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e64fe5e5eb405409a002c0ef453ab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sailMode: 0
   state: 0
 --- !u!114 &4104963896124392918
 MonoBehaviour:
@@ -2561,14 +2603,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca9749a131bac684c9c11bf605e607d8, type: 3}
---- !u!1 &776274251831602007 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ca9749a131bac684c9c11bf605e607d8, type: 3}
-  m_PrefabInstance: {fileID: 433621548825925126}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &112082004199354861 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ca9749a131bac684c9c11bf605e607d8, type: 3}
+  m_PrefabInstance: {fileID: 433621548825925126}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &776274251831602007 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ca9749a131bac684c9c11bf605e607d8, type: 3}
   m_PrefabInstance: {fileID: 433621548825925126}
   m_PrefabAsset: {fileID: 0}
 --- !u!136 &433621548202677317

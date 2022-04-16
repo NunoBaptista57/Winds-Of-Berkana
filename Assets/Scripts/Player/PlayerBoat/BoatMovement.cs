@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,8 @@ public class BoatMovement : MonoBehaviour
     [ReadOnlyInspector] public float CurrentMaxVelocity;
     [Min(0), SerializeField] float VelocityLimitingStrength = 1;
     [Min(0), SerializeField] float TurningTorque;
+
+    [Header("Boost")]
     [Min(0), SerializeField] float BoostMaxSpeedMultiplier = 1.1f;
 
     [Min(0), SerializeField] float MaxBoostCapacity = 1f;
@@ -25,7 +28,6 @@ public class BoatMovement : MonoBehaviour
     [ReadOnlyInspector, SerializeField] float CurrentBoost = 0;
     [ReadOnlyInspector, SerializeField] bool Boosting = false;
     [ReadOnlyInspector, SerializeField] bool BoostRecharging = false;
-    
 
     struct PlayerInput
     {
@@ -80,13 +82,13 @@ public class BoatMovement : MonoBehaviour
                 Boosting = false;
                 BoostRecharging = true;
             }
-        } 
+        }
         else if (CurrentBoost > MaxBoostCapacity)
         {
             CurrentBoost = MaxBoostCapacity;
             BoostRecharging = false;
             Boosting = false;
-        } 
+        }
         else if (CurrentBoost < MaxBoostCapacity)
         {
             CurrentBoost += BoostRecoveredPerSecond * Time.deltaTime;
@@ -126,11 +128,6 @@ public class BoatMovement : MonoBehaviour
     void OnTurn(InputValue value)
     {
         input.Turn = value.Get<float>();
-    }
-
-    void OnReel(InputValue value)
-    {
-        input.Reel = value.Get<float>();
     }
 
     void OnPitch(InputValue value)
