@@ -374,7 +374,7 @@ public class PlayerLocomotion : MonoBehaviour
         if (other.gameObject.tag == "Death")
         {
             Debug.Log("Player has fallen to its Death");
-            this.GetComponent<InputManager>().RestartScene();
+            this.GetComponent<InputManager>().HandleDeath();
         }
     }
 

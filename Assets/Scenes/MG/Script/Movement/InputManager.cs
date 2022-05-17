@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,9 +42,11 @@ class InputManager : MonoBehaviour
     public bool SolvingPuzzle = false;
 
     public Light flashlight;
+    public int respawnTimer;
 
     public Cinemachine.CinemachineVirtualCameraBase baseCamera;
     public Cinemachine.CinemachineVirtualCameraBase aimCamera;
+    public Cinemachine.CinemachineVirtualCameraBase deathCamera;
 
     private Canvas aimCanvas;
 
@@ -77,7 +80,7 @@ class InputManager : MonoBehaviour
         //stributes camera to variable
         if (_mainCamera == null)
         {
-            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); ;
+            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         }
 
         _puzzle = VitralPuzzleManager.Instance;
@@ -99,6 +102,20 @@ class InputManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         
+    }
+
+    public void HandleDeath()
+    {
+        deathCamera.Priority = 15;
+        StartCoroutine("Respawn");
+
+    }
+
+    IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(respawnTimer);
+
+        RestartScene();
     }
 
     public void HandleMovementInput()
