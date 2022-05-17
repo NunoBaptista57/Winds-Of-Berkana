@@ -97,7 +97,8 @@ public class Sphere_Color : MonoBehaviour
           //  Debug.Log(actualIntensity);
             gameObject.GetComponent<Renderer>().material.SetFloat("Emissive Intensity", actualIntensity);
 
-           Debug.Log(" Intensity: " + gameObject.GetComponent<Renderer>().material.GetFloat("Emissive Intensity"));
+            // There is a bug here, the intensity is not going up, I suspect it is the fact that Lights are barely working, we need to change the lighting asset or set a newt one.
+          // Debug.Log(" Intensity: " + gameObject.GetComponent<Renderer>().material.GetFloat("Emissive Intensity"));
          //   Debug.Log(" HasPropery: " + gameObject.GetComponent<Renderer>().material.HasProperty("_EmissionIntensity"));
         }
 

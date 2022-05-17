@@ -365,6 +365,17 @@ public class PlayerLocomotion : MonoBehaviour
             Debug.Log("Climb!");
             isClimbing = true;
         }
+
+     
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Death")
+        {
+            Debug.Log("Player has fallen to its Death");
+            this.GetComponent<InputManager>().RestartScene();
+        }
     }
 
     void OnCollisionExit(Collision collision)
