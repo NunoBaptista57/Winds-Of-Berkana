@@ -63,19 +63,24 @@ class InputManager : MonoBehaviour
         {
             playerControls = new PlayerActions();
 
-            playerControls.Character.Move.performed += i => movementInput = i.ReadValue<Vector2>();
-            playerControls.Character.Jump.performed += i => jumpInput = true;
-            playerControls.Character.Dodge.performed += i => dodgeInput = true;
-            playerControls.Character.Glide.performed += i => HandleGliding();
-            playerControls.Character.Fire.performed += i => HandleShooting();
-            playerControls.Character.Aim.started += i => aimInput = true;
-            playerControls.Character.Aim.canceled += i => aimInput = false;
-            playerControls.Character.Run.performed += i => runningInput = !runningInput;
-            playerControls.Character.Flashlight.performed += i => HandleFlashlight();
-            playerControls.Character.Reset.performed += i => RestartScene();
-            playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
-            playerControls.Character.Vision.performed += i => HandleVision();
-            playerControls.Character.Interact.performed += i => HandleInteract();
+        
+            if (!manager.paused)
+            {
+                playerControls.Character.Move.performed += i => movementInput = i.ReadValue<Vector2>();
+                playerControls.Character.Jump.performed += i => jumpInput = true;
+                playerControls.Character.Dodge.performed += i => dodgeInput = true;
+                playerControls.Character.Glide.performed += i => HandleGliding();
+                playerControls.Character.Fire.performed += i => HandleShooting();
+                playerControls.Character.Aim.started += i => aimInput = true;
+                playerControls.Character.Aim.canceled += i => aimInput = false;
+                playerControls.Character.Run.performed += i => runningInput = !runningInput;
+                playerControls.Character.Flashlight.performed += i => HandleFlashlight();
+                playerControls.Character.Reset.performed += i => RestartScene();
+                playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
+                playerControls.Character.Vision.performed += i => HandleVision();
+                playerControls.Character.Interact.performed += i => HandleInteract();
+            }
+
             playerControls.Character.Pause.performed += i => manager.HandlePause();
         }
 
@@ -97,10 +102,13 @@ class InputManager : MonoBehaviour
 
     public void HandleAllInputs()
     {
-        HandleMovementInput();
-        HandleJumpingInput();
-        HandleAiming();
-        HandleDodgeInput();
+        if (!manager.paused)
+        {
+            HandleMovementInput();
+            HandleJumpingInput();
+            HandleAiming();
+            HandleDodgeInput();
+        }
     }
 
     public void RestartScene()
@@ -193,17 +201,20 @@ class InputManager : MonoBehaviour
 
     private void HandleShooting()
     {
-        if (shootInput == true)
+        if (!manager.paused)
         {
-            shootInput = false;
-            gun.StopGrapple();
-        }
+            if (shootInput == true)
+            {
+                shootInput = false;
+                gun.StopGrapple();
+            }
 
-        else if (shootInput == false)
-        {
-            shootInput = true;
-            gun.StartGrapple();
-            Time.timeScale = 1f;
+            else if (shootInput == false)
+            {
+                shootInput = true;
+                gun.StartGrapple();
+                Time.timeScale = 1f;
+            }
         }
     }
 

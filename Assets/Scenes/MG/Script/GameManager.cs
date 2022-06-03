@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject _pauseMenu;
     //[SerializeField] private GameObject _pasueButton;
-    private bool paused = false;
+    public bool paused = false;
 
     public void StartGame()
     {
