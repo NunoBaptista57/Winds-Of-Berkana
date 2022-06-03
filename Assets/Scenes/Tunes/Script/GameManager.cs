@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class GameManager : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
     // Start is called before the first frame update
     int puzzle_collected = 0;

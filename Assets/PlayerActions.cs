@@ -447,6 +447,15 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Pause"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""99ca8904-ea80-465c-8a56-ca063d112b52"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Dodge"",
                     ""type"": ""Value"",
                     ""id"": ""50863995-03f7-472e-9a60-68fad26bd4bf"",
@@ -848,6 +857,28 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""68d9cd34-3d8f-412a-bc55-def229bb11fd"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d71fb2ad-e474-4bd6-b92d-478c8572b2e8"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -911,6 +942,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Character_Flashlight = m_Character.FindAction("Flashlight", throwIfNotFound: true);
         m_Character_Reset = m_Character.FindAction("Reset", throwIfNotFound: true);
         m_Character_Pickup = m_Character.FindAction("Pickup", throwIfNotFound: true);
+        m_Character_Pause = m_Character.FindAction("Pause", throwIfNotFound: true);
         m_Character_Dodge = m_Character.FindAction("Dodge", throwIfNotFound: true);
         m_Character_Vision = m_Character.FindAction("Vision", throwIfNotFound: true);
         m_Character_Interact = m_Character.FindAction("Interact", throwIfNotFound: true);
@@ -1088,6 +1120,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Flashlight;
     private readonly InputAction m_Character_Reset;
     private readonly InputAction m_Character_Pickup;
+    private readonly InputAction m_Character_Pause;
     private readonly InputAction m_Character_Dodge;
     private readonly InputAction m_Character_Vision;
     private readonly InputAction m_Character_Interact;
@@ -1105,6 +1138,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Flashlight => m_Wrapper.m_Character_Flashlight;
         public InputAction @Reset => m_Wrapper.m_Character_Reset;
         public InputAction @Pickup => m_Wrapper.m_Character_Pickup;
+        public InputAction @Pause => m_Wrapper.m_Character_Pause;
         public InputAction @Dodge => m_Wrapper.m_Character_Dodge;
         public InputAction @Vision => m_Wrapper.m_Character_Vision;
         public InputAction @Interact => m_Wrapper.m_Character_Interact;
@@ -1147,6 +1181,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Pickup.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
                 @Pickup.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
                 @Pickup.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPickup;
+                @Pause.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPause;
                 @Dodge.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
                 @Dodge.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
                 @Dodge.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnDodge;
@@ -1190,6 +1227,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Pickup.started += instance.OnPickup;
                 @Pickup.performed += instance.OnPickup;
                 @Pickup.canceled += instance.OnPickup;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
                 @Dodge.started += instance.OnDodge;
                 @Dodge.performed += instance.OnDodge;
                 @Dodge.canceled += instance.OnDodge;
@@ -1246,6 +1286,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnFlashlight(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
         void OnVision(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);

@@ -49,12 +49,15 @@ class InputManager : MonoBehaviour
     public Cinemachine.CinemachineVirtualCameraBase deathCamera;
 
     private Canvas aimCanvas;
+    public GameManager manager;
 
     private void OnEnable()
     {
         animator = this.GetComponent<AnimatorManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
         aimCanvas = aimCamera.GetComponentInChildren<Canvas>();
+        manager = GameObject.Find("Manager").GetComponent<GameManager>();
+
         aimCanvas.enabled = false;
         if (playerControls == null)
         {
@@ -73,6 +76,7 @@ class InputManager : MonoBehaviour
             playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
             playerControls.Character.Vision.performed += i => HandleVision();
             playerControls.Character.Interact.performed += i => HandleInteract();
+            playerControls.Character.Pause.performed += i => manager.HandlePause();
         }
 
         playerControls.Enable();
@@ -90,6 +94,7 @@ class InputManager : MonoBehaviour
     {
         playerControls.Disable();
     }
+
     public void HandleAllInputs()
     {
         HandleMovementInput();
@@ -100,15 +105,13 @@ class InputManager : MonoBehaviour
 
     public void RestartScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);        
     }
 
     public void HandleDeath()
     {
         deathCamera.Priority = 15;
         StartCoroutine("Respawn");
-
     }
 
     IEnumerator Respawn()
