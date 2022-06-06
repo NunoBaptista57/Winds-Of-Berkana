@@ -49,14 +49,15 @@ class InputManager : MonoBehaviour
     public Cinemachine.CinemachineVirtualCameraBase deathCamera;
 
     private Canvas aimCanvas;
-    public GameManager manager;
+    public MainMenuHandler manager;
 
     private void OnEnable()
     {
         animator = this.GetComponent<AnimatorManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
         aimCanvas = aimCamera.GetComponentInChildren<Canvas>();
-        manager = GameObject.Find("Manager").GetComponent<GameManager>();
+        if(GameObject.Find("Manager") != null)
+        manager = GameObject.Find("Manager").GetComponent<MainMenuHandler>();
 
         aimCanvas.enabled = false;
         if (playerControls == null)
