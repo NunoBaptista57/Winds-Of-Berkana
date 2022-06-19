@@ -46,7 +46,7 @@ public class PlayerLocomotion : MonoBehaviour
     [Header("Glide Inverse Gravity Acceleration")]
     public float glideAcceleration = 3.0f;
     [Header("Glide MovDirection Influence")]
-    public float glideCoeficient = 30;
+    public float glideControlCoeficient = 30;
 
     [Header("Climb")]
     public float wallRaycastDistance = 3.0f;
@@ -74,22 +74,20 @@ public class PlayerLocomotion : MonoBehaviour
         if (MainGameManager.Instance.State == GameState.Paused || MainGameManager.Instance.State == GameState.Death)
             return;
 
+        HandleRotation();
 
 
         HandleFallingandLanding();
+
         if (playerManager.isInteracting)
             return;
 
-
-
-        if (isJumping)
-            return;
-
-
+        
         HandleMovement();
+      //  if (isJumping)
+      //      return;
 
 
-        HandleRotation();
     }
 
 
@@ -170,35 +168,11 @@ public class PlayerLocomotion : MonoBehaviour
             if (isClimbing)
             {
 
-                Debug.Log("IsClimbing" + isClimbing);
-                //RaycastHit hit;
-
-                /*  var RayTop = new Ray(this.transform.position + new Vector3(0.0f, 0.6f, 0.0f), transform.forward);
-                  Debug.DrawRay(RayTop.origin, RayTop.direction, Color.red, 2);
-                  var RayBot = new Ray(this.transform.position + new Vector3(0.0f, -0.6f, 0.0f), transform.forward);
-                  Debug.DrawRay(RayBot.origin, RayBot.direction, Color.green, 3);
-                  RaycastHit hittop, hitbot;
-                  var toprayresult = Physics.Raycast(RayTop, out hittop, wallRaycastDistance, climbLayer);
-                  var botrayresult = Physics.Raycast(RayBot, out hitbot, wallRaycastDistance, climbLayer);
-
-                  if(!toprayresult && !botrayresult)
-                  {
-                      Debug.Log("No Wall");
-                      isClimbing = false;
-                  }
-                  else { 
-                          Debug.Log("Wall ahead");
-                          moveDirection = new Vector3(0.0f, 2.0f, 0.0f) * inputManager.horizontalInput;
-
-                          Vector3 movementVelocity = moveDirection;
-                          playerRigidBody.velocity = movementVelocity;
-
-                     */
+                Debug.Log("IsClimbing" + isClimbing); 
                 moveDirection = new Vector3(0.0f, 2.0f, 0.0f) * inputManager.horizontalInput;
                 Vector3 movementVelocity = moveDirection;
                 playerRigidBody.velocity = movementVelocity;
-              //  playerRigidBody.velocity = Vector3.zero;
-              //  moveDirection = Vector3.zero;
+
             }
             else
             {
@@ -215,22 +189,38 @@ public class PlayerLocomotion : MonoBehaviour
 
                 if (isGliding)
                 {
-                    playerRigidBody.AddForce(moveDirection.x * glideCoeficient, glideAcceleration, moveDirection.z * glideCoeficient, ForceMode.Acceleration);
+                    var x = moveDirection.x * glideControlCoeficient;
+                    var y = glideAcceleration;
+                    var z = moveDirection.z * glideControlCoeficient;
+
+                    Debug.Log("Gliding  x:" + x + " y:" + y + " z:" + z);
+
+                    playerRigidBody.AddForce(x, y, z, ForceMode.Acceleration);
 
                 }
                 else
                 {
-                    playerRigidBody.AddForce(moveDirection.x * jumpControlCoeficient, 0.0f, moveDirection.z * jumpControlCoeficient, ForceMode.Acceleration);
+
+                    var x = moveDirection.x * jumpControlCoeficient;
+                    var y = 0.0f;
+                    var z = moveDirection.z * jumpControlCoeficient;
+
+                    Debug.Log("Jumping  x:" + x + " y:" + y + " z:" + z);
+
+                    playerRigidBody.AddForce(x, y, z, ForceMode.Acceleration);
+
+                  
                 }
 
+
                 //Rotation while falling
-                HandleRotation();
+               // HandleRotation();
 
             }
         }
 
 
-        if (Physics.SphereCast(raycastOrigin, 0.2f, -Vector3.up, out hit, groundLayer))
+        if (Physics.SphereCast(raycastOrigin, 0.5f, -Vector3.up, out hit, groundLayer))
         {
             if (!isGrounded && !playerManager.isInteracting)
             {
@@ -334,32 +324,6 @@ public class PlayerLocomotion : MonoBehaviour
             isGliding = false;
         }
     }
-
-
-    /* public IEnumerator Climb(Collider climbableCollider)
-     {
-         isClimbing = true;
-         RaycastHit hit;
-         if (Physics.Raycast(this.transform.position, transform.forward, out hit, wallRaycastDistance))
-         {
-             if(hit.collider == climbableCollider)
-             {
-                 Debug.Log("Wall ahead");
-                 moveDirection = new Vector3(0.0f, 1.0f, 0.0f) * inputManager.horizontalInput;
-
-                 Vector3 movementVelocity = moveDirection;
-                 playerRigidBody.velocity = movementVelocity;
-                 yield return null;
-             }
-             else
-             {
-                 Debug.Log("No Wall");
-                 yield return null;
-             }
-         }
-
-         isClimbing = false;
-     }*/
 
     void OnCollisionEnter(Collision collision)
     {
