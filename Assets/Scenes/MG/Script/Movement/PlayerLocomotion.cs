@@ -70,7 +70,12 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleAllMovement()
     {
-        // HandleGlide();
+
+        if (MainGameManager.Instance.State == GameState.Paused || MainGameManager.Instance.State == GameState.Death)
+            return;
+
+
+
         HandleFallingandLanding();
         if (playerManager.isInteracting)
             return;
@@ -374,7 +379,7 @@ public class PlayerLocomotion : MonoBehaviour
         if (other.gameObject.tag == "Death")
         {
             Debug.Log("Player has fallen to its Death");
-            this.GetComponent<InputManager>().HandleDeath();
+            MainGameManager.Instance.UpdateGameState(GameState.Death);
         }
     }
 

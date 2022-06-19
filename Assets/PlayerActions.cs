@@ -393,24 +393,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Fire"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""0157ab3a-8a46-4d4f-8bf8-a5e7ece3ebfb"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": ""Press(behavior=1)"",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Aim"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""11afffa7-695b-407e-9af3-584e948e73ec"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": ""Hold"",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Run"",
                     ""type"": ""PassThrough"",
                     ""id"": ""aac0294c-8625-4f08-af83-f996c4bc575c"",
@@ -668,50 +650,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""Glide"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1beb76bd-fbdc-4732-a799-383207f20140"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""84a5608f-6631-42f3-9e73-a6163a30d5ec"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f0e9effd-e2d6-4217-ae80-1ea982acc5ce"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Aim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""58623265-79f8-4053-b997-9e709ec3a408"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1485,8 +1423,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Character_Jump = m_Character.FindAction("Jump", throwIfNotFound: true);
         m_Character_Glide = m_Character.FindAction("Glide", throwIfNotFound: true);
         m_Character_Look = m_Character.FindAction("Look", throwIfNotFound: true);
-        m_Character_Fire = m_Character.FindAction("Fire", throwIfNotFound: true);
-        m_Character_Aim = m_Character.FindAction("Aim", throwIfNotFound: true);
         m_Character_Run = m_Character.FindAction("Run", throwIfNotFound: true);
         m_Character_Flashlight = m_Character.FindAction("Flashlight", throwIfNotFound: true);
         m_Character_Reset = m_Character.FindAction("Reset", throwIfNotFound: true);
@@ -1675,8 +1611,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Jump;
     private readonly InputAction m_Character_Glide;
     private readonly InputAction m_Character_Look;
-    private readonly InputAction m_Character_Fire;
-    private readonly InputAction m_Character_Aim;
     private readonly InputAction m_Character_Run;
     private readonly InputAction m_Character_Flashlight;
     private readonly InputAction m_Character_Reset;
@@ -1693,8 +1627,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Character_Jump;
         public InputAction @Glide => m_Wrapper.m_Character_Glide;
         public InputAction @Look => m_Wrapper.m_Character_Look;
-        public InputAction @Fire => m_Wrapper.m_Character_Fire;
-        public InputAction @Aim => m_Wrapper.m_Character_Aim;
         public InputAction @Run => m_Wrapper.m_Character_Run;
         public InputAction @Flashlight => m_Wrapper.m_Character_Flashlight;
         public InputAction @Reset => m_Wrapper.m_Character_Reset;
@@ -1724,12 +1656,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Look.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnLook;
-                @Fire.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFire;
-                @Fire.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFire;
-                @Fire.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnFire;
-                @Aim.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAim;
-                @Aim.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAim;
-                @Aim.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAim;
                 @Run.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnRun;
@@ -1770,12 +1696,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
-                @Fire.started += instance.OnFire;
-                @Fire.performed += instance.OnFire;
-                @Fire.canceled += instance.OnFire;
-                @Aim.started += instance.OnAim;
-                @Aim.performed += instance.OnAim;
-                @Aim.canceled += instance.OnAim;
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
@@ -1946,8 +1866,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnGlide(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnFire(InputAction.CallbackContext context);
-        void OnAim(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnFlashlight(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);

@@ -5,11 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-
-
-// KEK
-
-
 using UnityEngine.SceneManagement;
 
 class InputManager : MonoBehaviour
@@ -49,15 +44,30 @@ class InputManager : MonoBehaviour
     public Cinemachine.CinemachineVirtualCameraBase deathCamera;
 
     private Canvas aimCanvas;
-    public MainGameManager manager;
+    private MainGameManager manager;
+
+
+    void Start()
+    {
+
+     manager = MainGameManager.Instance;
+
+     MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+
+    }
+
+    // Its good practice to unsubscribe from events
+    void OnDestroy()
+    {
+        MainGameManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+    }
 
     private void OnEnable()
     {
         animator = this.GetComponent<AnimatorManager>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
         aimCanvas = aimCamera.GetComponentInChildren<Canvas>();
-        if (GameObject.Find("Manager") != null)
-            manager = MainGameManager.Instance;
+       
 
         aimCanvas.enabled = false;
         if (playerControls == null)
@@ -73,7 +83,7 @@ class InputManager : MonoBehaviour
             playerControls.Character.Aim.canceled += i => aimInput = false;
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
             playerControls.Character.Flashlight.performed += i => HandleFlashlight();
-            playerControls.Character.Reset.performed += i => RestartScene();
+            playerControls.Character.Reset.performed += i => manager.UpdateGameState(GameState.Remake);
             playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
             playerControls.Character.Vision.performed += i => HandleVision();
             playerControls.Character.Interact.performed += i => HandleInteract();
@@ -108,23 +118,19 @@ class InputManager : MonoBehaviour
         }
     }
 
-    public void RestartScene()
+    private void GameManagerOnGameStateChanged(GameState state)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);        
+        if (state == GameState.Play)
+        {
+            Reset();
+        }
     }
 
-    public void HandleDeath()
+    public void Reset()
     {
-        deathCamera.Priority = 15;
-        StartCoroutine("Respawn");
+        // Reset all movement 
     }
 
-    IEnumerator Respawn()
-    {
-        yield return new WaitForSeconds(respawnTimer);
-
-        RestartScene();
-    }
 
     public void HandleMovementInput()
     {
@@ -230,9 +236,6 @@ class InputManager : MonoBehaviour
             aimCamera.Priority = 5;
             Time.timeScale = 1f;
         }
-
-
-       
     }
 
     private void HandleVision()
