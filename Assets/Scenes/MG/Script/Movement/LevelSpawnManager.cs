@@ -9,6 +9,8 @@ public class LevelSpawnManager : MonoBehaviour
     MainGameManager manager;
     Transform player;
 
+    Vector3 originalCameraPosition;
+
     [Serializable]
     public struct SpawnLocation
     {
@@ -23,16 +25,16 @@ public class LevelSpawnManager : MonoBehaviour
         manager = MainGameManager.Instance;
         MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
     }
 
 
 
     private void GameManagerOnGameStateChanged(GameState state)
     {
-        if (state == GameState.Death)
+        if (state == GameState.Respawn)
         {
             var location = Vector3.zero;
-            Debug.Log("Respawn");
             foreach(var spawnL in spawnLocations)
             {
                 if(spawnL.state == manager.levelState)
@@ -43,9 +45,10 @@ public class LevelSpawnManager : MonoBehaviour
                 }
             }
 
-
             player.position = location;
             player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
+            MainGameManager.Instance.UpdateGameState(GameState.Play);
         }
     }
 

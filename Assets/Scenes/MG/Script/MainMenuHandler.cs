@@ -59,6 +59,7 @@ public class MainMenuHandler : MonoBehaviour
         paused = false;
         Time.timeScale = 1f;
         _pauseMenu.SetActive(false);
+        MainGameManager.Instance.UpdateGameState(GameState.Play);
     }
 
     public void Pause()

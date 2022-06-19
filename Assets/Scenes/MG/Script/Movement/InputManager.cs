@@ -78,9 +78,9 @@ class InputManager : MonoBehaviour
             playerControls.Character.Jump.performed += i => jumpInput = true;
             playerControls.Character.Dodge.performed += i => dodgeInput = true;
             playerControls.Character.Glide.performed += i => HandleGliding();
-            playerControls.Character.Fire.performed += i => HandleShooting();
-            playerControls.Character.Aim.started += i => aimInput = true;
-            playerControls.Character.Aim.canceled += i => aimInput = false;
+          //  playerControls.Character.Fire.performed += i => HandleShooting();
+          //  playerControls.Character.Aim.started += i => aimInput = true;
+          //  playerControls.Character.Aim.canceled += i => aimInput = false;
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
             playerControls.Character.Flashlight.performed += i => HandleFlashlight();
             playerControls.Character.Reset.performed += i => manager.UpdateGameState(GameState.Remake);

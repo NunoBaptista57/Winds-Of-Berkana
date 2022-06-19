@@ -47,6 +47,10 @@ public class MainGameManager : MonoBehaviour
                 // Transition Between modes
                 break;
 
+            case GameState.Respawn:
+                // Transition Between modes
+                break;
+
             case GameState.Death:
                 HandleDeath();
                 break;
@@ -54,7 +58,6 @@ public class MainGameManager : MonoBehaviour
             case GameState.Remake:
                 this.RestartCurrentScene();
                 break;
-
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
@@ -100,18 +103,18 @@ public class MainGameManager : MonoBehaviour
 
     private async void HandleDeath()
     {
-        await System.Threading.Tasks.Task.Delay(5000);
+        await System.Threading.Tasks.Task.Delay(500);
 
         if (GameObject.Find("Death Camera"))
         {
             GameObject.Find("Death Camera").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 15;
 
-            await System.Threading.Tasks.Task.Delay(5000);
+            await System.Threading.Tasks.Task.Delay(2000);
 
             GameObject.Find("Death Camera").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 8;
         }
 
-        UpdateGameState(GameState.Play);
+        UpdateGameState(GameState.Respawn);
     }
 }
 
@@ -122,6 +125,7 @@ public enum GameState
     Paused,
     Victory,
     Death,
+    Respawn,
     Remake
 }
 
