@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class PuzzlePiece : MonoBehaviour
+public class Key : MonoBehaviour
 {
-    public float degreesPerSecond = 15.0f;
-    public float amplitude = 0.5f;
-    public float frequency = 1f;
-    public event Action Collect;
-    [SerializeField] int _npeca;
+    [SerializeField] private float degreesPerSecond = 15.0f;
+    [SerializeField] private float amplitude = 0.5f;
+    [SerializeField] private float frequency = 1f;
+    [SerializeField] private int _npeca;
+
+    public event Action<int> Collect;
 
     // Position Storage Variables
     Vector3 posOffset = new Vector3();
@@ -25,21 +26,24 @@ public class PuzzlePiece : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       /* // Spin object around Y-Axis
+        //Spin object around Y-Axis
         transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.World);
 
         // Float up/down with a Sin()
         tempPos = posOffset;
         tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * amplitude;
 
-        transform.position = tempPos;*/
+        transform.position = tempPos;
     }
 
-   /* private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-      /*  if(other.gameObject.tag == "Player")
+        if(other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponentInChildren<Interact>().StartObjectInteraction(this.gameObject);
+            //other.gameObject.GetComponentInChildren<Interact>().StartObjectInteraction(this.gameObject);
+
+            Collect?.Invoke(_npeca);
+            gameObject.SetActive(false);
         }
-    }*/
+    }
 }

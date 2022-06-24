@@ -33,7 +33,7 @@ public class VitralPuzzleManager : MonoBehaviour
     {
         puzzlePieces[_piecesCollected].gameObject.SetActive(true);
         _piecesCollected += 1;
-        sphereController.NextSphere();
+        sphereController.GetClosestKey();
 
     }
 

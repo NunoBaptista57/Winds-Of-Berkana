@@ -7,14 +7,14 @@ public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
     int puzzle_collected = 0;
-    [SerializeField] private PuzzlePiece[] _puzzlepieces;
+    [SerializeField] private Key[] _puzzlepieces;
     [SerializeField] private Camera _main_camera;
 
     public event Action PuzzleFinished;
     public event Action PieceCollected;
     void Start()
     {
-        foreach(PuzzlePiece puzzle in _puzzlepieces)
+        foreach(Key puzzle in _puzzlepieces)
         {
             puzzle.Collect += pieceCollected;
         }
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void pieceCollected()
+    public void pieceCollected(int i)
     {
         puzzle_collected += 1;
         PieceCollected?.Invoke();
