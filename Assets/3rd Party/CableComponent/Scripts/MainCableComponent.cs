@@ -23,8 +23,8 @@ public class MainCableComponent : MonoBehaviour
 	//[Range(0,3)]
 	[SerializeField] private float stiffness = 1f;
 
-	private LineRenderer line;
-	private CableParticle[] points;
+	public LineRenderer line;
+	public CableParticle[] points;
 
 	#endregion
 
@@ -76,8 +76,9 @@ public class MainCableComponent : MonoBehaviour
 	void InitLineRenderer()
 	{
 		line = this.gameObject.AddComponent<LineRenderer>();
-		line.SetWidth(cableWidth, cableWidth);
-		line.SetVertexCount(segments + 1);
+		line.startWidth = cableWidth;
+		line.endWidth = cableWidth;
+		line.positionCount = segments + 1;
 		line.material = cableMaterial;
 		line.GetComponent<Renderer>().enabled = true;
 	}
