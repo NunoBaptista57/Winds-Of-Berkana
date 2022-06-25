@@ -33,7 +33,7 @@ public class BoatMovement : MonoBehaviour
 
 
     PlayerInput input;
-
+    public Action onInteraction;
 
     // Start is called before the first frame update
     void Start()
@@ -73,11 +73,19 @@ public class BoatMovement : MonoBehaviour
 
     void OnTurn(InputValue value)
     {
+       // Debug.Log("Landing");
         input.Turn = value.Get<float>();
     }
 
     void OnPitch(InputValue value)
     {
+        //Debug.Log("Lwasdanding");
         input.Pitch = value.Get<float>();
+    }
+
+    void OnRelease()
+    {
+        Debug.Log("Interactin");
+        onInteraction.Invoke();
     }
 }

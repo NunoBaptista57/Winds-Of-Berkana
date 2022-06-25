@@ -32,7 +32,7 @@ public class MainMenuController : MonoBehaviour
 
     [Header("Levels to Load")]
     public string _newGameLevel;
-    private string levelToLoad;
+    public string levelToLoad;
 
     [Header("Resolution Dropdowns")]
     public Dropdown resolutionDropDown;
@@ -81,7 +81,10 @@ public class MainMenuController : MonoBehaviour
 
     public void LoadGameDialogYes()
     {
-        if (PlayerPrefs.HasKey("SavedLevel"))
+
+        SceneManager.LoadScene(levelToLoad);
+
+        /*if (PlayerPrefs.HasKey("SavedLevel"))
         {
             levelToLoad = PlayerPrefs.GetString("SavedLevel");
             SceneManager.LoadScene(levelToLoad);
@@ -89,7 +92,7 @@ public class MainMenuController : MonoBehaviour
         else
         {
             noSavedGameDialog.SetActive(true);
-        }
+        }*/
     }
 
     public void ExitGame()
