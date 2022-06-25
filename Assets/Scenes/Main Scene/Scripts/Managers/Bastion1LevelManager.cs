@@ -7,6 +7,7 @@ public class Bastion1LevelManager : MonoBehaviour
 {
 
     MainGameManager manager;
+    KeyManager keyManager;
     Transform player;
     public LevelState levelState;
 
@@ -29,6 +30,9 @@ public class Bastion1LevelManager : MonoBehaviour
         MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
+        MainGameManager.Instance.UpdateGameState(GameState.Play);
+        keyManager = KeyManager.Instance;
+        keyManager.CollectedNKey += PickUpKey;
     }
 
 
@@ -39,9 +43,17 @@ public class Bastion1LevelManager : MonoBehaviour
         switch (newState)
         {
             case LevelState.BastionState_Intro:
-                // Play mode 
+                
                 break;
             case LevelState.BastionState_Puzzle1:
+                // Paused, already being handled
+                break;
+
+            case LevelState.BastionState_Puzzle2:
+                // Paused, already being handled
+                break;
+
+            case LevelState.BastionState_Puzzle3:
                 // Paused, already being handled
                 break;
 
@@ -61,6 +73,23 @@ public class Bastion1LevelManager : MonoBehaviour
         OnLevelStateChanged?.Invoke(newState);
     }
 
+    private void PickUpKey(int keyNumber)
+    {
+        if(keyNumber == 1)
+        {
+            UpdateLevelState(LevelState.BastionState_Puzzle2);
+        }
+
+        else if(keyNumber == 2)
+        {
+            UpdateLevelState(LevelState.BastionState_Puzzle3);
+        }
+
+        else if (keyNumber == 3)
+        {
+            UpdateLevelState(LevelState.BastionState_Ending);
+        }
+    }
 
 
     private void GameManagerOnGameStateChanged(GameState state)

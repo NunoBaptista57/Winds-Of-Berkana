@@ -19,12 +19,6 @@ public class MainGameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    void Start()
-    {
-        UpdateGameState(GameState.Play);
-    }
-
-
     public void UpdateGameState(GameState newState)
     {
         State = newState;

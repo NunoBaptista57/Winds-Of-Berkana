@@ -2,34 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class KeyManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] _keys;
     private bool[] _piecesCollected;
-    private int _npiecesCollecetd;
+    private int _npiecesCollected;
     [SerializeField] Sphere_Color _sphere;
     [SerializeField] GameObject _door;
 
-    public event Action KeysCollected;
+    public event Action CollectedAllKeys;
+    public event Action<int> CollectedNKey;
 
     private bool _allPiecesCollected;
     private bool _doorUnlocked;
 
-    /*[Header("Canvas Objects")]
-    public GameObject startInteractionText;
-    public GameObject directionText;
-    public GameObject puzzlePiecesText;
+    [Serializable]
+    public struct LevelChanges
+    {
+        public GameObject movingPiece;
+        public int pickedUpPieces;
+    }
 
-    [Header("CompleteImage")]
-    public GameObject completedPanel;*/
-
-    //private Sphere_Color sphereController;
-
+    [SerializeField] public LevelChanges[] levelChanges;
 
     void Awake()
     {
-        //sphereController = GameObject.Find("PuzzleSphere").GetComponent<Sphere_Color>();
         _piecesCollected = new bool[_keys.Length];
 
         foreach(GameObject go in _keys)
@@ -43,51 +42,39 @@ public class KeyManager : MonoBehaviour
     // Increase the Number of Puzzle Pieces Collected
     public void KeyCollected(int key)
     {
-        /*_keys[peca].gameObject.SetActive(true);
-        _piecesCollected += 1;
-        sphereController.NextSphere();*/
-
         _piecesCollected[key] = true;
-        _npiecesCollecetd += 1;
+        _npiecesCollected += 1;
 
-        if(_npiecesCollecetd == _keys.Length)
+        if(_npiecesCollected == _keys.Length)
         {
             _allPiecesCollected = true;
-            KeysCollected?.Invoke();
+            // When all pieces are collected send an event to whoever is listening
+            CollectedAllKeys?.Invoke();
         }
 
+        //  When a piece is collected send an event to whoever is listening
+        CollectedNKey?.Invoke(key);
         _sphere.RemoveKey(_keys[key]);
         _sphere.GetClosestKey();
+        HandleLevelChange(key);
     }
 
 
-
-    //  Triger Enter and Exit to check if Player is near the Vitral
-    /*private void OnTriggerEnter(Collider other)
+    public void HandleLevelChange(int pickedPieceNumber)
     {
-        if (other.tag == "Player")
+        var relevantObjects = levelChanges.ToList().FindAll(x => x.pickedUpPieces == pickedPieceNumber);
+       
+        // Enact Changes in the Level
+        foreach(var r in relevantObjects)
         {
-            startInteractionText.gameObject.SetActive(true);
-            puzzlePiecesText.SetActive(true);
-            puzzlePiecesText.GetComponent<UnityEngine.UI.Text>().text = "Collected " + _piecesCollected + "/3 Puzzle Pieces";
-            isNear = true;
+            // Ideally the have an Animator that plays on Trigger
+            r.movingPiece.GetComponent<Animator>().SetTrigger("Move");
         }
+
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            startInteractionText.gameObject.SetActive(false);
-            puzzlePiecesText.SetActive(false);
-            directionText.SetActive(false);
-            isNear = false;
-        }
-    }*/
-
 
     // The objective of this function is to Check if the panels are in the correct Position
-    public void CheckPosition()
+    public void CheckPanelPosition()
     {
         /*if (_piecesCollected == 3)
         {

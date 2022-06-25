@@ -8,7 +8,7 @@ public class Key : MonoBehaviour
     [SerializeField] private float degreesPerSecond = 15.0f;
     [SerializeField] private float amplitude = 0.5f;
     [SerializeField] private float frequency = 1f;
-    [SerializeField] private int _npeca;
+    [SerializeField] private int _pieceNumber;
 
     public event Action<int> Collect;
 
@@ -24,7 +24,7 @@ public class Key : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Spin object around Y-Axis
         transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.World);
@@ -42,7 +42,7 @@ public class Key : MonoBehaviour
         {
             //other.gameObject.GetComponentInChildren<Interact>().StartObjectInteraction(this.gameObject);
 
-            Collect?.Invoke(_npeca);
+            Collect?.Invoke(_pieceNumber);
             gameObject.SetActive(false);
         }
     }

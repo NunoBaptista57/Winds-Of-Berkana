@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Sphere_Color : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public List<GameObject> puzzle_piece;// = GameObject.FindGameObjectWithTag("Puzzle_Piece");
+   
+    public List<GameObject> puzzle_piece;
 
     private GameObject closestSphere;
     private KeyManager _keyManager;
@@ -17,7 +17,7 @@ public class Sphere_Color : MonoBehaviour
     void Start()
     {
         _keyManager = KeyManager.Instance;
-        _keyManager.KeysCollected += KeysWereCollected;
+        _keyManager.CollectedAllKeys += KeysWereCollected;
         InvokeRepeating("GetClosestKey", 0, 3);
     }
 
@@ -47,7 +47,7 @@ public class Sphere_Color : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (!_keysCollected)
         {
@@ -77,7 +77,7 @@ public class Sphere_Color : MonoBehaviour
 
     public void KeysWereCollected()
     {
-        _keysCollected = true;
-        gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", 1);
+            _keysCollected = true;
+            gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", 1);
     }
 }
