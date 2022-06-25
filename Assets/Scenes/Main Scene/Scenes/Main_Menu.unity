@@ -3448,7 +3448,7 @@ Transform:
   m_Children:
   - {fileID: 120927890}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &656720620
 GameObject:
@@ -3717,6 +3717,7 @@ GameObject:
   m_Component:
   - component: {fileID: 674435046}
   - component: {fileID: 674435047}
+  - component: {fileID: 674435048}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3752,7 +3753,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volumentTextValue: {fileID: 1328516952}
   volumeSlider: {fileID: 902794469}
-  defaultVolume: 1
+  defaultVolume: 0.2
   confirmationPrompt: {fileID: 2064896198}
   controllerSentTextValue: {fileID: 1121010063}
   controllerSenSlider: {fileID: 2060866365}
@@ -3769,6 +3770,29 @@ MonoBehaviour:
   fulScreenToggle: {fileID: 0}
   noSavedGameDialog: {fileID: 0}
   mainMenuSoundtrack: {fileID: 8300000, guid: 1564fc67d9582c848b775b56a9b0b4ae, type: 3}
+--- !u!114 &674435048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674435045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f58a6d85dd607b42ae6003454883c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canUse: 1
+  menuController: {fileID: 674435047}
+  volumentTextValue: {fileID: 1328516952}
+  volumeSlider: {fileID: 902794469}
+  brightnessTexValue: {fileID: 323231781}
+  brightnessSlider: {fileID: 185824207}
+  _qualityDropDown: {fileID: 1813307199}
+  fullScreenToogle: {fileID: 152759000}
+  controllerSentTextValue: {fileID: 1121010063}
+  controllerSenSlider: {fileID: 2060866365}
+  invertYToggle: {fileID: 1643592974}
 --- !u!1 &674732861
 GameObject:
   m_ObjectHideFlags: 0
@@ -4681,7 +4705,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.27429688, g: 0.67817146, b: 0.8679245, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.3120861, g: 0.6096209, b: 0.8396226, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -6215,60 +6239,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1279253696}
   m_CullTransparentMesh: 1
---- !u!1 &1303078342
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1303078344}
-  - component: {fileID: 1303078343}
-  m_Layer: 0
-  m_Name: LoadPrefs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1303078343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1303078342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f58a6d85dd607b42ae6003454883c26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canUse: 1
-  menuController: {fileID: 674435047}
-  volumentTextValue: {fileID: 1328516952}
-  volumeSlider: {fileID: 902794469}
-  brightnessTexValue: {fileID: 323231781}
-  brightnessSlider: {fileID: 185824207}
-  _qualityDropDown: {fileID: 1813307199}
-  fullScreenToogle: {fileID: 152759000}
-  controllerSentTextValue: {fileID: 1121010063}
-  controllerSenSlider: {fileID: 2060866365}
-  invertYToggle: {fileID: 1643592974}
---- !u!4 &1303078344
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1303078342}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 915.28827, y: 497.6565, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1313699014
 GameObject:
   m_ObjectHideFlags: 0

@@ -140,7 +140,7 @@ public class MainPlayerLocomotion : MonoBehaviour
         targetPosition = transform.position;
         if (!isGrounded && !isJumping)
         {
-            Debug.Log("Not grounded and not jumping");
+           
             if (!playerManager.isInteracting)
             {
                 animatorManager.PlayTargetAnimation("Falling", true);

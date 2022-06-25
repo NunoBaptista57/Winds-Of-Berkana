@@ -11,10 +11,8 @@ public class UpdateFirstSelected : MonoBehaviour
     
     void OnEnable()
     {
-        Debug.Log("Uhm");
         var eventSystem = EventSystem.current;
-        eventSystem.SetSelectedGameObject(gameObject, new BaseEventData(eventSystem));
-      
+        eventSystem.SetSelectedGameObject(gameObject, new BaseEventData(eventSystem));    
         firstSelected.GetComponent<Button>().Select();
     }
 
