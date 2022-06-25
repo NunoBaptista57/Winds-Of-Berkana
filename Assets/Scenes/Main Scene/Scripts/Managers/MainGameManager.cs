@@ -15,7 +15,7 @@ public class MainGameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-
+                            
         DontDestroyOnLoad(this.gameObject);
     }
 
@@ -46,6 +46,7 @@ public class MainGameManager : MonoBehaviour
 
             case GameState.Remake:
                 this.RestartCurrentScene();
+                UpdateGameState(GameState.Play);
                 break;
 
             default:

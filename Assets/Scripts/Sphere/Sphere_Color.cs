@@ -19,6 +19,8 @@ public class Sphere_Color : MonoBehaviour
         _keyManager = KeyManager.Instance;
         _keyManager.CollectedAllKeys += KeysWereCollected;
         InvokeRepeating("GetClosestKey", 0, 3);
+        GetClosestKey();
+
     }
 
     //Removes collected key from the List

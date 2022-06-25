@@ -42,7 +42,9 @@ public class KeyManager : MonoBehaviour
     // Increase the Number of Puzzle Pieces Collected
     public void KeyCollected(int key)
     {
-        _piecesCollected[key] = true;
+        // Key number != index in the list
+        var index = key - 1;
+        _piecesCollected[index] = true;
         _npiecesCollected += 1;
 
         if(_npiecesCollected == _keys.Length)
@@ -54,7 +56,7 @@ public class KeyManager : MonoBehaviour
 
         //  When a piece is collected send an event to whoever is listening
         CollectedNKey?.Invoke(key);
-        _sphere.RemoveKey(_keys[key]);
+        _sphere.RemoveKey(_keys[index]);
         _sphere.GetClosestKey();
         HandleLevelChange(key);
     }
