@@ -61,7 +61,7 @@ public class MainPlayerInputHandler : MonoBehaviour
             playerControls.Character.Jump.performed += i => jumpInput = true;
             playerControls.Character.Glide.performed += i => HandleGliding();
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
-            playerControls.Character.Flashlight.performed += i => HandleFlashlight();
+           // playerControls.Character.Flashlight.performed += i => HandleFlashlight();
             playerControls.Character.Reset.performed += i => manager.UpdateGameState(GameState.Remake);
             //playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
             playerControls.Character.Vision.performed += i => HandleVision();
