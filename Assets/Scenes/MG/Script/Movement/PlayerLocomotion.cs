@@ -11,6 +11,7 @@ public class PlayerLocomotion : MonoBehaviour
     private Vector3 moveDirection;
 
     public Rigidbody playerRigidBody;
+    public GameObject gliderObject;
 
     [Header("Movement Settings")]
     public bool doubleJumpAbility;
@@ -81,11 +82,8 @@ public class PlayerLocomotion : MonoBehaviour
 
         HandleRotation();
 
+ 
         HandleMovement();
-
-        //  if (isJumping)
-        //      return;
-
 
     }
 
@@ -310,7 +308,7 @@ public class PlayerLocomotion : MonoBehaviour
             Debug.Log("Activate Glide");
             animatorManager.animator.SetBool("Gliding", true);
             animatorManager.PlayTargetAnimation("Glide", true);
-
+            gliderObject?.SetActive(true);
             // We are no longer using this....so we need to think of another way of simulating a glide
             //currentFallingVelocity = glideVelocity;
             isGliding = true;
@@ -324,6 +322,7 @@ public class PlayerLocomotion : MonoBehaviour
         {
             Debug.Log("Deactivate Glide");
             animatorManager.animator.SetBool("Gliding", false);
+            gliderObject?.SetActive(false);
             //  currentFallingVelocity = fallingVelocity;
             isGliding = false;
         }

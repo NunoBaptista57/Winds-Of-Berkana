@@ -49,6 +49,7 @@ public class MainPlayerLocomotion : MonoBehaviour
 
     private Camera cam;
     private bool doublejumped;
+    public GameObject gliderObject;
     
     private void Awake()
     {
@@ -248,6 +249,7 @@ public class MainPlayerLocomotion : MonoBehaviour
             Debug.Log("Activate Glide");
             animatorManager.animator.SetBool("Gliding", true);
             animatorManager.PlayTargetAnimation("Glide", true);
+            gliderObject?.SetActive(true);
             isGliding = true;
         }
 
@@ -259,6 +261,7 @@ public class MainPlayerLocomotion : MonoBehaviour
         {
             Debug.Log("Deactivate Glide");
             animatorManager.animator.SetBool("Gliding", false);
+            gliderObject?.SetActive(false);
             isGliding = false;
         }
     }

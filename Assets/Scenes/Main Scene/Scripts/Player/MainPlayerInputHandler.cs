@@ -112,6 +112,7 @@ public class MainPlayerInputHandler : MonoBehaviour
             verticalInput = movementInput.x;
             horizontalInput = movementInput.y;
             moveAmount = Mathf.Clamp01(Math.Abs(horizontalInput) + Mathf.Abs(verticalInput));
+            Debug.Log("Horizontal Input: " + horizontalInput + " verticalInput:" + verticalInput);
             animator.UpdateAnimatorValues(horizontalInput, verticalInput);
         }
 
