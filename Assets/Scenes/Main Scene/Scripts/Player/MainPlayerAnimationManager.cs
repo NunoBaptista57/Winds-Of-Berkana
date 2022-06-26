@@ -81,7 +81,7 @@ public class MainPlayerAnimationManager : MonoBehaviour
             snappedVertical = 0;
         }
 
-        Debug.Log("Horizontal Input: " + snappedHorizontal + " verticalInput:" + snappedVertical);
+       
         animator.SetFloat(horizontal, snappedHorizontal, 0.1f, Time.deltaTime);
         animator.SetFloat(vertical, snappedVertical, 0.1f, Time.deltaTime);
     }
