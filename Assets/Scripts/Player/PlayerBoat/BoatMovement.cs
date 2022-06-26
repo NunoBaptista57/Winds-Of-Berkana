@@ -20,6 +20,8 @@ public class BoatMovement : MonoBehaviour
         public float Turn;
         public float Pitch;
         public float Reel;
+        public float Slow;
+        public float SpeedUp;
     }
 
     [Header("Angle Limiting")]
@@ -49,6 +51,22 @@ public class BoatMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (Input.GetKey(KeyCode.P))
+        {
+            if(CurrentMaxVelocity < MaxVelocity*2)
+            {
+                CurrentMaxVelocity++;
+            }
+        }
+        if (Input.GetKey(KeyCode.O))
+        {
+            if (CurrentMaxVelocity > MaxVelocity/2)
+            {
+                CurrentMaxVelocity--;
+            }
+        }
+
+
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.Project(rigidbody.velocity, transform.forward), ForwardStabilization);
         rigidbody.AddForce(WindForce * transform.forward, ForceMode.Acceleration);
 
@@ -87,5 +105,15 @@ public class BoatMovement : MonoBehaviour
     {
         Debug.Log("Interactin");
         onInteraction.Invoke();
+    }
+
+    void OnSlow(InputValue value)
+    {
+        input.Slow = value.Get<float>();
+    }
+
+    void OnSpeedUp(InputValue value)
+    {
+        input.SpeedUp = value.Get<float>();
     }
 }

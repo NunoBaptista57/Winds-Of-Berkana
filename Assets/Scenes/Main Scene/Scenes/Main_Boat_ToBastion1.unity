@@ -1866,11 +1866,11 @@ MonoBehaviour:
   CurrentMaxVelocity: 0
   VelocityLimitingStrength: 100
   TurningTorque: 1
-  MinVerticalAngle: 8.6
-  MaxVerticalAngle: 90
+  MinVerticalAngle: 45
+  MaxVerticalAngle: 45
   LimitingTorqueMultiplier: 1
   LimitingOffsetExponent: 1
-  ForwardStabilization: 0
+  ForwardStabilization: 0.2
 --- !u!1 &956290293
 GameObject:
   m_ObjectHideFlags: 0
@@ -3973,7 +3973,7 @@ Transform:
   - {fileID: 632440271}
   m_Father: {fileID: 0}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0.0015697826, y: 253.36752, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.0015697825, y: 253.36603, z: 5.211021e-11}
 --- !u!1001 &2010996455
 PrefabInstance:
   m_ObjectHideFlags: 0

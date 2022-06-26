@@ -116,6 +116,15 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SpeedUp"",
+                    ""type"": ""Value"",
+                    ""id"": ""47f80017-9370-442a-8117-a4ae8dce3118"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -358,6 +367,28 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Cancel Harpoon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""089d09bb-98ee-475a-8f90-58e8a748d1e7"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SpeedUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5f0beb41-ec1a-480b-b219-02d57516d3f8"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SpeedUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -755,7 +786,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""468494e7-6b9b-4935-b2e8-f11f84f6f013"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -1428,6 +1459,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         m_Boat_CancelHarpoon = m_Boat.FindAction("Cancel Harpoon", throwIfNotFound: true);
         m_Boat_Aim = m_Boat.FindAction("Aim", throwIfNotFound: true);
         m_Boat_Release = m_Boat.FindAction("Release", throwIfNotFound: true);
+        m_Boat_SpeedUp = m_Boat.FindAction("SpeedUp", throwIfNotFound: true);
         // Character
         m_Character = asset.FindActionMap("Character", throwIfNotFound: true);
         m_Character_Move = m_Character.FindAction("Move", throwIfNotFound: true);
@@ -1523,6 +1555,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Boat_CancelHarpoon;
     private readonly InputAction m_Boat_Aim;
     private readonly InputAction m_Boat_Release;
+    private readonly InputAction m_Boat_SpeedUp;
     public struct BoatActions
     {
         private @PlayerActions m_Wrapper;
@@ -1537,6 +1570,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         public InputAction @CancelHarpoon => m_Wrapper.m_Boat_CancelHarpoon;
         public InputAction @Aim => m_Wrapper.m_Boat_Aim;
         public InputAction @Release => m_Wrapper.m_Boat_Release;
+        public InputAction @SpeedUp => m_Wrapper.m_Boat_SpeedUp;
         public InputActionMap Get() { return m_Wrapper.m_Boat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1576,6 +1610,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Release.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnRelease;
                 @Release.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnRelease;
                 @Release.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnRelease;
+                @SpeedUp.started -= m_Wrapper.m_BoatActionsCallbackInterface.OnSpeedUp;
+                @SpeedUp.performed -= m_Wrapper.m_BoatActionsCallbackInterface.OnSpeedUp;
+                @SpeedUp.canceled -= m_Wrapper.m_BoatActionsCallbackInterface.OnSpeedUp;
             }
             m_Wrapper.m_BoatActionsCallbackInterface = instance;
             if (instance != null)
@@ -1610,6 +1647,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                 @Release.started += instance.OnRelease;
                 @Release.performed += instance.OnRelease;
                 @Release.canceled += instance.OnRelease;
+                @SpeedUp.started += instance.OnSpeedUp;
+                @SpeedUp.performed += instance.OnSpeedUp;
+                @SpeedUp.canceled += instance.OnSpeedUp;
             }
         }
     }
@@ -1870,6 +1910,7 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         void OnCancelHarpoon(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnRelease(InputAction.CallbackContext context);
+        void OnSpeedUp(InputAction.CallbackContext context);
     }
     public interface ICharacterActions
     {
