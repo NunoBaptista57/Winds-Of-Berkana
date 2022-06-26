@@ -26,7 +26,12 @@ public class MainMenuHandler : MonoBehaviour
     {
        if(state == GameState.Paused)
         {
-            HandlePause();
+            Pause();
+        }
+
+        if (state == GameState.Play)
+        {
+            Resume();
         }
     }
 
@@ -49,9 +54,7 @@ public class MainMenuHandler : MonoBehaviour
 
     public void HandlePause()
     {
-        if (paused)
-            Resume();
-        else Pause();
+      MainGameManager.Instance.UpdateGameState(GameState.Paused);
     }
 
     public void Resume()
@@ -59,7 +62,7 @@ public class MainMenuHandler : MonoBehaviour
         paused = false;
         Time.timeScale = 1f;
         _pauseMenu.SetActive(false);
-        MainGameManager.Instance.UpdateGameState(GameState.Play);
+       
     }
 
     public void Pause()
@@ -67,6 +70,7 @@ public class MainMenuHandler : MonoBehaviour
         paused = true;
         Time.timeScale = 0f;
         _pauseMenu.SetActive(true);
+       
     }
 
 

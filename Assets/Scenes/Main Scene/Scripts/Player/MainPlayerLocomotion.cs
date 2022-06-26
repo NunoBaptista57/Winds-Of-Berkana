@@ -246,7 +246,7 @@ public class MainPlayerLocomotion : MonoBehaviour
     {
         if (!isGrounded && glideAbility)
         {
-            Debug.Log("Activate Glide");
+           
             animatorManager.animator.SetBool("Gliding", true);
             animatorManager.PlayTargetAnimation("Glide", true);
             gliderObject?.SetActive(true);
@@ -259,7 +259,6 @@ public class MainPlayerLocomotion : MonoBehaviour
     {
         if (glideAbility)
         {
-            Debug.Log("Deactivate Glide");
             animatorManager.animator.SetBool("Gliding", false);
             gliderObject?.SetActive(false);
             isGliding = false;

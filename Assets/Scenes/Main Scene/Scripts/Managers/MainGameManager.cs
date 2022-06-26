@@ -21,6 +21,7 @@ public class MainGameManager : MonoBehaviour
 
     public void UpdateGameState(GameState newState)
     {
+        var PreviousState = State;
         State = newState;
 
         switch (newState)
@@ -30,7 +31,9 @@ public class MainGameManager : MonoBehaviour
 
                 break;
             case GameState.Paused:
-                // Paused, already being handled
+                
+                if(PreviousState == GameState.Paused)
+                    this.State = GameState.Play;
                 break;
 
             case GameState.Victory:
@@ -54,7 +57,7 @@ public class MainGameManager : MonoBehaviour
 
         }
 
-        OnGameStateChanged?.Invoke(newState);
+        OnGameStateChanged?.Invoke(this.State);
     }
 
    
