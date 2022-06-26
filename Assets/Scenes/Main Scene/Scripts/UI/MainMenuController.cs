@@ -79,6 +79,11 @@ public class MainMenuController : MonoBehaviour
         SceneManager.LoadScene(_newGameLevel);
     }
 
+    public void LoadLevel(string level)
+    {
+        SceneManager.LoadScene(level);
+    }
+
     public void LoadGameDialogYes()
     {
 
