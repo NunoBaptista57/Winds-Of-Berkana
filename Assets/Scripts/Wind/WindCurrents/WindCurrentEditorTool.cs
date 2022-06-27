@@ -1,6 +1,7 @@
+#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.EditorTools;
-using UnityEngine;
 
 [EditorTool("Wind Current Direction Tool", typeof(WindCurrent))]
 public class WindSourceEditorTool : EditorTool
@@ -32,3 +33,5 @@ public class WindSourceEditorTool : EditorTool
         }
     }
 }
+
+#endif

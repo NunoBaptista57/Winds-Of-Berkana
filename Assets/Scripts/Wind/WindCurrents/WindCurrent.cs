@@ -80,6 +80,7 @@ public class WindCurrent : MonoBehaviour, IWindEffector
         return 2f * (1f - t) * (points[1] - points[0]) + 2f * t * (points[2] - points[1]);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Transform handleTransform = transform;
@@ -95,6 +96,8 @@ public class WindCurrent : MonoBehaviour, IWindEffector
             Handles.DrawWireDisc(handleTransform.position + GetCurvePoint(i / (float)steps), GetCurvePointDerivative(i / (float)steps), radius);
         }
     }
+
+#endif
 
     public void OnPlayerEnter(WindCurrentCollider entered, PlayerBoatEntity player)
     {

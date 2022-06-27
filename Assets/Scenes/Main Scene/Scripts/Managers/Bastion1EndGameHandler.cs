@@ -47,7 +47,7 @@ public class Bastion1EndGameHandler : MonoBehaviour
 
     void SendElevator()
     {
-        if (textObject.activeSelf) {
+        if (textObject.activeSelf && elevatorDown) {
             animator.SetTrigger("Up");
             elevatorDown = false;
             textObject.SetActive(false);

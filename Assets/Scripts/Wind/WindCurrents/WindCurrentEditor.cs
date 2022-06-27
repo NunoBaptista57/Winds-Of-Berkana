@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+
+#if UNITY_EDITOR
 [CustomEditor(typeof(WindCurrent))]
 public class WindCurrentEditor : Editor
 {
@@ -59,3 +61,4 @@ public class WindCurrentEditor : Editor
         }
     }
 }
+#endif
