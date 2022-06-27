@@ -13,7 +13,7 @@ public class Bastion1LevelManager : MonoBehaviour
 
     Vector3 originalCameraPosition;
 
-    public static event Action<LevelState> OnLevelStateChanged;
+    public event Action<LevelState> OnLevelStateChanged;
 
     [Serializable]
     public struct SpawnLocation
@@ -58,7 +58,7 @@ public class Bastion1LevelManager : MonoBehaviour
                 break;
 
             case LevelState.BastionState_Ending:
-                // Finished Bastion here
+               
                 break;
 
             case LevelState.Boat:
@@ -87,6 +87,7 @@ public class Bastion1LevelManager : MonoBehaviour
 
         else if (keyNumber == 3)
         {
+            Debug.Log("Ending");
             UpdateLevelState(LevelState.BastionState_Ending);
         }
     }
@@ -132,7 +133,7 @@ public class Bastion1LevelManager : MonoBehaviour
         {
             GameObject.Find("Death Camera").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 15;
 
-            await System.Threading.Tasks.Task.Delay(2000);
+            await System.Threading.Tasks.Task.Delay(1000);
 
             GameObject.Find("Death Camera").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 8;
         }

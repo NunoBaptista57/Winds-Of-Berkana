@@ -190,6 +190,7 @@ public class MainPlayerLocomotion : MonoBehaviour
             inAirTimer = 0;
             isGrounded = true;
             isGliding = false;
+            DeactivateGlide();
             if (doubleJumpAbility)
                 doublejumped = false;
 
@@ -211,6 +212,7 @@ public class MainPlayerLocomotion : MonoBehaviour
                 transform.position = targetPosition;
                 animatorManager.animator.SetBool("isJumping", false);
                 animatorManager.animator.SetBool("Gliding", false);
+                DeactivateGlide();
             }
 
         }

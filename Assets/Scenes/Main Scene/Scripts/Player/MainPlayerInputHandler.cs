@@ -33,6 +33,7 @@ public class MainPlayerInputHandler : MonoBehaviour
 
     private MainGameManager manager;
 
+    public event Action Interact;
 
     void Start()
     {
@@ -174,6 +175,6 @@ public class MainPlayerInputHandler : MonoBehaviour
 
     private void HandleInteract()
     {
-        //SolvingPuzzle = !SolvingPuzzle;
+        Interact.Invoke();
     }
 }
