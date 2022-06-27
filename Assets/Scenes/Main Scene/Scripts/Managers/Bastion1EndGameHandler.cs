@@ -28,7 +28,7 @@ public class Bastion1EndGameHandler : MonoBehaviour
     {
        if(levelState == LevelState.BastionState_Ending)
         {
-            Debug.Log("Calling Elevator");
+          
             CallElevator(); 
         }
     }
@@ -50,7 +50,7 @@ public class Bastion1EndGameHandler : MonoBehaviour
         if (textObject.activeSelf) {
             animator.SetTrigger("Up");
             elevatorDown = false;
-            textObject.SetActive(true);
+            textObject.SetActive(false);
             foreach (var v in removeCollisions)
             {
                 var col = v.GetComponent<MeshCollider>();
