@@ -224,7 +224,6 @@ public class PlayerLocomotion : MonoBehaviour
         {
             if (!isGrounded && !playerManager.isInteracting)
             {
-                Debug.Log("LAND DUDE");
                 animatorManager.PlayTargetAnimation("Land", true);
             }
 
@@ -265,6 +264,7 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void Jump()
     {
+        Debug.Log("Jumped");
         animatorManager.animator.SetBool("isJumping", true);
         animatorManager.PlayTargetAnimation("Jump", true);
         animatorManager.animator.SetBool("Gliding", false);

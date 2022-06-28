@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class MainPlayerLocomotion : MonoBehaviour
@@ -178,8 +179,12 @@ public class MainPlayerLocomotion : MonoBehaviour
         }
 
         // Carefull with the floor distance. If needed reduce the 0.2f value
-        if (Physics.SphereCast(raycastOrigin, 0.2f, -Vector3.up, out hit, groundLayer))
+        if (Physics.SphereCast(raycastOrigin, 0.1f, -Vector3.up, out hit, 1.0f ,groundLayer))
         {
+            Debug.DrawRay(raycastOrigin, -Vector3.up, Color.red, 1.0f);
+         //   Debug.DrawRay(this.transform.position, Vector3.forward, Color.green);
+         //   Debug.Log("Drawing Ray " + raycastOrigin + " dir: " + -Vector3.up);
+           
             if (!isGrounded)
             {
                 animatorManager.PlayTargetAnimation("Land", true);
