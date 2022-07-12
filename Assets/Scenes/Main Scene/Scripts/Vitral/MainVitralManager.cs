@@ -2,15 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Cinemachine;
 
 public class MainVitralManager : MonoBehaviour
 {
+
     [SerializeField] GameObject[] puzzlePieces;
     private int _pieceSelected = 0;
 
     private bool isNear = false;
     private bool isInteracting = false;
 
+    [SerializeField]
+    private CinemachineFreeLook playerCam;
+    
+    [SerializeField]
+    private CinemachineVirtualCamera vitralCam;
+    
     [Header("Canvas Objects")]
     public Text infoText;
 
@@ -112,6 +120,7 @@ public class MainVitralManager : MonoBehaviour
     // Show the final panel, animations and walls going up should be called here
     public void CompletedVitral()
     {
+        SwitchPriority();
         completedPanel.SetActive(true);
         infoText.text = "Congratulations \n You have finished this Demo";
     }
@@ -119,7 +128,25 @@ public class MainVitralManager : MonoBehaviour
 
     public void HandlePlayerInteraction()
     {
-        if(isNear)
+        if (isNear)
+        {
+            SwitchPriority();
             isInteracting = true;
+        }
+    }
+
+    private void SwitchPriority()
+    {
+        if (isInteracting)
+        {
+            playerCam.Priority = 11;
+            vitralCam.Priority = 10;
+        }
+
+        else
+        {
+            playerCam.Priority = 10;
+            vitralCam.Priority = 11;
+        }
     }
 }
