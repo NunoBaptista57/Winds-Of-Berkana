@@ -57,7 +57,8 @@ public class MainVitralManager : MonoBehaviour
         if (isInteracting)
             RotatePiece(player.movementInput.x);
 
-        if (player.movementInput.y > 0)
+        // Way too sensitive
+        if (player.movementInput.y > 0.5f)
             SelectPiece();
     }
 
