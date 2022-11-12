@@ -24,15 +24,15 @@ public class Bastion1LevelManager : MonoBehaviour
 
     public SpawnLocation[] spawnLocations;
 
-    void Awake()
+    void Start()
     {
         manager = MainGameManager.Instance;
         MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
-        MainGameManager.Instance.UpdateGameState(GameState.Play);
         keyManager = KeyManager.Instance;
         keyManager.CollectedNKey += PickUpKey;
+        manager.UpdateGameState(GameState.Play);
     }
 
 

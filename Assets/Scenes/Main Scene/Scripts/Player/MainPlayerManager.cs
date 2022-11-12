@@ -32,9 +32,9 @@ public class MainPlayerManager : MonoBehaviour
 
     void LateUpdate()
     {
-        isInteracting = animator.GetBool("isInteracting");
-        isUsingRootMotion = animator.GetBool("isUsingRootMotion");
-        playerLocomotion.isJumping = animator.GetBool("isJumping");
-        animator.SetBool("isGrounded", playerLocomotion.isGrounded);
+        isInteracting = animator.GetBool("IsInteracting");
+        isUsingRootMotion = animator.GetBool("IsUsingRootMotion");
+        playerLocomotion.isJumping = animator.GetBool("IsJumping");
+        animator.SetBool("IsGrounded", playerLocomotion.isGrounded);
     }
 }

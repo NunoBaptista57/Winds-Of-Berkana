@@ -60,20 +60,24 @@ public class Sphere_Color : MonoBehaviour
     public void ChangeColor()
     {
         // Get Distance to closest sphere
-        var currentDistance = Vector3.Distance(closestSphere.transform.position, this.transform.position);
 
-        // Change color of the sphere incrementally
-        if (currentDistance > 30)
+        if (closestSphere != null)
         {
-            gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", .99f + ((currentDistance - 16) * 0.0005f)); //color = new Color(255 - distance * 5, 0, 98, 255);*/
-        }
-        else if (currentDistance > 20)
-        {
-            gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", .9f + ((currentDistance - 20) * 0.009f)); //color = new Color(255 - distance * 5, 0, 98, 255);*/
-        }
-        else
-        {
-            gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", currentDistance * 0.045f); //color = new Color(255 - distance * 5, 0, 98, 255);*/
+            var currentDistance = Vector3.Distance(closestSphere.transform.position, this.transform.position);
+
+            // Change color of the sphere incrementally
+            if (currentDistance > 30)
+            {
+                gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", .99f + ((currentDistance - 16) * 0.0005f)); //color = new Color(255 - distance * 5, 0, 98, 255);*/
+            }
+            else if (currentDistance > 20)
+            {
+                gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", .9f + ((currentDistance - 20) * 0.009f)); //color = new Color(255 - distance * 5, 0, 98, 255);*/
+            }
+            else
+            {
+                gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", currentDistance * 0.045f); //color = new Color(255 - distance * 5, 0, 98, 255);*/
+            }
         }
     }
 

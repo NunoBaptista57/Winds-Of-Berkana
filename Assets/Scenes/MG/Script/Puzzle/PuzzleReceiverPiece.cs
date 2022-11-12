@@ -19,7 +19,9 @@ public class PuzzleReceiverPiece : InteractableZone
     {
         rend = this.GetComponent<MeshRenderer>();
         defaultMaterial = rend.materials[0];
-        manager = GameObject.Find("VitralManager").GetComponent<VitralPuzzleManager>();
+
+        if(GameObject.Find("VitralManager") != null)
+            manager = GameObject.Find("VitralManager").GetComponent<VitralPuzzleManager>();
     }
 
 

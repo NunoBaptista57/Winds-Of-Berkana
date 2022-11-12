@@ -215,8 +215,8 @@ public class MainPlayerLocomotion : MonoBehaviour
             else
             {
                 transform.position = targetPosition;
-                animatorManager.animator.SetBool("isJumping", false);
-                animatorManager.animator.SetBool("Gliding", false);
+                animatorManager.animator.SetBool("IsJumping", false);
+                animatorManager.animator.SetBool("IsGliding", false);
                 DeactivateGlide();
             }
 
@@ -226,9 +226,9 @@ public class MainPlayerLocomotion : MonoBehaviour
 
     public void Jump()
     {
-        animatorManager.animator.SetBool("isJumping", true);
+        animatorManager.animator.SetBool("IsJumping", true);
         animatorManager.PlayTargetAnimation("Jump", true);
-        animatorManager.animator.SetBool("Gliding", false);
+        animatorManager.animator.SetBool("IsGliding", false);
 
         float jumpingVelocity = Mathf.Sqrt(-2 * gravityValue * jumpHeight);
         playerRigidBody.velocity = Vector3.zero;
@@ -254,7 +254,7 @@ public class MainPlayerLocomotion : MonoBehaviour
         if (!isGrounded && glideAbility)
         {
            
-            animatorManager.animator.SetBool("Gliding", true);
+            animatorManager.animator.SetBool("IsGliding", true);
             animatorManager.PlayTargetAnimation("Glide", true);
             gliderObject?.SetActive(true);
             isGliding = true;
@@ -266,7 +266,7 @@ public class MainPlayerLocomotion : MonoBehaviour
     {
         if (glideAbility)
         {
-            animatorManager.animator.SetBool("Gliding", false);
+            animatorManager.animator.SetBool("IsGliding", false);
             gliderObject?.SetActive(false);
             isGliding = false;
         }
