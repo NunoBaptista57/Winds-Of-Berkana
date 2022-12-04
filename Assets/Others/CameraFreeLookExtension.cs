@@ -61,7 +61,6 @@ public class CameraFreeLookExtension : CinemachineExtension
 
             timeSinceInput += deltaTime;
             var input = GetInput();
-            Debug.Log(input);
             if (input != Vector2.zero)
             {
                 timeSinceInput = 0;

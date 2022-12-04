@@ -60,7 +60,7 @@ public class BoatMovement : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.O))
         {
-            if (CurrentMaxVelocity > MaxVelocity/2)
+            if (CurrentMaxVelocity > 0)//MaxVelocity/2)
             {
                 CurrentMaxVelocity--;
             }
@@ -115,5 +115,14 @@ public class BoatMovement : MonoBehaviour
     void OnSpeedUp(InputValue value)
     {
         input.SpeedUp = value.Get<float>();
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Ring"))
+        {
+            CurrentMaxVelocity += MaxVelocity / 2;
+            Debug.Log("Entrou");
+        }
     }
 }
