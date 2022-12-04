@@ -13,7 +13,7 @@ public class MainTunelVento : MonoBehaviour
     [SerializeField]
     private CinemachineFreeLook playerCam;
     [SerializeField]
-    private CinemachineVirtualCamera vcam2;
+    private CinemachineFreeLook vcam2;
     // Start is called before the first frame update
     void Start()
     {

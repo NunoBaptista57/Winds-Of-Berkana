@@ -12,12 +12,16 @@ public class MainVitralManager : MonoBehaviour
 
     private bool isNear = false;
     private bool isInteracting = false;
+    
 
     [SerializeField]
     private CinemachineFreeLook playerCam;
     
     [SerializeField]
     private CinemachineVirtualCamera vitralCam;
+
+    private bool overworldCamera = true;
+    private bool panelIsComplete = false;
     
     [Header("Canvas Objects")]
     public Text infoText;
@@ -48,6 +52,7 @@ public class MainVitralManager : MonoBehaviour
     public void SolvingPuzzle()
     {
         infoText.text = "Solving Puzzle";
+        SwitchPriority();
     }
 
     private void FixedUpdate()
@@ -55,7 +60,9 @@ public class MainVitralManager : MonoBehaviour
         if (!isNear) return;
 
         if (isInteracting)
+        {
             RotatePiece(player.movementInput.x);
+        }
 
         // Way too sensitive
         if (player.movementInput.y > 0.5f)
@@ -121,8 +128,9 @@ public class MainVitralManager : MonoBehaviour
     // Show the final panel, animations and walls going up should be called here
     public void CompletedVitral()
     {
-        SwitchPriority();
         completedPanel.SetActive(true);
+        panelIsComplete = true;
+        SwitchPriority();
         infoText.text = "Congratulations \n You have finished this Demo";
     }
 
@@ -131,23 +139,26 @@ public class MainVitralManager : MonoBehaviour
     {
         if (isNear)
         {
-            SwitchPriority();
             isInteracting = true;
         }
     }
 
     private void SwitchPriority()
     {
-        if (isInteracting)
+        if (overworldCamera && panelIsComplete == false)
         {
-            playerCam.Priority = 11;
-            vitralCam.Priority = 10;
+            vitralCam.Priority = playerCam.Priority;
+            playerCam.Priority = 0;
+            overworldCamera = !overworldCamera;
+
         }
 
-        else
+        else if (overworldCamera == false && panelIsComplete)
         {
-            playerCam.Priority = 10;
-            vitralCam.Priority = 11;
+            playerCam.Priority = vitralCam.Priority;
+            vitralCam.Priority = 0;
+            overworldCamera = !overworldCamera;
+
         }
     }
 }
