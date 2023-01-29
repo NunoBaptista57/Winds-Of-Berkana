@@ -41,7 +41,7 @@ public class MainVitralManager : MonoBehaviour
     // Rotating the Vitral using movement controls
     public void RotatePiece(float rotation)
     {
-        if (isNear)
+        if (isInteracting)
         {
             puzzlePieces[_pieceSelected].gameObject.transform.Rotate(0, 0, rotation);
             CheckPosition();
@@ -53,6 +53,7 @@ public class MainVitralManager : MonoBehaviour
     {
         infoText.text = "Solving Puzzle";
         SwitchPriority();
+
     }
 
     private void FixedUpdate()
@@ -61,7 +62,10 @@ public class MainVitralManager : MonoBehaviour
 
         if (isInteracting)
         {
-            RotatePiece(player.movementInput.x);
+            if (player.movementInput.x > 0.5f)
+            {
+                RotatePiece(player.movementInput.x);
+            }
         }
 
         // Way too sensitive
@@ -115,8 +119,12 @@ public class MainVitralManager : MonoBehaviour
     {
             foreach (var p in puzzlePieces)
             {
-                if (p.transform.rotation.z <= -5 && p.transform.rotation.z >= 5)
+                Debug.Log(p.transform.rotation.z);
+                if (p.transform.rotation.z <= -5f || p.transform.rotation.z >= 5f)
+                {
+                    Debug.Log("esta a entrar");
                     return;
+                }
 
             }
             // Completed the panel
@@ -140,6 +148,7 @@ public class MainVitralManager : MonoBehaviour
         if (isNear)
         {
             isInteracting = true;
+            SolvingPuzzle();
         }
     }
 
