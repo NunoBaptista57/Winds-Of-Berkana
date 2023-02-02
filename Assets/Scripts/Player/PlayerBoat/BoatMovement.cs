@@ -8,6 +8,10 @@ using UnityEngine.InputSystem;
 public class BoatMovement : MonoBehaviour
 {
     new Rigidbody rigidbody;
+
+    [Header("Boat Mode")]
+    [SerializeField] bool boat_mode;
+
     [Header("Wind")]
     [Min(0), SerializeField] float WindForce;
     [Min(0)] public float MaxVelocity;
@@ -53,16 +57,16 @@ public class BoatMovement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.P))
         {
-            if(CurrentMaxVelocity < MaxVelocity*2)
+            if (CurrentMaxVelocity < MaxVelocity*2)
             {
-                CurrentMaxVelocity++;
+                CurrentMaxVelocity += .1f;
             }
         }
         if (Input.GetKey(KeyCode.O))
         {
             if (CurrentMaxVelocity > 0)//MaxVelocity/2)
             {
-                CurrentMaxVelocity--;
+                CurrentMaxVelocity -= .1f;
             }
         }
 
@@ -97,6 +101,10 @@ public class BoatMovement : MonoBehaviour
 
     void OnPitch(InputValue value)
     {
+        if (boat_mode)
+        {
+            return;
+        }
         //Debug.Log("Lwasdanding");
         input.Pitch = value.Get<float>();
     }
