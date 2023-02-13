@@ -62,15 +62,16 @@ public class MainVitralManager : MonoBehaviour
 
         if (isInteracting)
         {
+            // Way too sensitive
             if (player.movementInput.x > 0.5f)
             {
                 RotatePiece(player.movementInput.x);
             }
+            if (player.movementInput.y > 0.5f)
+                SelectPiece();
         }
 
-        // Way too sensitive
-        if (player.movementInput.y > 0.5f)
-            SelectPiece();
+        
     }
 
 
@@ -119,8 +120,18 @@ public class MainVitralManager : MonoBehaviour
     {
             foreach (var p in puzzlePieces)
             {
-                Debug.Log(p.transform.rotation.z);
-                if (p.transform.rotation.z <= -5f || p.transform.rotation.z >= 5f)
+                float currentRot = p.transform.rotation.eulerAngles.z;
+                Debug.Log(currentRot);
+                while (currentRot < -360f || currentRot > 360f)
+                {
+                    if (currentRot < -360f)
+                        currentRot += 360f;
+                    else if (currentRot > 360f)
+                        currentRot -= 360f;
+                }
+
+                Debug.Log(currentRot);
+                if (currentRot <= -5f || currentRot >= 5f)
                 {
                     Debug.Log("esta a entrar");
                     return;
