@@ -31,6 +31,10 @@ public class MainVitralManager : MonoBehaviour
 
     private MainPlayerInputHandler player;
 
+    private float delaySelectingTime;
+    public float timeHolder;
+
+
     public void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<MainPlayerInputHandler>();
@@ -58,17 +62,26 @@ public class MainVitralManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (delaySelectingTime > 0)
+        {
+            delaySelectingTime -= Time.deltaTime;
+        }
+
         if (!isNear) return;
 
         if (isInteracting)
         {
             // Way too sensitive
-            if (player.movementInput.x > 0.5f)
+            if (player.movementInput.x > 0.5f || player.movementInput.x < -0.5f)
             {
                 RotatePiece(player.movementInput.x);
             }
-            if (player.movementInput.y > 0.5f)
+
+            if ((player.movementInput.y > 0.5f || player.movementInput.y < -0.5f) && delaySelectingTime <= 0)
+            {
+                delaySelectingTime = timeHolder;
                 SelectPiece();
+            }
         }
 
         
@@ -148,6 +161,9 @@ public class MainVitralManager : MonoBehaviour
     public void CompletedVitral()
     {
         completedPanel.SetActive(true);
+        puzzlePieces[0].SetActive(false);
+        puzzlePieces[1].SetActive(false);
+        puzzlePieces[2].SetActive(false);
         panelIsComplete = true;
         SwitchPriority();
         infoText.text = "Congratulations \n You have finished this Demo";
