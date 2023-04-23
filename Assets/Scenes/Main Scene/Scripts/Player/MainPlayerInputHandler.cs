@@ -140,8 +140,11 @@ public class MainPlayerInputHandler : MonoBehaviour
     {
         if (jumpInput == true)
         {
-            jumpInput = false;
-            playerLocomotion.HandleJumping();
+            if (!SolvingPuzzle)
+            {
+                jumpInput = false;
+                playerLocomotion.HandleJumping();
+            }
         }
     }
 
