@@ -12,7 +12,7 @@ public class MainVitralManager : MonoBehaviour
 
     private bool isNear = false;
     private bool isInteracting = false;
-    
+
 
     [SerializeField]
     private CinemachineFreeLook playerCam;
@@ -166,6 +166,7 @@ public class MainVitralManager : MonoBehaviour
         puzzlePieces[2].SetActive(false);
         panelIsComplete = true;
         SwitchPriority();
+        player.SolvingPuzzle = false;
         infoText.text = "Congratulations \n You have finished this Demo";
     }
 
@@ -175,6 +176,7 @@ public class MainVitralManager : MonoBehaviour
         if (isNear)
         {
             isInteracting = true;
+            player.SolvingPuzzle = true;
             SolvingPuzzle();
         }
     }

@@ -26,7 +26,7 @@ public class MainPlayerInputHandler : MonoBehaviour
     public bool pickupInput = false;
     public bool runningInput = false;
     public bool flashInput = false;
-    public bool SolvingPuzzle = false;
+    public bool SolvingPuzzle;
 
     public Light flashlight;
     public int respawnTimer;
@@ -37,9 +37,9 @@ public class MainPlayerInputHandler : MonoBehaviour
 
     void Start()
     {
-
+        
         manager = MainGameManager.Instance;
-
+        SolvingPuzzle = false;
         MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
 
     }
@@ -110,10 +110,13 @@ public class MainPlayerInputHandler : MonoBehaviour
     {
         if (MainGameManager.Instance.State == GameState.Play)
         {
-            verticalInput = movementInput.x;
-            horizontalInput = movementInput.y;
-            moveAmount = Mathf.Clamp01(Math.Abs(horizontalInput) + Mathf.Abs(verticalInput));
-            animator.UpdateAnimatorValues(horizontalInput, verticalInput);
+            if (!SolvingPuzzle)
+            {
+                verticalInput = movementInput.x;
+                horizontalInput = movementInput.y;
+                moveAmount = Mathf.Clamp01(Math.Abs(horizontalInput) + Mathf.Abs(verticalInput));
+                animator.UpdateAnimatorValues(horizontalInput, verticalInput);
+            }
         }
 
     }
