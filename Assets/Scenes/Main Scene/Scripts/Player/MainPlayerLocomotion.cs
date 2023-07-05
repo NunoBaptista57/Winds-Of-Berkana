@@ -29,6 +29,8 @@ public class MainPlayerLocomotion : MonoBehaviour
     public float runningSpeed = 5f;
     public float sprintingSpeed = 7f;
     public float playerRotationSpeed = 15f;
+    public float airborneAcceleration = 0.5f;
+    public float airborneMax = 5f;
 
     [Header("Falling")]
     public float inAirTimer;
@@ -39,7 +41,7 @@ public class MainPlayerLocomotion : MonoBehaviour
     [Header("JumpSpeed")]
     public float jumpHeight = 3.0f;
     public float jumpCoeficient = 0.1f;
-    public float jumpControlCoeficient = 20;
+    public float jumpControlCoeficient = 35f;
     public float gravityValue = -9.81f;
 
     [Header("Glide Controls")]
@@ -164,7 +166,7 @@ public class MainPlayerLocomotion : MonoBehaviour
                     var x = moveDirection.x * glideControlCoeficient;
                     var y = glideAcceleration;
                     var z = moveDirection.z * glideControlCoeficient;
-                    playerRigidBody.AddForce(x, y, z, ForceMode.Acceleration);
+                    //playerRigidBody.AddForce(x, y, z, ForceMode.Acceleration);
 
                 }
                 else
@@ -172,7 +174,16 @@ public class MainPlayerLocomotion : MonoBehaviour
                     var x = moveDirection.x * jumpControlCoeficient;
                     var y = 0.0f;
                     var z = moveDirection.z * jumpControlCoeficient;
-                    playerRigidBody.AddForce(x, y, z, ForceMode.Acceleration);
+                    Vector3 movement = new Vector3(moveDirection.x*jumpCoeficient, 0f, moveDirection.z*jumpCoeficient);
+                    
+                    float maxSpeed = 10f; // Adjust this value to your desired maximum speed
+                    if (playerRigidBody.velocity.magnitude < maxSpeed)
+                    {
+                        playerRigidBody.velocity += movement;                    }
+
+                    //Vector3 movement = new Vector3(moveDirection.x, 0f, moveDirection.z).normalized;
+                    //playerRigidBody.velocity = new Vector3(movement.x*jumpControlCoeficient, playerRigidBody.velocity.y, movement.z*jumpControlCoeficient);
+                    //playerRigidBody.velocity = Vector3.ClampMagnitude(playerRigidBody.velocity, airborneMax);
                 }
                 //Rotation while falling
                 HandleRotation();
@@ -188,6 +199,8 @@ public class MainPlayerLocomotion : MonoBehaviour
             if (!isGrounded)
             {
                 animatorManager.PlayTargetAnimation("Land", true);
+                playerRigidBody.velocity = new Vector3(0f, 0f, 0f);
+
             }
 
             Vector3 rayCastHitPoint = hit.point;
