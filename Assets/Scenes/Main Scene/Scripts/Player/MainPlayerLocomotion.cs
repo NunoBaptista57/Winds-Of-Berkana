@@ -109,7 +109,6 @@ public class MainPlayerLocomotion : MonoBehaviour
         Vector3 movementVelocity = moveDirection;
         playerRigidBody.velocity = movementVelocity;
 
-
     }
 
     private void HandleRotation()
@@ -167,7 +166,17 @@ public class MainPlayerLocomotion : MonoBehaviour
                     var y = glideAcceleration;
                     var z = moveDirection.z * glideControlCoeficient;
                     //playerRigidBody.AddForce(x, y, z, ForceMode.Acceleration);
-
+                    Vector3 movement = new Vector3(x, y, z);
+                    float maxSpeed = 10f; // Adjust this value to your desired maximum speed
+                    if (movement.x * playerRigidBody.velocity.x < 0 || movement.y * playerRigidBody.velocity.y < 0 ||
+                        movement.z * playerRigidBody.velocity.z < 0)
+                    {
+                        playerRigidBody.velocity = new Vector3(0,y,0);
+                    }
+                    
+                    if (playerRigidBody.velocity.magnitude < maxSpeed)
+                    {
+                        playerRigidBody.velocity += movement;                    }
                 }
                 else
                 {
@@ -177,6 +186,12 @@ public class MainPlayerLocomotion : MonoBehaviour
                     Vector3 movement = new Vector3(moveDirection.x*jumpCoeficient, 0f, moveDirection.z*jumpCoeficient);
                     
                     float maxSpeed = 10f; // Adjust this value to your desired maximum speed
+                    if (movement.x * playerRigidBody.velocity.x < 0 || movement.y * playerRigidBody.velocity.y < 0 ||
+                        movement.z * playerRigidBody.velocity.z < 0)
+                    {
+                        playerRigidBody.velocity = new Vector3(0,0,0);
+                    }
+                    
                     if (playerRigidBody.velocity.magnitude < maxSpeed)
                     {
                         playerRigidBody.velocity += movement;                    }
