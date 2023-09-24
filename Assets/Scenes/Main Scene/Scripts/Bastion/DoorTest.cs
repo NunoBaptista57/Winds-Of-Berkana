@@ -5,7 +5,7 @@ public class DoorTest : MonoBehaviour, IDoor
 {
     public void Open()
     {
-
+        Debug.Log("Open");
     }
 
     public bool CanOpen()

@@ -1,15 +1,20 @@
 using UnityEngine;
 using System;
 
-
-
-public class Key : MonoBehaviour
+public class MainKey : MonoBehaviour, IKey
 {
     [SerializeField] private EventSender _eventSender;
+    private bool _collected = false;
 
-    private void Collect()
+    public void Collect()
     {
+        _collected = true;
         _eventSender.InvokeCollectedKeyEvent();
+    }
+
+    public bool IsCollected()
+    {
+        return _collected;
     }
 
     private void OnTriggerEnter(Collider other)

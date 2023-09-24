@@ -10,7 +10,7 @@ public class BastionManager : MonoBehaviour, IManager
     private Transform _startPosition;
     private GameObject _player;
     private List<IDoor> _doors;
-    private List<Key> _keys;
+    private List<IKey> _keys;
 
     private Transform _currentCheckpoint;
 
@@ -26,7 +26,7 @@ public class BastionManager : MonoBehaviour, IManager
             _doors.Append(door);
         }
 
-        foreach (Key key in transform.Find("Keys").GetComponentsInChildren<Key>())
+        foreach (IKey key in transform.Find("Keys").GetComponentsInChildren<IKey>())
         {
             _keys.Append(key);
         }
