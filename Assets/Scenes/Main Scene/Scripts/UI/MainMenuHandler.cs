@@ -70,8 +70,5 @@ public class MainMenuHandler : MonoBehaviour
         paused = true;
         Time.timeScale = 0f;
         _pauseMenu.SetActive(true);
-       
     }
-
-
 }

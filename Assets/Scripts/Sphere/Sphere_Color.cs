@@ -8,7 +8,7 @@ public class Sphere_Color : MonoBehaviour
     public List<GameObject> puzzle_piece;
 
     private GameObject closestSphere;
-    private KeyManager _keyManager;
+    // private KeyManager _keyManager;
     private bool _keysCollected;
 
     private float _angle;
@@ -16,8 +16,8 @@ public class Sphere_Color : MonoBehaviour
 
     void Start()
     {
-        _keyManager = KeyManager.Instance;
-        _keyManager.CollectedAllKeys += KeysWereCollected;
+        // _keyManager = KeyManager.Instance;
+        // _keyManager.CollectedAllKeys += KeysWereCollected;
         InvokeRepeating("GetClosestKey", 0, 3);
         GetClosestKey();
 

@@ -5,11 +5,11 @@ using System;
 
 public class Key : MonoBehaviour
 {
-    [SerializeField] private EventManager _eventManager;
+    [SerializeField] private EventSender _eventSender;
 
     private void Collect()
     {
-        _eventManager.InvokeCollectedKeyEvent();
+        _eventSender.InvokeCollectedKeyEvent();
     }
 
     private void OnTriggerEnter(Collider other)

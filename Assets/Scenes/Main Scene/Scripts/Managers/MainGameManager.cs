@@ -6,17 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class MainGameManager : MonoBehaviour
 {
-
     public static MainGameManager Instance;
-
     public GameState State;
     public static event Action<GameState> OnGameStateChanged;
+
+    [SerializeField] private EventSender _eventSender;
 
     void Awake()
     {
         Instance = this;
                             
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     public void UpdateGameState(GameState newState)
@@ -33,7 +33,7 @@ public class MainGameManager : MonoBehaviour
             case GameState.Paused:
                 
                 if(PreviousState == GameState.Paused)
-                    this.State = GameState.Play;
+                    State = GameState.Play;
                 break;
 
             case GameState.Victory:
@@ -48,7 +48,7 @@ public class MainGameManager : MonoBehaviour
                 break;
 
             case GameState.Remake:
-                this.RestartCurrentScene();
+                RestartCurrentScene();
                 UpdateGameState(GameState.Play);
                 break;
 
@@ -57,7 +57,7 @@ public class MainGameManager : MonoBehaviour
 
         }
 
-        OnGameStateChanged?.Invoke(this.State);
+        OnGameStateChanged?.Invoke(State);
     }
 
    
@@ -72,8 +72,16 @@ public class MainGameManager : MonoBehaviour
         Application.Quit();
     }
    
-}
+    private void OnEnable()
+    {
+        _eventSender.ChangeGameStateEvent += UpdateGameState;
+    }
 
+    private void OnDisable()
+    {
+        _eventSender.ChangeGameStateEvent -= UpdateGameState;
+    }
+}
 
 public enum GameState
 {
