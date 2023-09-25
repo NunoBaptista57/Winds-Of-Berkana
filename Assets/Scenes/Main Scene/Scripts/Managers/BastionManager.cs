@@ -34,8 +34,9 @@ public class BastionManager : MonoBehaviour, IManager
 
     private void Start()
     {
-        Reset();
+        _currentCheckpoint = _startPosition;
         _player.transform.position = _currentCheckpoint.position;
+        _eventSender.InvokeChangeGameStateEvent(GameState.Play);
     }
 
     private void UpdateDoors()
@@ -74,11 +75,5 @@ public class BastionManager : MonoBehaviour, IManager
     public void Load()
     {
         Debug.Log("Load");
-    }
-
-    public void Reset()
-    {
-        _currentCheckpoint = _startPosition;
-        _eventSender.InvokeChangeGameStateEvent(GameState.Play);
     }
 }

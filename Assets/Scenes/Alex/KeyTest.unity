@@ -6518,6 +6518,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventSender: {fileID: 0}
+  degreesPerSecond: 15
+  amplitude: 0.5
+  frequency: 1
 --- !u!65 &742941915
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8082,6 +8085,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventSender: {fileID: 0}
+  degreesPerSecond: 15
+  amplitude: 0.5
+  frequency: 1
 --- !u!65 &983112651
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9368,7 +9374,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258959862}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0000067857286, y: 0.9991821, z: -0.04043685, w: 0.00016767326}
+  m_LocalRotation: {x: 0.00000678572, y: 0.9991821, z: -0.04043685, w: 0.00016767306}
   m_LocalPosition: {x: 12.13, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11770,6 +11776,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventSender: {fileID: 11400000, guid: c8aed4e5362a18e4781d394eb243b0ce, type: 2}
+  degreesPerSecond: 15
+  amplitude: 0.5
+  frequency: 1
 --- !u!65 &1509957718
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14126,6 +14135,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: _eventSender
+      value: 
+      objectReference: {fileID: 11400000, guid: c8aed4e5362a18e4781d394eb243b0ce, type: 2}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: _keys.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: _keys.Array.data[0]
+      value: 
+      objectReference: {fileID: 1509957715}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: _keys.Array.data[1]
+      value: 
+      objectReference: {fileID: 742941912}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: _keys.Array.data[2]
+      value: 
+      objectReference: {fileID: 983112648}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: puzzle_piece.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: puzzle_piece.Array.data[0]
+      value: 
+      objectReference: {fileID: 1509957715}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: puzzle_piece.Array.data[1]
+      value: 
+      objectReference: {fileID: 742941912}
+    - target: {fileID: 9182904697019500212, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
+      propertyPath: puzzle_piece.Array.data[2]
+      value: 
+      objectReference: {fileID: 983112648}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

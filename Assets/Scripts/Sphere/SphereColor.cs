@@ -2,31 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sphere_Color : MonoBehaviour
+public class SphereColor : MonoBehaviour
 {
-   
-    public List<GameObject> puzzle_piece;
+    [SerializeField] private EventSender _eventSender;
+    [SerializeField] private List<GameObject> _keys;
 
     private GameObject closestSphere;
-    // private KeyManager _keyManager;
     private bool _keysCollected;
-
-    private float _angle;
-    private Color _color = new Color(1, 0, 0);
 
     void Start()
     {
-        // _keyManager = KeyManager.Instance;
-        // _keyManager.CollectedAllKeys += KeysWereCollected;
-        InvokeRepeating("GetClosestKey", 0, 3);
+        InvokeRepeating(nameof(GetClosestKey), 0, 3);
         GetClosestKey();
-
     }
 
     //Removes collected key from the List
     public void RemoveKey(GameObject key)
     {
-        puzzle_piece.Remove(key);
+        _keys.Remove(key);
     }
 
     // Get Closest key from the List
@@ -34,8 +27,13 @@ public class Sphere_Color : MonoBehaviour
     {
         float maxDistance = float.MaxValue;
 
-        foreach (var p in puzzle_piece)
+        foreach (var p in _keys)
         {
+            if (p.GetComponent<IKey>().IsCollected())
+            {
+                continue;
+            }
+            
             var distance = Vector3.Distance(p.transform.position, transform.position);
 
             if (distance < maxDistance)
@@ -43,9 +41,7 @@ public class Sphere_Color : MonoBehaviour
                 maxDistance = distance;
                 closestSphere = p;
             }
-
         }
-
     }
 
     // Update is called once per frame
@@ -60,7 +56,6 @@ public class Sphere_Color : MonoBehaviour
     public void ChangeColor()
     {
         // Get Distance to closest sphere
-
         if (closestSphere != null)
         {
             var currentDistance = Vector3.Distance(closestSphere.transform.position, this.transform.position);
@@ -83,7 +78,30 @@ public class Sphere_Color : MonoBehaviour
 
     public void KeysWereCollected()
     {
-            _keysCollected = true;
-            gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", 1);
+        _keysCollected = true;
+        gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", 1);
+    }
+
+    private void UpdateKeys()
+    {
+        foreach (GameObject key in _keys)
+        {
+            if (key.GetComponent<IKey>().IsCollected())
+            {
+                GetClosestKey();
+                return;
+            }
+        }
+        KeysWereCollected();
+    }
+
+    private void OnEnable()
+    {
+        _eventSender.CollectedKeyEvent += UpdateKeys;
+    }
+
+    private void OnDisable()
+    {
+        _eventSender.CollectedKeyEvent -= UpdateKeys;
     }
 }
