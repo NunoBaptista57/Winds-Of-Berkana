@@ -6953,11 +6953,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6881137594584593069, guid: 753d1d94cd02d7e46aa85b976780f2cb, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.008052746
+      value: 0.008052732
       objectReference: {fileID: 0}
     - target: {fileID: 6881137594584593069, guid: 753d1d94cd02d7e46aa85b976780f2cb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0017529937
+      value: -0.0017529905
       objectReference: {fileID: 0}
     - target: {fileID: 6881137594953727906, guid: 753d1d94cd02d7e46aa85b976780f2cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6985,7 +6985,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6881137594953727906, guid: 753d1d94cd02d7e46aa85b976780f2cb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.001743726
+      value: -0.0017437262
       objectReference: {fileID: 0}
     - target: {fileID: 6881137595412873523, guid: 753d1d94cd02d7e46aa85b976780f2cb, type: 3}
       propertyPath: m_FollowOffset.y
@@ -9374,7 +9374,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258959862}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000678572, y: 0.9991821, z: -0.04043685, w: 0.00016767306}
+  m_LocalRotation: {x: 0.000006785725, y: 0.9991821, z: -0.04043685, w: 0.00016767318}
   m_LocalPosition: {x: 12.13, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11677,7 +11677,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1495532929}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2106818, y: 0.0080563575, z: -0.0017363614, w: 0.97752}
+  m_LocalRotation: {x: 0.2106818, y: 0.008056326, z: -0.0017363545, w: 0.97752}
   m_LocalPosition: {x: 0.29443818, y: 5.8849583, z: 17.879597}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11775,7 +11775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fb4e22a4e0771547b2762cf801fc3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _eventSender: {fileID: 11400000, guid: c8aed4e5362a18e4781d394eb243b0ce, type: 2}
+  _eventSender: {fileID: 0}
   degreesPerSecond: 15
   amplitude: 0.5
   frequency: 1
@@ -14018,6 +14018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1549559b61ca8634b99c8c3ebb4e6d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _keys: []
 --- !u!1 &1990920093
 GameObject:
   m_ObjectHideFlags: 0
@@ -14078,7 +14079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   State: 1
-  _eventSender: {fileID: 11400000, guid: c8aed4e5362a18e4781d394eb243b0ce, type: 2}
+  _eventSender: {fileID: 0}
 --- !u!1001 &1995751315
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16714,6 +16715,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c4d4805ef44d94e95940055a88bea5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelManager: {fileID: 0}
+  textObject: {fileID: 0}
+  animator: {fileID: 0}
+  elevatorDown: 0
+  removeCollisions: []
+  player: {fileID: 0}
 --- !u!1 &3684386515606405948
 GameObject:
   m_ObjectHideFlags: 0
