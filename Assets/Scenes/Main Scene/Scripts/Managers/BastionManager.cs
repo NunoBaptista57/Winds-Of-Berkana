@@ -23,12 +23,12 @@ public class BastionManager : MonoBehaviour, IManager
 
         foreach (IDoor door in transform.Find("Doors").GetComponentsInChildren<IDoor>())
         {
-            _doors.Append(door);
+            _doors.Add(door);
         }
 
         foreach (IKey key in transform.Find("Keys").GetComponentsInChildren<IKey>())
         {
-            _keys.Append(key);
+            _keys.Add(key);
         }
     }
 
@@ -41,10 +41,12 @@ public class BastionManager : MonoBehaviour, IManager
 
     private void UpdateDoors()
     {
+        Debug.Log(_doors[0]);
         foreach (IDoor door in _doors)
         {
             if (door.CanOpen() && !door.IsOpen())
             {
+                Debug.Log(door);
                 door.Open();
             }
         }
