@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IKey
 {
+    public void SetKeyManager(KeyManager keyManager)
     public void Collect();
     public bool IsCollected();
 }
