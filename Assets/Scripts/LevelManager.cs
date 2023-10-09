@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainGameManager : MonoBehaviour
+public class LevelManager : MonoBehaviour
 {
 
-    public static MainGameManager Instance;
+    public static LevelManager Instance;
 
     public GameState State;
     public static event Action<GameState> OnGameStateChanged;
@@ -18,6 +18,7 @@ public class MainGameManager : MonoBehaviour
                             
         DontDestroyOnLoad(this.gameObject);
     }
+
 
     public void UpdateGameState(GameState newState)
     {
@@ -60,18 +61,11 @@ public class MainGameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(this.State);
     }
 
-   
 
     public void RestartCurrentScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
-    public void QuiGame()
-    {
-        Application.Quit();
-    }
-   
 }
 
 

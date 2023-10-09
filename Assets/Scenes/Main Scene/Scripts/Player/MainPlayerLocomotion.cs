@@ -65,7 +65,7 @@ public class MainPlayerLocomotion : MonoBehaviour
 
     public void HandleAllMovement()
     {
-        if (MainGameManager.Instance.State == GameState.Paused || MainGameManager.Instance.State == GameState.Death)
+        if (ServiceLocator.instance.GetService<LevelManager>().State == GameState.Paused || ServiceLocator.instance.GetService<LevelManager>().State == GameState.Death)
             return;
 
         HandleFallingandLanding();
@@ -303,10 +303,10 @@ public class MainPlayerLocomotion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Death" && MainGameManager.Instance.State != GameState.Death)
+        if (other.gameObject.tag == "Death" && ServiceLocator.instance.GetService<LevelManager>().State != GameState.Death)
         {
             Debug.Log("Player has fallen to its Death");
-            MainGameManager.Instance.UpdateGameState(GameState.Death);
+            ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Death);
         }
     }
 

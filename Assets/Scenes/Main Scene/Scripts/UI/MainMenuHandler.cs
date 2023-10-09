@@ -13,13 +13,13 @@ public class MainMenuHandler : MonoBehaviour
 
     void Awake()
     {
-        MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
     }
 
     // Its good practice to unsubscribe from events
     void OnDestroy()
     {
-        MainGameManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+        LevelManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
     }
 
     private void GameManagerOnGameStateChanged(GameState state)
@@ -54,7 +54,7 @@ public class MainMenuHandler : MonoBehaviour
 
     public void HandlePause()
     {
-      MainGameManager.Instance.UpdateGameState(GameState.Paused);
+      ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Paused);
     }
 
     public void Resume()
