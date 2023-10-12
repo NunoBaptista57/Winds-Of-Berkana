@@ -3,13 +3,10 @@
 // using System.Collections.Generic;
 // using UnityEngine;
 
-// public class Bastion1LevelManager : MonoBehaviour
-// {
-
-//     MainGameManager manager;
-//     KeyManager keyManager;
-//     Transform player;
-//     public LevelState levelState;
+public class Bastion1LevelManager : MonoBehaviour
+{
+    Transform player;
+    public LevelState levelState;
 
 //     Vector3 originalCameraPosition;
 
@@ -24,16 +21,14 @@
 
 //     public SpawnLocation[] spawnLocations;
 
-//     void Start()
-//     {
-//         manager = MainGameManager.Instance;
-//         MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
-//         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-//         originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
-//         keyManager = KeyManager.Instance;
-//         keyManager.CollectedNKey += PickUpKey;
-//         manager.UpdateGameState(GameState.Play);
-//     }
+    void Start()
+    {
+        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
+        ServiceLocator.instance.GetService<KeyManager>().CollectedNKey += PickUpKey;
+        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
+    }
 
 
 //     public void UpdateLevelState(LevelState newState)
@@ -114,12 +109,12 @@
 //                     }
 //                 }
 
-//                 player.position = location;
-//                 player.GetComponent<Rigidbody>().velocity = Vector3.zero;
-//                 GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
-//                 MainGameManager.Instance.UpdateGameState(GameState.Play);
-//                 break;
-//         }
+                player.position = location;
+                player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
+                ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
+                break;
+        }
      
 //     }
 
@@ -138,8 +133,8 @@
 //             GameObject.Find("Death Camera").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 8;
 //         }
 
-//         manager.UpdateGameState(GameState.Respawn);
-//     }
+        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Respawn);
+    }
 
 // }
 

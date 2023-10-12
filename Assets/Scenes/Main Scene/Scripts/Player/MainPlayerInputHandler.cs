@@ -31,23 +31,23 @@ public class MainPlayerInputHandler : MonoBehaviour
     public Light flashlight;
     public int respawnTimer;
 
-    private MainGameManager manager;
+    private LevelManager manager;
 
     public event Action Interact;
 
     void Start()
     {
         
-        manager = MainGameManager.Instance;
+        manager = LevelManager.Instance;
         SolvingPuzzle = false;
-        MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
 
     }
 
     // Its good practice to unsubscribe from events
     void OnDestroy()
     {
-        MainGameManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+        LevelManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
     }
 
     private void OnEnable()
@@ -108,7 +108,7 @@ public class MainPlayerInputHandler : MonoBehaviour
 
     public void HandleMovementInput()
     {
-        if (MainGameManager.Instance.State == GameState.Play)
+        if (LevelManager.Instance.State == GameState.Play)
         {
             if (!SolvingPuzzle)
             {

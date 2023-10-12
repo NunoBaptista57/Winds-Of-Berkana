@@ -23,7 +23,6 @@ class InputManager : MonoBehaviour
 
     private AnimatorManager animator;
     private Camera _mainCamera;
-    private VitralPuzzleManager _puzzle;
 
     public bool jumpInput;
     public bool dodgeInput;
@@ -44,22 +43,17 @@ class InputManager : MonoBehaviour
     public Cinemachine.CinemachineVirtualCameraBase deathCamera;
 
     private Canvas aimCanvas;
-    private MainGameManager manager;
 
 
     void Start()
     {
-
-     manager = MainGameManager.Instance;
-
-     MainGameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
-
+        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
     }
 
     // Its good practice to unsubscribe from events
     void OnDestroy()
     {
-        MainGameManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+        LevelManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
     }
 
     private void OnEnable()
@@ -83,12 +77,12 @@ class InputManager : MonoBehaviour
           //  playerControls.Character.Aim.canceled += i => aimInput = false;
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
             playerControls.Character.Flashlight.performed += i => HandleFlashlight();
-            playerControls.Character.Reset.performed += i => manager.UpdateGameState(GameState.Remake);
+            playerControls.Character.Reset.performed += i => ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Remake);
             playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
             playerControls.Character.Vision.performed += i => HandleVision();
             playerControls.Character.Interact.performed += i => HandleInteract();
 
-            playerControls.Character.Pause.performed += i => manager.UpdateGameState(GameState.Paused);
+            playerControls.Character.Pause.performed += i => ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Paused);
         }
 
         playerControls.Enable();
@@ -98,8 +92,6 @@ class InputManager : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         }
-
-        _puzzle = VitralPuzzleManager.Instance;
     }
 
     private void OnDisable()
@@ -109,7 +101,7 @@ class InputManager : MonoBehaviour
 
     public void HandleAllInputs()
     {
-        if (manager.State != GameState.Paused)
+        if (ServiceLocator.instance.GetService<LevelManager>().State != GameState.Paused)
         {
             HandleMovementInput();
             HandleJumpingInput();
@@ -243,11 +235,11 @@ class InputManager : MonoBehaviour
         if (!SolvingPuzzle)
         {
             _mainCamera.enabled = !_mainCamera.enabled;
-            _puzzle.SolvingPuzzle();
+            ServiceLocator.instance.GetService<VitralPuzzleManager>().SolvingPuzzle();
         }
         else
         {
-            _puzzle.SelectPiece();
+            ServiceLocator.instance.GetService<VitralPuzzleManager>().SelectPiece();
         }
         
     }
