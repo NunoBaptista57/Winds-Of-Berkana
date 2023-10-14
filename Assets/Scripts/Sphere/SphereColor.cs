@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SphereColor : MonoBehaviour
 {
-    [SerializeField] private EventSender _eventSender;
     [SerializeField] private List<GameObject> _keys;
 
     private GameObject closestSphere;
@@ -33,7 +32,7 @@ public class SphereColor : MonoBehaviour
             {
                 continue;
             }
-            
+
             var distance = Vector3.Distance(p.transform.position, transform.position);
 
             if (distance < maxDistance)
@@ -97,11 +96,11 @@ public class SphereColor : MonoBehaviour
 
     private void OnEnable()
     {
-        _eventSender.CollectedKeyEvent += UpdateKeys;
+        // _eventSender.CollectedKeyEvent += UpdateKeys;
     }
 
     private void OnDisable()
     {
-        _eventSender.CollectedKeyEvent -= UpdateKeys;
+        // _eventSender.CollectedKeyEvent -= UpdateKeys;
     }
 }

@@ -1,7 +1,7 @@
-// using System;
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Bastion1LevelManager : MonoBehaviour
 {
@@ -26,7 +26,6 @@ public class Bastion1LevelManager : MonoBehaviour
         LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
-        ServiceLocator.instance.GetService<KeyManager>().CollectedNKey += PickUpKey;
         ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
     }
 

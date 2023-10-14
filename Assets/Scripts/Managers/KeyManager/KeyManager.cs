@@ -1,16 +1,3 @@
-//     public void HandleLevelChange(int pickedPieceNumber)
-//     {
-//         var relevantObjects = levelChanges.ToList().FindAll(x => x.pickedUpPieces == pickedPieceNumber);
-
-//         // Enact Changes in the Level
-//         foreach(var r in relevantObjects)
-//         {
-//             // Ideally the have an Animator that plays on Trigger
-//             r.movingPiece.GetComponent<Animator>().SetTrigger("Move");
-//         }
-
-//     }
-
 //     // The objective of this function is to Check if the panels are in the correct Position
 //     public void CheckPanelPosition()
 //     {
@@ -49,13 +36,15 @@
 
 //     #endregion
 // }
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BastionManager : MonoBehaviour
+public class KeyManager : MonoBehaviour
 {
+
     private List<IDoor> _allDoors;
     private List<IKey> _allKeys;
     private bool[] _collectedKeys;
@@ -76,26 +65,29 @@ public class BastionManager : MonoBehaviour
             _allKeys.Add(key);
         }
 
-        _collectedKeys = new(_allKeys.lenght);
-        _openDoors = new(_allDoors.length);
+        _collectedKeys = new bool[_allKeys.Count];
+        _openDoors = new bool[_allDoors.Count];
+
     }
 
     public void UpdateValues()
     {
-        foreach (IKey key in _allKeys)
+        for (int i = 0; i < _allKeys.Count; i++)
         {
-            if (key.IsCollected())
+            if (_allKeys[i].IsCollected())
             {
-                _collectedKeys[_allKeys.index(key)] = true;
+                _collectedKeys[i] = true;
             }
         }
 
-        foreach (IDoor door in _allDoors)
+        for (int i = 0; i < _allDoors.Count; i++)
         {
+            IDoor door = _allDoors[i];
+
             if (door.CanOpen() && !door.IsOpen())
             {
                 door.Open();
-                _openDoors[_allDoors.index(door)] = true;
+                _openDoors[i] = true;
             }
         }
     }
