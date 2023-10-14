@@ -6,18 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager Instance;
 
     public GameState State;
     public static event Action<GameState> OnGameStateChanged;
-
-    void Awake()
-    {
-        Instance = this;
-
-        DontDestroyOnLoad(gameObject);
-    }
-
 
     public void UpdateGameState(GameState newState)
     {
