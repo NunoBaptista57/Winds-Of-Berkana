@@ -33,6 +33,8 @@ public class Bastion1LevelManager : MonoBehaviour
     {
         levelState = newState;
 
+        Debug.Log(newState);
+
         switch (newState)
         {
             case LevelState.BastionState_Intro:
@@ -71,15 +73,15 @@ public class Bastion1LevelManager : MonoBehaviour
         switch (keyNumber)
         {
             case 1:
-                UpdateLevelState(LevelState.BastionState_Puzzle2);
+                UpdateLevelState(LevelState.BastionState_Puzzle1);
                 break;
 
             case 2:
-                UpdateLevelState(LevelState.BastionState_Puzzle3);
+                UpdateLevelState(LevelState.BastionState_Puzzle2);
                 break;
 
             case 3:
-                UpdateLevelState(LevelState.BastionState_Ending);
+                UpdateLevelState(LevelState.BastionState_Puzzle3);
                 break;
 
             default:

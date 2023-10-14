@@ -18,7 +18,7 @@ public class SphereColor : MonoBehaviour
     {
         foreach (IKey key in _keys)
         {
-            if (key.IsCollected())
+            if (!key.IsCollected())
             {
                 GetClosestKey();
                 return;
@@ -49,12 +49,6 @@ public class SphereColor : MonoBehaviour
                 closestKey = p;
             }
         }
-    }
-
-    //Removes collected key from the List
-    private void RemoveKey(IKey key)
-    {
-        _keys.Remove(key);
     }
 
     // Update is called once per frame
