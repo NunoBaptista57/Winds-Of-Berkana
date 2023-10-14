@@ -48,7 +48,7 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case GameState.Remake:
-                this.RestartCurrentScene();
+                RestartCurrentScene();
                 UpdateGameState(GameState.Play);
                 break;
 
@@ -57,7 +57,7 @@ public class LevelManager : MonoBehaviour
 
         }
 
-        OnGameStateChanged?.Invoke(this.State);
+        OnGameStateChanged?.Invoke(State);
     }
 
 

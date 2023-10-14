@@ -14,7 +14,7 @@ public class MainKey : MonoBehaviour, IKey
     {
         _collected = true;
         gameObject.SetActive(false);
-        ServiceLocator.instance.GetService<KeyManager>().UpdateValues();
+        ServiceLocator.instance.GetService<KeyManager>().UpdateKeys();
     }
 
     public bool IsCollected()
@@ -30,6 +30,7 @@ public class MainKey : MonoBehaviour, IKey
     private void Start()
     {
         posOffset = transform.position;
+        ServiceLocator.instance.GetService<KeyManager>().AddKey(this);
     }
 
     private void OnTriggerEnter(Collider other)

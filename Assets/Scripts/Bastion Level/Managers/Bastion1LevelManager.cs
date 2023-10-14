@@ -39,7 +39,7 @@ public class Bastion1LevelManager : MonoBehaviour
 
                 break;
             case LevelState.BastionState_Puzzle1:
-                // Paused, already being handled
+
                 break;
 
             case LevelState.BastionState_Puzzle2:
@@ -66,22 +66,24 @@ public class Bastion1LevelManager : MonoBehaviour
         OnLevelStateChanged?.Invoke(newState);
     }
 
-    private void PickUpKey(int keyNumber)
+    public void PickUpKey(int keyNumber)
     {
-        if (keyNumber == 1)
+        switch (keyNumber)
         {
-            UpdateLevelState(LevelState.BastionState_Puzzle2);
-        }
+            case 1:
+                UpdateLevelState(LevelState.BastionState_Puzzle2);
+                break;
 
-        else if (keyNumber == 2)
-        {
-            UpdateLevelState(LevelState.BastionState_Puzzle3);
-        }
+            case 2:
+                UpdateLevelState(LevelState.BastionState_Puzzle3);
+                break;
 
-        else if (keyNumber == 3)
-        {
-            Debug.Log("Ending");
-            UpdateLevelState(LevelState.BastionState_Ending);
+            case 3:
+                UpdateLevelState(LevelState.BastionState_Ending);
+                break;
+
+            default:
+                break;
         }
     }
 

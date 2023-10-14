@@ -38,61 +38,33 @@
 
 //     #endregion
 // }
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.Analytics;
+using UnityEngine.Rendering;
 
 public class KeyManager : MonoBehaviour
 {
-    public List<IKey> AllKeys;
+    public List<IKey> AllKeys = new();
 
-    private List<IDoor> _allDoors;
-    private bool[] _collectedKeys;
-    private bool[] _openDoors;
-
-    private void Awake()
+    public void UpdateKeys()
     {
-        _allDoors = new();
-        AllKeys = new();
+        int n_keys = 0;
 
-        foreach (IDoor door in transform.Find("Doors").GetComponentsInChildren<IDoor>())
-        {
-            _allDoors.Add(door);
-        }
-
-        foreach (IKey key in transform.Find("Keys").GetComponentsInChildren<IKey>())
-        {
-            AllKeys.Add(key);
-        }
-
-        _collectedKeys = new bool[AllKeys.Count];
-        _openDoors = new bool[_allDoors.Count];
-
-    }
-
-    public void UpdateValues()
-    {
         for (int i = 0; i < AllKeys.Count; i++)
         {
             if (AllKeys[i].IsCollected())
             {
-                _collectedKeys[i] = true;
-            }
-        }
-
-        for (int i = 0; i < _allDoors.Count; i++)
-        {
-            IDoor door = _allDoors[i];
-
-            if (door.CanOpen() && !door.IsOpen())
-            {
-                door.Open();
-                _openDoors[i] = true;
+                n_keys++;
             }
         }
 
         ServiceLocator.instance.GetService<SphereColor>().UpdateKeys();
+        ServiceLocator.instance.GetService<Bastion1LevelManager>().PickUpKey(n_keys);
+    }
+
+    public void AddKey(IKey key)
+    {
+        AllKeys.Add(key);
     }
 }
