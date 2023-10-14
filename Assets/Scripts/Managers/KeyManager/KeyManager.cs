@@ -1,7 +1,7 @@
 //     public void HandleLevelChange(int pickedPieceNumber)
 //     {
 //         var relevantObjects = levelChanges.ToList().FindAll(x => x.pickedUpPieces == pickedPieceNumber);
-       
+
 //         // Enact Changes in the Level
 //         foreach(var r in relevantObjects)
 //         {
@@ -56,9 +56,6 @@ using UnityEngine;
 
 public class BastionManager : MonoBehaviour
 {
-    [SerializeField] private BastionSignal _bastionSignal
-    [SerializeField] private KeySignal _keySignal
-
     private List<IDoor> _allDoors;
     private List<IKey> _allKeys;
     private bool[] _collectedKeys;
@@ -76,12 +73,11 @@ public class BastionManager : MonoBehaviour
 
         foreach (IKey key in transform.Find("Keys").GetComponentsInChildren<IKey>())
         {
-            key.SetKeyManager(this);
             _allKeys.Add(key);
         }
 
-        _collectedKeys = new(_allKeys.lenght)
-        _openDoors = new(_allDoors.length)
+        _collectedKeys = new(_allKeys.lenght);
+        _openDoors = new(_allDoors.length);
     }
 
     public void UpdateValues()
@@ -100,7 +96,7 @@ public class BastionManager : MonoBehaviour
             {
                 door.Open();
                 _openDoors[_allDoors.index(door)] = true;
-             }
+            }
         }
     }
 }

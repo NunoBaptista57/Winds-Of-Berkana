@@ -6,21 +6,15 @@ public class MainKey : MonoBehaviour, IKey
     [SerializeField] private float amplitude = 0.5f;
     [SerializeField] private float frequency = 1f;
 
-    private KeyManager _keyManager;
     private bool _collected = false;
     private Vector3 posOffset = new();
     private Vector3 tempPos = new();
-
-    public SetKeyManager(KeyManager keyManager)
-    {
-        _keyManager = keyManager;
-    }
 
     public void Collect()
     {
         _collected = true;
         gameObject.SetActive(false);
-        _keyManager.UpdateValues();
+        ServiceLocator.instance.GetService<KeyManager>().UpdateValues();
     }
 
     public bool IsCollected()
@@ -35,7 +29,7 @@ public class MainKey : MonoBehaviour, IKey
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player"))
         {
             Collect();
         }
