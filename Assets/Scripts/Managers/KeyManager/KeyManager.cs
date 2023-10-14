@@ -1,3 +1,5 @@
+// TODO: put this somewhere
+
 //     // The objective of this function is to Check if the panels are in the correct Position
 //     public void CheckPanelPosition()
 //     {

@@ -6962,11 +6962,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6881137594584593069, guid: 753d1d94cd02d7e46aa85b976780f2cb, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.008052732
+      value: 0.008052783
       objectReference: {fileID: 0}
     - target: {fileID: 6881137594584593069, guid: 753d1d94cd02d7e46aa85b976780f2cb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0017529905
+      value: -0.0017530019
       objectReference: {fileID: 0}
     - target: {fileID: 6881137594953727906, guid: 753d1d94cd02d7e46aa85b976780f2cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9382,7 +9382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258959862}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.000006785745, y: 0.9991821, z: -0.04043685, w: 0.00016767369}
+  m_LocalRotation: {x: 0.0000067857554, y: 0.9991821, z: -0.04043685, w: 0.00016767395}
   m_LocalPosition: {x: 12.13, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11631,7 +11631,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1495532929}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2106818, y: 0.008056326, z: -0.0017363545, w: 0.97752}
+  m_LocalRotation: {x: 0.2106818, y: 0.008056387, z: -0.0017363679, w: 0.97752}
   m_LocalPosition: {x: 0.29443818, y: 5.8849583, z: 17.879597}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14079,6 +14079,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2009800927}
+  - component: {fileID: 2009800928}
   m_Layer: 0
   m_Name: BastionManager
   m_TagString: Untagged
@@ -14102,6 +14103,20 @@ Transform:
   - {fileID: 1922481931}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2009800928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009800926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aba2a408212fa5f48b46ff483ccb14a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelState: 0
+  spawnLocations: []
 --- !u!1 &2026493243
 GameObject:
   m_ObjectHideFlags: 0
