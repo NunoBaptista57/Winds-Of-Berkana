@@ -4,60 +4,74 @@ using UnityEngine;
 
 public class SphereColor : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _keys;
+    private IKey closestKey;
+    private bool _collectedKeys;
+    private List<IKey> _keys;
 
-    private GameObject closestSphere;
-    private bool _keysCollected;
-
-    void Start()
+    private void Start()
     {
         InvokeRepeating(nameof(GetClosestKey), 0, 3);
         GetClosestKey();
     }
 
-    //Removes collected key from the List
-    public void RemoveKey(GameObject key)
+    public void UpdateKeys()
     {
-        _keys.Remove(key);
+        foreach (IKey key in _keys)
+        {
+            if (key.IsCollected())
+            {
+                GetClosestKey();
+                return;
+            }
+        }
+        KeysWereCollected();
     }
 
     // Get Closest key from the List
     public void GetClosestKey()
     {
+        _keys = ServiceLocator.instance.GetService<KeyManager>().AllKeys;
+
         float maxDistance = float.MaxValue;
 
         foreach (var p in _keys)
         {
-            if (p.GetComponent<IKey>().IsCollected())
+            if (p.IsCollected())
             {
                 continue;
             }
 
-            var distance = Vector3.Distance(p.transform.position, transform.position);
+            var distance = Vector3.Distance(p.GetPosition().position, transform.position);
 
             if (distance < maxDistance)
             {
                 maxDistance = distance;
-                closestSphere = p;
+                closestKey = p;
             }
         }
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    //Removes collected key from the List
+    private void RemoveKey(IKey key)
     {
-        if (!_keysCollected)
+        _keys.Remove(key);
+    }
+
+    // Update is called once per frame
+    private void FixedUpdate()
+    {
+        if (!_collectedKeys)
         {
             ChangeColor();
         }
     }
 
-    public void ChangeColor()
+    private void ChangeColor()
     {
         // Get Distance to closest sphere
-        if (closestSphere != null)
+        if (closestKey != null)
         {
-            var currentDistance = Vector3.Distance(closestSphere.transform.position, this.transform.position);
+            var currentDistance = Vector3.Distance(closestKey.GetPosition().position, this.transform.position);
 
             // Change color of the sphere incrementally
             if (currentDistance > 30)
@@ -75,32 +89,9 @@ public class SphereColor : MonoBehaviour
         }
     }
 
-    public void KeysWereCollected()
+    private void KeysWereCollected()
     {
-        _keysCollected = true;
+        _collectedKeys = true;
         gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", 1);
-    }
-
-    private void UpdateKeys()
-    {
-        foreach (GameObject key in _keys)
-        {
-            if (key.GetComponent<IKey>().IsCollected())
-            {
-                GetClosestKey();
-                return;
-            }
-        }
-        KeysWereCollected();
-    }
-
-    private void OnEnable()
-    {
-        // _eventSender.CollectedKeyEvent += UpdateKeys;
-    }
-
-    private void OnDisable()
-    {
-        // _eventSender.CollectedKeyEvent -= UpdateKeys;
     }
 }

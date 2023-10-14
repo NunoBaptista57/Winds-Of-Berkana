@@ -29,7 +29,6 @@ public class Bastion1LevelManager : MonoBehaviour
         ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
     }
 
-
     public void UpdateLevelState(LevelState newState)
     {
         levelState = newState;

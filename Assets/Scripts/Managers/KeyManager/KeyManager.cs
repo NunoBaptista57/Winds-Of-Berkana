@@ -46,16 +46,16 @@ using UnityEngine;
 
 public class KeyManager : MonoBehaviour
 {
+    public List<IKey> AllKeys;
 
     private List<IDoor> _allDoors;
-    private List<IKey> _allKeys;
     private bool[] _collectedKeys;
     private bool[] _openDoors;
 
     private void Awake()
     {
         _allDoors = new();
-        _allKeys = new();
+        AllKeys = new();
 
         foreach (IDoor door in transform.Find("Doors").GetComponentsInChildren<IDoor>())
         {
@@ -64,19 +64,19 @@ public class KeyManager : MonoBehaviour
 
         foreach (IKey key in transform.Find("Keys").GetComponentsInChildren<IKey>())
         {
-            _allKeys.Add(key);
+            AllKeys.Add(key);
         }
 
-        _collectedKeys = new bool[_allKeys.Count];
+        _collectedKeys = new bool[AllKeys.Count];
         _openDoors = new bool[_allDoors.Count];
 
     }
 
     public void UpdateValues()
     {
-        for (int i = 0; i < _allKeys.Count; i++)
+        for (int i = 0; i < AllKeys.Count; i++)
         {
-            if (_allKeys[i].IsCollected())
+            if (AllKeys[i].IsCollected())
             {
                 _collectedKeys[i] = true;
             }
@@ -92,5 +92,7 @@ public class KeyManager : MonoBehaviour
                 _openDoors[i] = true;
             }
         }
+
+        ServiceLocator.instance.GetService<SphereColor>().UpdateKeys();
     }
 }

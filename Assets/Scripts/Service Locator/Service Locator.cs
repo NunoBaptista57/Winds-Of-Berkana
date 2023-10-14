@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class ServiceLocator : Singleton<ServiceLocator>
 {
-
     private IDictionary<Type, MonoBehaviour> serviceReferences;
     protected void Awake()
     {

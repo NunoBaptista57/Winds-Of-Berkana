@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-
     public static LevelManager Instance;
 
     public GameState State;
@@ -15,8 +14,8 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-                            
-        DontDestroyOnLoad(this.gameObject);
+
+        DontDestroyOnLoad(gameObject);
     }
 
 
@@ -32,8 +31,8 @@ public class LevelManager : MonoBehaviour
 
                 break;
             case GameState.Paused:
-                
-                if(PreviousState == GameState.Paused)
+
+                if (PreviousState == GameState.Paused)
                     this.State = GameState.Play;
                 break;
 

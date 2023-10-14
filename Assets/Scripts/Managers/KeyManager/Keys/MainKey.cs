@@ -22,6 +22,11 @@ public class MainKey : MonoBehaviour, IKey
         return _collected;
     }
 
+    public Transform GetPosition()
+    {
+        return transform;
+    }
+
     private void Start()
     {
         posOffset = transform.position;
