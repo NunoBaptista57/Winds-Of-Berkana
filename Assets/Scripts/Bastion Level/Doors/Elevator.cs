@@ -1,14 +1,12 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class Elevator : MonoBehaviour, IDoor
 {
+    [SerializeField] private TextMeshProUGUI text;
+    private bool elevatorDown = false;
     private Animator animator;
-
-    public bool elevatorDown = false;
-
-    public GameObject[] removeCollisions;
-
     private GameObject player;
     private bool _isOpen = false;
 
@@ -51,12 +49,12 @@ public class Elevator : MonoBehaviour, IDoor
         {
             animator.SetTrigger("Up");
             elevatorDown = false;
-            foreach (var v in removeCollisions)
-            {
-                var col = v.GetComponent<MeshCollider>();
-                col.convex = true;
-                col.isTrigger = true;
-            }
+            // foreach (var v in removeCollisions)
+            // {
+            //     var col = v.GetComponent<MeshCollider>();
+            //     col.convex = true;
+            //     col.isTrigger = true;
+            // }
         }
     }
 }
