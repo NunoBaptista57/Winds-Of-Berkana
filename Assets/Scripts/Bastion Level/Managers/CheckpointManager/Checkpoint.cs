@@ -5,9 +5,11 @@ public class Checkpoint : MonoBehaviour
 {
     public Transform RespawnPosition;
 
-    private void OnTriggerEnter()
+    private void OnTriggerEnter(Collider other)
     {
-        ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint = RespawnPosition;
-        Debug.Log("entrou");
+        if (other.CompareTag("Player"))
+        {
+            ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint = RespawnPosition;
+        }
     }
 }

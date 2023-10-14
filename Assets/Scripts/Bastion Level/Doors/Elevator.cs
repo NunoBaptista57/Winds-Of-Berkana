@@ -1,10 +1,11 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class Elevator : MonoBehaviour, IDoor
 {
-    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private GameObject text;
     private bool elevatorDown = false;
     private Animator animator;
     private GameObject player;
@@ -23,7 +24,7 @@ public class Elevator : MonoBehaviour, IDoor
 
     private void Start()
     {
-        ServiceLocator.instance.GetService<Bastion1LevelManager>().OnLevelStateChanged += CallElevator;
+        ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged += CallElevator;
         player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<MainPlayerInputHandler>().Interact += SendElevator;
         animator = transform.GetComponent<Animator>();
@@ -43,12 +44,15 @@ public class Elevator : MonoBehaviour, IDoor
         elevatorDown = true;
     }
 
-    void SendElevator()
+    private void SendElevator()
     {
         if (elevatorDown)
         {
+            text.SetActive(false);
             animator.SetTrigger("Up");
             elevatorDown = false;
+
+            //TODO: collisions
             // foreach (var v in removeCollisions)
             // {
             //     var col = v.GetComponent<MeshCollider>();
@@ -56,5 +60,10 @@ public class Elevator : MonoBehaviour, IDoor
             //     col.isTrigger = true;
             // }
         }
+    }
+
+    private void OnTriggerEnter()
+    {
+        text.SetActive(true);
     }
 }
