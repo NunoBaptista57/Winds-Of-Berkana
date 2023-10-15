@@ -1,20 +1,30 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
-public class Elevator : MonoBehaviour
+public class Elevator : MonoBehaviour, IDoor
 {
-    public GameObject textObject;
+    [SerializeField] private GameObject text;
+    private bool elevatorDown = false;
     private Animator animator;
-
-    public bool elevatorDown = false;
-
-    public GameObject[] removeCollisions;
-
     private GameObject player;
+    private bool _isOpen = false;
+
+    public void Open()
+    {
+        animator.SetTrigger("Down");
+        _isOpen = true;
+    }
+
+    public bool IsOpen()
+    {
+        return _isOpen;
+    }
 
     private void Start()
     {
-        ServiceLocator.instance.GetService<Bastion1LevelManager>().OnLevelStateChanged += CallElevator;
+        ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged += CallElevator;
         player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<MainPlayerInputHandler>().Interact += SendElevator;
         animator = transform.GetComponent<Animator>();
@@ -22,9 +32,10 @@ public class Elevator : MonoBehaviour
 
     private void CallElevator(LevelState levelState)
     {
-        if (levelState == LevelState.BastionState_Ending)
+        if (levelState == LevelState.BastionState_Puzzle3)
         {
-            animator.SetTrigger("Down");
+            Debug.Log("Elevator");
+            Open();
         }
     }
 
@@ -33,34 +44,26 @@ public class Elevator : MonoBehaviour
         elevatorDown = true;
     }
 
-
-    void SendElevator()
+    private void SendElevator()
     {
-        if (textObject.activeSelf && elevatorDown)
+        if (elevatorDown)
         {
+            text.SetActive(false);
             animator.SetTrigger("Up");
             elevatorDown = false;
-            textObject.SetActive(false);
-            foreach (var v in removeCollisions)
-            {
-                var col = v.GetComponent<MeshCollider>();
-                col.convex = true;
-                col.isTrigger = true;
 
-            }
+            //TODO: collisions
+            // foreach (var v in removeCollisions)
+            // {
+            //     var col = v.GetComponent<MeshCollider>();
+            //     col.convex = true;
+            //     col.isTrigger = true;
+            // }
         }
-
     }
 
-    public void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter()
     {
-        if (collision.gameObject.tag == "Player" && !textObject.activeSelf && elevatorDown)
-            textObject.SetActive(true);
-    }
-
-    public void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player" && textObject.activeSelf && elevatorDown)
-            textObject.SetActive(false);
+        text.SetActive(true);
     }
 }

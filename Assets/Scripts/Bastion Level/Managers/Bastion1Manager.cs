@@ -3,23 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bastion1LevelManager : MonoBehaviour
+public class Bastion1Manager : MonoBehaviour
 {
     Transform player;
     public LevelState levelState;
-
     Vector3 originalCameraPosition;
-
     public event Action<LevelState> OnLevelStateChanged;
-
-    [Serializable]
-    public struct SpawnLocation
-    {
-        public LevelState state;
-        public Vector3 position;
-    }
-
-    public SpawnLocation[] spawnLocations;
 
     void Start()
     {
@@ -27,59 +16,30 @@ public class Bastion1LevelManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
         ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
+        player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint.position;
     }
 
     public void UpdateLevelState(LevelState newState)
     {
         levelState = newState;
-
-        switch (newState)
-        {
-            case LevelState.BastionState_Intro:
-
-                break;
-            case LevelState.BastionState_Puzzle1:
-
-                break;
-
-            case LevelState.BastionState_Puzzle2:
-                // Paused, already being handled
-                break;
-
-            case LevelState.BastionState_Puzzle3:
-                // Paused, already being handled
-                break;
-
-            case LevelState.BastionState_Ending:
-
-                break;
-
-            case LevelState.Boat:
-                // Finished Bastion here
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
-
-        }
-
         OnLevelStateChanged?.Invoke(newState);
     }
 
+    // TODO: should be more dynamic
     public void PickUpKey(int keyNumber)
     {
         switch (keyNumber)
         {
             case 1:
-                UpdateLevelState(LevelState.BastionState_Puzzle2);
+                UpdateLevelState(LevelState.BastionState_Puzzle1);
                 break;
 
             case 2:
-                UpdateLevelState(LevelState.BastionState_Puzzle3);
+                UpdateLevelState(LevelState.BastionState_Puzzle2);
                 break;
 
             case 3:
-                UpdateLevelState(LevelState.BastionState_Ending);
+                UpdateLevelState(LevelState.BastionState_Puzzle3);
                 break;
 
             default:
@@ -87,10 +47,8 @@ public class Bastion1LevelManager : MonoBehaviour
         }
     }
 
-
     private void GameManagerOnGameStateChanged(GameState state)
     {
-
         switch (state)
         {
             case GameState.Death:
@@ -98,18 +56,7 @@ public class Bastion1LevelManager : MonoBehaviour
                 break;
 
             case GameState.Respawn:
-                var location = Vector3.zero;
-                foreach (var spawnL in spawnLocations)
-                {
-                    if (spawnL.state == levelState)
-                    {
-                        location = spawnL.position;
-                        break;
-
-                    }
-                }
-
-                player.position = location;
+                player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint.position;
                 player.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
                 ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
@@ -117,8 +64,6 @@ public class Bastion1LevelManager : MonoBehaviour
         }
 
     }
-
-
 
     private async void HandleDeath()
     {
