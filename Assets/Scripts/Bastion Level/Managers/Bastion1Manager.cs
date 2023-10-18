@@ -10,7 +10,7 @@ public class Bastion1Manager : MonoBehaviour
     Vector3 originalCameraPosition;
     public event Action<LevelState> OnLevelStateChanged;
 
-    void Start()
+    private void Start()
     {
         LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
@@ -19,13 +19,12 @@ public class Bastion1Manager : MonoBehaviour
         player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint.position;
     }
 
-    public void UpdateLevelState(LevelState newState)
+    private void UpdateLevelState(LevelState newState)
     {
         levelState = newState;
         OnLevelStateChanged?.Invoke(newState);
     }
 
-    // TODO: should be more dynamic
     public void PickUpKey(int keyNumber)
     {
         switch (keyNumber)
@@ -40,6 +39,19 @@ public class Bastion1Manager : MonoBehaviour
 
             case 3:
                 UpdateLevelState(LevelState.BastionState_Puzzle3);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void ActivateLever(int leverNumber)
+    {
+        switch (leverNumber)
+        {
+            case 0:
+                UpdateLevelState(LevelState.WindTunnel);
                 break;
 
             default:
@@ -87,6 +99,7 @@ public enum LevelState
 {
     BastionState_Intro,
     BastionState_Puzzle1,
+    WindTunnel,
     BastionState_Puzzle2,
     BastionState_Puzzle3,
     BastionState_Ending,

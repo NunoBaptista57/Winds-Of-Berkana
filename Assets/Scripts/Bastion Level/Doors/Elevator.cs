@@ -34,7 +34,6 @@ public class Elevator : MonoBehaviour, IDoor
     {
         if (levelState == LevelState.BastionState_Puzzle3)
         {
-            Debug.Log("Elevator");
             Open();
         }
     }
