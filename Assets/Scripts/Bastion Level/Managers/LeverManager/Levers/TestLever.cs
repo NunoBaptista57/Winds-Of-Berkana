@@ -37,8 +37,6 @@ public class TestLever : MonoBehaviour, ILever
             ID = leverManager.Levers.Count;
         }
 
-        leverManager.AddLever(this);
-
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<MainPlayerInputHandler>().Interact += Activate;
     }

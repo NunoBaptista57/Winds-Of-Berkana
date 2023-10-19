@@ -9,20 +9,35 @@ public class Bastion1Manager : MonoBehaviour
     public LevelState levelState;
     Vector3 originalCameraPosition;
     public event Action<LevelState> OnLevelStateChanged;
+    private List<IManager> _managers = new();
+    private SaveFile _saveFile = new();
 
-    private void Start()
+    public void Save()
     {
-        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
-        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
-        player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint.position;
+        foreach (IManager manager in _managers)
+        {
+            _saveFile = manager.Save(_saveFile);
+        }
+
+        _saveFile.PlacedKeys = ServiceLocator.instance.GetService<SanctumEntrance>().PlacedKeys;
+        SaveSystem.Save(_saveFile);
     }
 
-    private void UpdateLevelState(LevelState newState)
+    public void Load()
     {
-        levelState = newState;
-        OnLevelStateChanged?.Invoke(newState);
+        _saveFile = SaveSystem.Load();
+
+        foreach (IManager manager in _managers)
+        {
+            manager.Load(_saveFile);
+        }
+
+        SanctumEntrance sanctumEntrance = ServiceLocator.instance.GetService<SanctumEntrance>();
+
+        sanctumEntrance.PlacedKeys = _saveFile.PlacedKeys;
+        sanctumEntrance.PlaceKeys();
+
+        UpdateLevelState(_saveFile.LevelState);
     }
 
     public void PickUpKey(int keyNumber)
@@ -59,6 +74,26 @@ public class Bastion1Manager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
+        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
+        player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
+
+        foreach (Transform child in transform)
+        {
+            _managers.Add(child.GetComponent<IManager>());
+        }
+    }
+
+    private void UpdateLevelState(LevelState newState)
+    {
+        levelState = newState;
+        OnLevelStateChanged?.Invoke(newState);
+    }
+
     private void GameManagerOnGameStateChanged(GameState state)
     {
         switch (state)
@@ -68,7 +103,7 @@ public class Bastion1Manager : MonoBehaviour
                 break;
 
             case GameState.Respawn:
-                player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint.position;
+                player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
                 player.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
                 ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);

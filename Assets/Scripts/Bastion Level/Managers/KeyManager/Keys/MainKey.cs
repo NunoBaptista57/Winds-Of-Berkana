@@ -20,7 +20,6 @@ public class MainKey : MonoBehaviour, IKey
     {
         _collected = true;
         gameObject.SetActive(false);
-        _keyManager.UpdateKeys();
     }
 
     public bool IsCollected()
@@ -43,6 +42,7 @@ public class MainKey : MonoBehaviour, IKey
         if (other.gameObject.CompareTag("Player"))
         {
             Collect();
+            _keyManager.UpdateKeys();
         }
     }
 

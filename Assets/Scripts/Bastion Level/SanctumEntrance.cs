@@ -16,23 +16,25 @@ public class SanctumEntrance : MonoBehaviour
             return;
         }
 
-        KeyManager keyManager = ServiceLocator.instance.GetService<KeyManager>();
-
-        if (keyManager.CollectedKeys <= 0)
+        if (ServiceLocator.instance.GetService<KeyManager>().CollectedKeys <= 0)
         {
             return;
         }
 
-        for (int i = PlacedKeys; i < keyManager.CollectedKeys; i++)
+        PlaceKeys();
+
+        ServiceLocator.instance.GetService<Bastion1Manager>().PickUpKey(PlacedKeys);
+    }
+
+    public void PlaceKeys()
+    {
+        for (int i = PlacedKeys; i < ServiceLocator.instance.GetService<KeyManager>().CollectedKeys; i++)
         {
 
             PlaceKey(_altars[i]);
             PlacedKeys++;
         }
-
-        ServiceLocator.instance.GetService<Bastion1Manager>().PickUpKey(PlacedKeys);
     }
-
     private void Start()
     {
         if (NKeysToOpen == 0)
@@ -50,7 +52,7 @@ public class SanctumEntrance : MonoBehaviour
 
     private void PlaceKey(GameObject altar)
     {
-        Debug.Log("Placed");
+        Debug.Log("Placed Key");
     }
 
     private void OnTriggerEnter(Collider other)
