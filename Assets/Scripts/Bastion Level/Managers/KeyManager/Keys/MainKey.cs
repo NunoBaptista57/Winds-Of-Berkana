@@ -7,14 +7,20 @@ public class MainKey : MonoBehaviour, IKey
     [SerializeField] private float frequency = 1f;
 
     private bool _collected = false;
+    private KeyManager _keyManager;
     private Vector3 posOffset = new();
     private Vector3 tempPos = new();
+
+    public void SetKeyManager(KeyManager keyManager)
+    {
+        _keyManager = keyManager;
+    }
 
     public void Collect()
     {
         _collected = true;
         gameObject.SetActive(false);
-        ServiceLocator.instance.GetService<KeyManager>().UpdateKeys();
+        _keyManager.UpdateKeys();
     }
 
     public bool IsCollected()
@@ -30,7 +36,6 @@ public class MainKey : MonoBehaviour, IKey
     private void Start()
     {
         posOffset = transform.position;
-        ServiceLocator.instance.GetService<KeyManager>().AddKey(this);
     }
 
     private void OnTriggerEnter(Collider other)

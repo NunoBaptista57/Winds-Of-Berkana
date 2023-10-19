@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class KeyManager : MonoBehaviour
 {
-    public List<IKey> AllKeys = new();
+    public List<IKey> Keys = new();
     public int CollectedKeys = 0;
 
     public void UpdateKeys()
     {
         int nKeys = 0;
 
-        for (int i = 0; i < AllKeys.Count; i++)
+        for (int i = 0; i < Keys.Count; i++)
         {
-            if (AllKeys[i].IsCollected())
+            if (Keys[i].IsCollected())
             {
                 nKeys++;
             }
@@ -20,11 +20,15 @@ public class KeyManager : MonoBehaviour
 
         CollectedKeys = nKeys;
         ServiceLocator.instance.GetService<SphereColor>().UpdateKeys();
-        ServiceLocator.instance.GetService<Bastion1Manager>().PickUpKey(nKeys);
     }
 
-    public void AddKey(IKey key)
+    private void Start()
     {
-        AllKeys.Add(key);
+        foreach (Transform child in transform)
+        {
+            IKey key = child.gameObject.GetComponent<IKey>();
+            Keys.Add(key);
+            key.SetKeyManager(this);
+        }
     }
 }

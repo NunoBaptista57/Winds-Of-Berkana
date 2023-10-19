@@ -10,6 +10,12 @@ public class Elevator : MonoBehaviour, IDoor
     private Animator animator;
     private GameObject player;
     private bool _isOpen = false;
+    private DoorManager _doorManager;
+
+    public void SetDoorManager(DoorManager doorManager)
+    {
+        _doorManager = doorManager;
+    }
 
     public void Open()
     {

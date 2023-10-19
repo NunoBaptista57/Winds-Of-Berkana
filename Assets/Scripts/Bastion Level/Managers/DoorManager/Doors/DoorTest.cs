@@ -4,6 +4,12 @@ using UnityEngine;
 public class DoorTest : MonoBehaviour, IDoor
 {
     private bool _isOpen = false;
+    private DoorManager _doorManager;
+
+    public void SetDoorManager(DoorManager doorManager)
+    {
+        _doorManager = doorManager;
+    }
 
     public void Open()
     {

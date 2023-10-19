@@ -5,7 +5,6 @@ public class SanctumEntrance : MonoBehaviour
 {
     public int NKeysToOpen = 0;
     [HideInInspector] public int PlacedKeys = 0;
-    [HideInInspector] public bool _open = false;
 
     private List<GameObject> _altars = new();
     private bool _playerIsNear = false;
@@ -31,16 +30,7 @@ public class SanctumEntrance : MonoBehaviour
             PlacedKeys++;
         }
 
-        if (PlacedKeys == NKeysToOpen)
-        {
-            OpenSanctum();
-        }
-    }
-
-    public void OpenSanctum()
-    {
-        Debug.Log("Open Sanctum");
-        _open = true;
+        ServiceLocator.instance.GetService<Bastion1Manager>().PickUpKey(PlacedKeys);
     }
 
     private void Start()

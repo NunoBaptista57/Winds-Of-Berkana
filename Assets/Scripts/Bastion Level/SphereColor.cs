@@ -30,7 +30,7 @@ public class SphereColor : MonoBehaviour
     // Get Closest key from the List
     public void GetClosestKey()
     {
-        _keys = ServiceLocator.instance.GetService<KeyManager>().AllKeys;
+        _keys = ServiceLocator.instance.GetService<KeyManager>().Keys;
 
         float maxDistance = float.MaxValue;
 
