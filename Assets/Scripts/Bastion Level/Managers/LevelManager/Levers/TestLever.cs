@@ -6,6 +6,7 @@ public class TestLever : MonoBehaviour, ILever
     public int ID = 0;
     private bool _isActivated = false;
     private bool _toActivate = false;
+    private bool _playerIsNear = false;
 
     public bool ToActivate()
     {
@@ -44,7 +45,27 @@ public class TestLever : MonoBehaviour, ILever
 
     private void Activate()
     {
+        if (!_playerIsNear)
+        {
+            return;
+        }
         _toActivate = true;
         ServiceLocator.instance.GetService<LeverManager>().UpdateLevers();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            _playerIsNear = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            _playerIsNear = false;
+        }
     }
 }

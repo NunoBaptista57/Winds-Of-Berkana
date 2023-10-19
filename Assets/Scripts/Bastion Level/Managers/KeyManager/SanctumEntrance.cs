@@ -8,9 +8,15 @@ public class SanctumEntrance : MonoBehaviour
     [HideInInspector] public bool _open = false;
 
     private List<GameObject> _altars = new();
+    private bool _playerIsNear = false;
 
     public void UpdateKeys()
     {
+        if (!_playerIsNear)
+        {
+            return;
+        }
+
         KeyManager keyManager = ServiceLocator.instance.GetService<KeyManager>();
 
         if (keyManager.CollectedKeys <= 0)
@@ -55,5 +61,21 @@ public class SanctumEntrance : MonoBehaviour
     private void PlaceKey(GameObject altar)
     {
         Debug.Log("Placed");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            _playerIsNear = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            _playerIsNear = false;
+        }
     }
 }
