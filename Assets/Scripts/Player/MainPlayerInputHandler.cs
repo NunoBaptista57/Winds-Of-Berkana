@@ -37,7 +37,7 @@ public class MainPlayerInputHandler : MonoBehaviour
 
     void Start()
     {
-        
+
         manager = LevelManager.Instance;
         SolvingPuzzle = false;
         LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
@@ -62,7 +62,7 @@ public class MainPlayerInputHandler : MonoBehaviour
             playerControls.Character.Jump.performed += i => jumpInput = true;
             playerControls.Character.Glide.performed += i => HandleGliding();
             playerControls.Character.Run.performed += i => runningInput = !runningInput;
-           // playerControls.Character.Flashlight.performed += i => HandleFlashlight();
+            // playerControls.Character.Flashlight.performed += i => HandleFlashlight();
             playerControls.Character.Reset.performed += i => manager.UpdateGameState(GameState.Remake);
             //playerControls.Character.Pickup.performed += i => pickup.HandleInteraction();
             playerControls.Character.Vision.performed += i => HandleVision();
@@ -179,6 +179,7 @@ public class MainPlayerInputHandler : MonoBehaviour
 
     }
 
+    //TODO: this doesn't care if you're touching or not the object
     private void HandleInteract()
     {
         Interact.Invoke();
