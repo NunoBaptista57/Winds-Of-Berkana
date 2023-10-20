@@ -1,19 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 // TODO
 public static class SaveSystem
 {
+
+    private const string saveName = "Save01.json";
+
     public static void Save(SaveFile saveFile)
     {
-        Debug.Log("Save");
+        string json = JsonUtility.ToJson(saveFile);
+        File.WriteAllText(Application.persistentDataPath + saveName, json);
     }
 
     public static SaveFile Load()
     {
-        SaveFile saveFile = new();
-        Debug.Log("Load");
+        SaveFile saveFile;
+
+        string loadSaveFile = File.ReadAllText(Application.persistentDataPath + saveName);
+        saveFile = JsonUtility.FromJson<SaveFile>(loadSaveFile);
+
         return saveFile;
     }
 }

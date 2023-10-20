@@ -10,34 +10,35 @@ public class Bastion1Manager : MonoBehaviour
     Vector3 originalCameraPosition;
     public event Action<LevelState> OnLevelStateChanged;
     private List<IManager> _managers = new();
-    private SaveFile _saveFile = new();
 
     public void Save()
     {
+        SaveFile saveFile = new();
+
         foreach (IManager manager in _managers)
         {
-            _saveFile = manager.Save(_saveFile);
+            saveFile = manager.Save(saveFile);
         }
 
-        _saveFile.PlacedKeys = ServiceLocator.instance.GetService<SanctumEntrance>().PlacedKeys;
-        SaveSystem.Save(_saveFile);
+        saveFile.PlacedKeys = ServiceLocator.instance.GetService<SanctumEntrance>().PlacedKeys;
+        SaveSystem.Save(saveFile);
     }
 
     public void Load()
     {
-        _saveFile = SaveSystem.Load();
+        SaveFile saveFile = SaveSystem.Load();
 
         foreach (IManager manager in _managers)
         {
-            manager.Load(_saveFile);
+            manager.Load(saveFile);
         }
 
         SanctumEntrance sanctumEntrance = ServiceLocator.instance.GetService<SanctumEntrance>();
 
-        sanctumEntrance.PlacedKeys = _saveFile.PlacedKeys;
+        sanctumEntrance.PlacedKeys = saveFile.PlacedKeys;
         sanctumEntrance.PlaceKeys();
 
-        UpdateLevelState(_saveFile.LevelState);
+        UpdateLevelState(saveFile.LevelState);
     }
 
     public void PickUpKey(int keyNumber)
