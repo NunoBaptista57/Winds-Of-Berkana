@@ -11,11 +11,11 @@ public class LevelManager : MonoBehaviour
     public GameState State;
     public static event Action<GameState> OnGameStateChanged;
 
-    void Awake()
+    private void Awake()
     {
         Instance = this;
 
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this);
     }
 
 
@@ -23,13 +23,17 @@ public class LevelManager : MonoBehaviour
     {
         GameState PreviousState = State;
 
+        if (PreviousState == GameState.Paused)
+        {
+            Time.timeScale = 1;
+        }
+
         switch (newState)
         {
             case GameState.Paused:
                 if (PreviousState == GameState.Paused)
                 {
                     newState = GameState.Play;
-                    Time.timeScale = 1;
                 }
                 else
                 {
@@ -43,7 +47,6 @@ public class LevelManager : MonoBehaviour
 
             case GameState.Remake:
                 RestartCurrentScene();
-                UpdateGameState(GameState.Play);
                 break;
 
             default:
@@ -52,7 +55,6 @@ public class LevelManager : MonoBehaviour
         }
 
         State = newState;
-        Debug.Log(State);
         OnGameStateChanged?.Invoke(State);
     }
 
@@ -68,6 +70,8 @@ public enum GameState
 {
     Play,
     Paused,
+    Save,
+    Load,
     Victory,
     Death,
     Respawn,

@@ -12,6 +12,7 @@ public static class SaveSystem
     public static void Save(SaveFile saveFile)
     {
         string json = JsonUtility.ToJson(saveFile);
+        Debug.Log(json);
         File.WriteAllText(Application.persistentDataPath + saveName, json);
     }
 
@@ -20,6 +21,7 @@ public static class SaveSystem
         SaveFile saveFile;
 
         string loadSaveFile = File.ReadAllText(Application.persistentDataPath + saveName);
+        Debug.Log(loadSaveFile);
         saveFile = JsonUtility.FromJson<SaveFile>(loadSaveFile);
 
         return saveFile;

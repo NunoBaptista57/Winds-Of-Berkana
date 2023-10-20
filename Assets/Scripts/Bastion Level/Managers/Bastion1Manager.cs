@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class Bastion1Manager : MonoBehaviour
@@ -10,36 +11,6 @@ public class Bastion1Manager : MonoBehaviour
     Vector3 originalCameraPosition;
     public event Action<LevelState> OnLevelStateChanged;
     private List<IManager> _managers = new();
-
-    public void Save()
-    {
-        SaveFile saveFile = new();
-
-        foreach (IManager manager in _managers)
-        {
-            saveFile = manager.Save(saveFile);
-        }
-
-        saveFile.PlacedKeys = ServiceLocator.instance.GetService<SanctumEntrance>().PlacedKeys;
-        SaveSystem.Save(saveFile);
-    }
-
-    public void Load()
-    {
-        SaveFile saveFile = SaveSystem.Load();
-
-        foreach (IManager manager in _managers)
-        {
-            manager.Load(saveFile);
-        }
-
-        SanctumEntrance sanctumEntrance = ServiceLocator.instance.GetService<SanctumEntrance>();
-
-        sanctumEntrance.PlacedKeys = saveFile.PlacedKeys;
-        sanctumEntrance.PlaceKeys();
-
-        UpdateLevelState(saveFile.LevelState);
-    }
 
     public void PickUpKey(int keyNumber)
     {
@@ -77,10 +48,17 @@ public class Bastion1Manager : MonoBehaviour
 
     private void Start()
     {
+        LevelManager levelManager = ServiceLocator.instance.GetService<LevelManager>();
+        Debug.Log(levelManager.State);
+        if (levelManager.State == GameState.Load)
+        {
+            Load();
+        }
+
         LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
-        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
+        levelManager.UpdateGameState(GameState.Play);
         player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
 
         foreach (Transform child in transform)
@@ -109,6 +87,14 @@ public class Bastion1Manager : MonoBehaviour
                 GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
                 ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
                 break;
+
+            case GameState.Save:
+                Save();
+                break;
+
+            case GameState.Load:
+                Load();
+                break;
         }
 
     }
@@ -129,6 +115,33 @@ public class Bastion1Manager : MonoBehaviour
         ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Respawn);
     }
 
+    private void Save()
+    {
+        SaveFile saveFile = new();
+
+        foreach (IManager manager in _managers)
+        {
+            saveFile = manager.Save(saveFile);
+        }
+        saveFile.LevelState = levelState;
+        saveFile.PlacedKeys = ServiceLocator.instance.GetService<SanctumEntrance>().PlacedKeys;
+        SaveSystem.Save(saveFile);
+    }
+
+    private void Load()
+    {
+        SaveFile saveFile = SaveSystem.Load();
+
+        foreach (IManager manager in _managers)
+        {
+            manager.Load(saveFile);
+        }
+
+        SanctumEntrance sanctumEntrance = ServiceLocator.instance.GetService<SanctumEntrance>();
+        player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
+        sanctumEntrance.PlacedKeys = saveFile.PlacedKeys;
+        UpdateLevelState(saveFile.LevelState);
+    }
 }
 
 public enum LevelState
