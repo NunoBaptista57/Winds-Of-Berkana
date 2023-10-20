@@ -21,14 +21,20 @@ public class LevelManager : MonoBehaviour
 
     public void UpdateGameState(GameState newState)
     {
-        var PreviousState = State;
-        State = newState;
+        GameState PreviousState = State;
 
         switch (newState)
         {
             case GameState.Paused:
                 if (PreviousState == GameState.Paused)
-                    State = GameState.Play;
+                {
+                    newState = GameState.Play;
+                    Time.timeScale = 1;
+                }
+                else
+                {
+                    Time.timeScale = 0;
+                }
                 break;
 
             case GameState.Victory:
@@ -45,6 +51,8 @@ public class LevelManager : MonoBehaviour
 
         }
 
+        State = newState;
+        Debug.Log(State);
         OnGameStateChanged?.Invoke(State);
     }
 
