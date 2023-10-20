@@ -3,8 +3,21 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
+    private GameObject _content;
+
+    public void Resume()
+    {
+        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Paused);
+    }
+
+    public void Restart()
+    {
+        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Remake);
+    }
+
     private void Start()
     {
+        _content = transform.GetChild(0).gameObject;
         LevelManager.OnGameStateChanged += Pause;
     }
 
@@ -12,11 +25,11 @@ public class PauseMenu : MonoBehaviour
     {
         if (gameState == GameState.Play)
         {
-            gameObject.SetActive(false);
+            _content.SetActive(false);
         }
         else if (gameState == GameState.Paused)
         {
-            gameObject.SetActive(true);
+            _content.SetActive(true);
         }
     }
 }
