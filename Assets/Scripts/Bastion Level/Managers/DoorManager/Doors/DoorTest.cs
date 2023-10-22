@@ -13,7 +13,6 @@ public class DoorTest : MonoBehaviour, IDoor
 
     public void Open()
     {
-        Debug.Log("Door Open");
         _isOpen = true;
     }
 

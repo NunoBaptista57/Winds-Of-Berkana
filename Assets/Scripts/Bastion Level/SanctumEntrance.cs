@@ -22,15 +22,13 @@ public class SanctumEntrance : MonoBehaviour
         }
 
         PlaceKeys();
-
-        ServiceLocator.instance.GetService<Bastion1Manager>().PickUpKey(PlacedKeys);
     }
 
     public void PlaceKeys()
     {
         for (int i = PlacedKeys; i < ServiceLocator.instance.GetService<KeyManager>().CollectedKeys; i++)
         {
-
+            ServiceLocator.instance.GetService<Bastion1Manager>().PickUpKey(i + 1);
             PlaceKey(_altars[i]);
             PlacedKeys++;
         }
@@ -52,7 +50,6 @@ public class SanctumEntrance : MonoBehaviour
 
     private void PlaceKey(GameObject altar)
     {
-        Debug.Log("Placed Key");
     }
 
     private void OnTriggerEnter(Collider other)

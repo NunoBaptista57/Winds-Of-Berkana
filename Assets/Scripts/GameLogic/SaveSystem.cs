@@ -35,6 +35,7 @@ public struct SaveFile
     public bool[] Doors;
     public int PlacedKeys;
     public int CollectedKeys;
+    public bool VitralIsComplete;
     public Vector3 Checkpoint;
     public LevelState LevelState;
 }

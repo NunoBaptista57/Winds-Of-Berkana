@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using TMPro;
 
-public class MainVitralManager : MonoBehaviour
+public class MainVitralManager : MonoBehaviour, IManager
 {
 
     [SerializeField] GameObject[] puzzlePieces;
@@ -16,15 +17,15 @@ public class MainVitralManager : MonoBehaviour
 
     [SerializeField]
     private CinemachineFreeLook playerCam;
-    
+
     [SerializeField]
     private CinemachineVirtualCamera vitralCam;
 
     private bool overworldCamera = true;
     private bool panelIsComplete = false;
-    
+
     [Header("Canvas Objects")]
-    public Text infoText;
+    public TextMeshProUGUI infoText;
 
     [Header("CompleteImage")]
     public GameObject completedPanel;
@@ -35,7 +36,26 @@ public class MainVitralManager : MonoBehaviour
     public float timeHolder;
 
 
-    public void Start()
+    public SaveFile Save(SaveFile saveFile)
+    {
+        saveFile.VitralIsComplete = panelIsComplete;
+        return saveFile;
+    }
+
+    public void Load(SaveFile saveFile)
+    {
+        if (!saveFile.VitralIsComplete)
+        {
+            return;
+        }
+        completedPanel.SetActive(true);
+        puzzlePieces[0].SetActive(false);
+        puzzlePieces[1].SetActive(false);
+        puzzlePieces[2].SetActive(false);
+        panelIsComplete = true;
+    }
+
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<MainPlayerInputHandler>();
         player.Interact += HandlePlayerInteraction;
@@ -43,7 +63,7 @@ public class MainVitralManager : MonoBehaviour
 
 
     // Rotating the Vitral using movement controls
-    public void RotatePiece(float rotation)
+    private void RotatePiece(float rotation)
     {
         if (isInteracting)
         {
@@ -53,7 +73,7 @@ public class MainVitralManager : MonoBehaviour
     }
 
     // If players Press E they start trying to solve the Vitral
-    public void SolvingPuzzle()
+    private void SolvingPuzzle()
     {
         infoText.text = "Solving Puzzle";
         SwitchPriority();
@@ -84,12 +104,12 @@ public class MainVitralManager : MonoBehaviour
             }
         }
 
-        
+
     }
 
 
     // Select which Piece of the Vitral is being controlled
-    public void SelectPiece()
+    private void SelectPiece()
     {
         if (_pieceSelected == puzzlePieces.Length - 1)
         {
@@ -110,7 +130,7 @@ public class MainVitralManager : MonoBehaviour
     //  Triger Enter and Exit to check if Player is near the Vitral
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.gameObject.CompareTag("Player"))
         {
             infoText.gameObject.SetActive(true);
             isNear = true;
@@ -119,7 +139,7 @@ public class MainVitralManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.gameObject.CompareTag("Player"))
         {
             infoText.gameObject.SetActive(false);
             isNear = false;
@@ -129,36 +149,36 @@ public class MainVitralManager : MonoBehaviour
 
 
     // The objective of this function is to Check if the panels are in the correct Position
-    public void CheckPosition()
+    private void CheckPosition()
     {
-            foreach (var p in puzzlePieces)
+        foreach (var p in puzzlePieces)
+        {
+            float currentRot = p.transform.rotation.eulerAngles.z;
+            Debug.Log(currentRot);
+            while (currentRot < -360f || currentRot > 360f)
             {
-                float currentRot = p.transform.rotation.eulerAngles.z;
-                Debug.Log(currentRot);
-                while (currentRot < -360f || currentRot > 360f)
-                {
-                    if (currentRot < -360f)
-                        currentRot += 360f;
-                    else if (currentRot > 360f)
-                        currentRot -= 360f;
-                }
-
-                Debug.Log(currentRot);
-                if (currentRot <= -5f || currentRot >= 5f)
-                {
-                    Debug.Log("esta a entrar");
-                    return;
-                }
-
+                if (currentRot < -360f)
+                    currentRot += 360f;
+                else if (currentRot > 360f)
+                    currentRot -= 360f;
             }
-            // Completed the panel
-            CompletedVitral();
-        
+
+            Debug.Log(currentRot);
+            if (currentRot <= -5f || currentRot >= 5f)
+            {
+                Debug.Log("esta a entrar");
+                return;
+            }
+
+        }
+        // Completed the panel
+        CompletedVitral();
+
 
     }
 
     // Show the final panel, animations and walls going up should be called here
-    public void CompletedVitral()
+    private void CompletedVitral()
     {
         completedPanel.SetActive(true);
         puzzlePieces[0].SetActive(false);
@@ -171,7 +191,7 @@ public class MainVitralManager : MonoBehaviour
     }
 
 
-    public void HandlePlayerInteraction()
+    private void HandlePlayerInteraction()
     {
         if (isNear)
         {
