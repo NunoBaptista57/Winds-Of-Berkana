@@ -19,12 +19,12 @@ public class VitralPuzzleManager : MonoBehaviour
     [Header("CompleteImage")]
     public GameObject completedPanel;
 
-    private Sphere_Color sphereController;
+    private SphereColor sphereController;
 
 
     void Start()
     {
-        sphereController = GameObject.Find("PuzzleSphere").GetComponent<Sphere_Color>();    
+        sphereController = GameObject.Find("PuzzleSphere").GetComponent<SphereColor>();    
     }
 
 

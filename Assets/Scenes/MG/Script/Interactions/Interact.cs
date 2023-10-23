@@ -9,34 +9,30 @@ public class Interact : MonoBehaviour
 
     public GameObject currentZone;
 
-    void Awake()
-    {
-    }
-
     public void StartObjectInteraction(GameObject obj)
     {
         currentObject = obj;
         currentObject.GetComponent<InteractableItem>().OnInteractionBegin(this.transform);
-        
+
     }
 
     public void StartZoneInteraction()
     {
         currentZone.GetComponent<InteractableZone>().OnInteractionBegin(currentObject);
-           
+
     }
 
     public void EndObjectInteraction()
     {
         currentObject.GetComponent<InteractableItem>().OnInteractionEnd();
-        this.currentObject = null;
+        currentObject = null;
     }
 
 
     public void HandleInteraction()
     {
         Debug.Log("Handle Interaction");
-        if(currentObject != null && currentZone != null)
+        if (currentObject != null && currentZone != null)
         {
             StartZoneInteraction();
             EndObjectInteraction();
@@ -44,7 +40,7 @@ public class Interact : MonoBehaviour
 
         }
 
-        else if(currentZone == null)
+        else if (currentZone == null)
         {
             if (currentObject != null)
                 EndObjectInteraction();
@@ -58,17 +54,17 @@ public class Interact : MonoBehaviour
         }
 
 
-       
+
     }
 
 
     public void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Interactable Item" || other.gameObject.tag == "Puzzle_Piece")
+        if (other.gameObject.CompareTag("Interactable Item") || other.gameObject.CompareTag("Puzzle_Piece"))
         {
             nearbyObject = other.gameObject;
         }
-        else if (other.gameObject.tag == "Interactable Zone")
+        else if (other.gameObject.CompareTag("Interactable Zone"))
         {
             currentZone = other.gameObject;
         }
@@ -76,11 +72,11 @@ public class Interact : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Interactable Item" || other.gameObject.tag == "Puzzle_Piece")
+        if (other.gameObject.CompareTag("Interactable Item") || other.gameObject.CompareTag("Puzzle_Piece"))
         {
             nearbyObject = null;
         }
-        else if (other.gameObject.tag == "Interactable Zone")
+        else if (other.gameObject.CompareTag("Interactable Zone"))
         {
             currentZone = null;
         }
