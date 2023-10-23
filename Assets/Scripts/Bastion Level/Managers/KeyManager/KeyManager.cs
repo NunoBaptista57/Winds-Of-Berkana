@@ -1,28 +1,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyManager : MonoBehaviour
+public class KeyManager : MonoBehaviour, ISavable
 {
-    public List<IKey> AllKeys = new();
+    public List<Key> Keys = new();
+    public int CollectedKeys = 0;
+
+    public SaveFile Save(SaveFile saveFile)
+    {
+        saveFile.CollectedKeys = CollectedKeys;
+        return saveFile;
+    }
+
+    public void Load(SaveFile saveFile)
+    {
+        for (int i = 0; i < saveFile.CollectedKeys; i++)
+        {
+            Keys[i].Collect();
+        }
+        CollectedKeys = saveFile.CollectedKeys;
+    }
 
     public void UpdateKeys()
     {
-        int n_keys = 0;
+        int nKeys = 0;
 
-        for (int i = 0; i < AllKeys.Count; i++)
+        foreach (Key key in Keys)
         {
-            if (AllKeys[i].IsCollected())
+            if (key.Collected)
             {
-                n_keys++;
+                nKeys++;
             }
         }
 
+        CollectedKeys = nKeys;
         ServiceLocator.instance.GetService<SphereColor>().UpdateKeys();
-        ServiceLocator.instance.GetService<Bastion1Manager>().PickUpKey(n_keys);
     }
 
-    public void AddKey(IKey key)
+    private void Start()
     {
-        AllKeys.Add(key);
+        foreach (Transform child in transform)
+        {
+            Key key = child.gameObject.GetComponent<Key>();
+            Keys.Add(key);
+            key.KeyManager = this;
+        }
     }
 }

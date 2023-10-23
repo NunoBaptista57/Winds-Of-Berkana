@@ -1,36 +1,17 @@
 using UnityEngine;
 
-public class MainKey : MonoBehaviour, IKey
+public class MainKey : Key
 {
     [SerializeField] private float degreesPerSecond = 15.0f;
     [SerializeField] private float amplitude = 0.5f;
     [SerializeField] private float frequency = 1f;
 
-    private bool _collected = false;
     private Vector3 posOffset = new();
     private Vector3 tempPos = new();
-
-    public void Collect()
-    {
-        _collected = true;
-        gameObject.SetActive(false);
-        ServiceLocator.instance.GetService<KeyManager>().UpdateKeys();
-    }
-
-    public bool IsCollected()
-    {
-        return _collected;
-    }
-
-    public Transform GetPosition()
-    {
-        return transform;
-    }
 
     private void Start()
     {
         posOffset = transform.position;
-        ServiceLocator.instance.GetService<KeyManager>().AddKey(this);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -38,6 +19,7 @@ public class MainKey : MonoBehaviour, IKey
         if (other.gameObject.CompareTag("Player"))
         {
             Collect();
+            KeyManager.UpdateKeys();
         }
     }
 

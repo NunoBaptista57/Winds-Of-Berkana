@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class Bastion1Manager : MonoBehaviour
@@ -9,23 +10,8 @@ public class Bastion1Manager : MonoBehaviour
     public LevelState levelState;
     Vector3 originalCameraPosition;
     public event Action<LevelState> OnLevelStateChanged;
+    private readonly List<ISavable> _toSave = new();
 
-    void Start()
-    {
-        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
-        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
-        player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint.position;
-    }
-
-    public void UpdateLevelState(LevelState newState)
-    {
-        levelState = newState;
-        OnLevelStateChanged?.Invoke(newState);
-    }
-
-    // TODO: should be more dynamic
     public void PickUpKey(int keyNumber)
     {
         switch (keyNumber)
@@ -47,6 +33,48 @@ public class Bastion1Manager : MonoBehaviour
         }
     }
 
+    public void ActivateLever(int leverNumber)
+    {
+        switch (leverNumber)
+        {
+            case 0:
+                UpdateLevelState(LevelState.WindTunnel);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void Start()
+    {
+        LevelManager levelManager = ServiceLocator.instance.GetService<LevelManager>();
+        Debug.Log(levelManager.State);
+        if (levelManager.State == GameState.Load)
+        {
+            Load();
+        }
+
+        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
+        levelManager.UpdateGameState(GameState.Play);
+        player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
+
+        foreach (Transform child in transform)
+        {
+            _toSave.Add(child.GetComponent<ISavable>());
+        }
+
+        _toSave.Add(ServiceLocator.instance.GetService<SanctumEntrance>());
+    }
+
+    private void UpdateLevelState(LevelState newState)
+    {
+        levelState = newState;
+        OnLevelStateChanged?.Invoke(newState);
+    }
+
     private void GameManagerOnGameStateChanged(GameState state)
     {
         switch (state)
@@ -56,10 +84,18 @@ public class Bastion1Manager : MonoBehaviour
                 break;
 
             case GameState.Respawn:
-                player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint.position;
+                player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
                 player.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
                 ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
+                break;
+
+            case GameState.Save:
+                Save();
+                break;
+
+            case GameState.Load:
+                Load();
                 break;
         }
 
@@ -81,12 +117,37 @@ public class Bastion1Manager : MonoBehaviour
         ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Respawn);
     }
 
+    private void Save()
+    {
+        SaveFile saveFile = new();
+
+        foreach (ISavable savable in _toSave)
+        {
+            saveFile = savable.Save(saveFile);
+        }
+        saveFile.LevelState = levelState;
+        SaveSystem.Save(saveFile);
+    }
+
+    private void Load()
+    {
+        SaveFile saveFile = SaveSystem.Load();
+
+        foreach (ISavable savable in _toSave)
+        {
+            savable.Load(saveFile);
+        }
+
+        player.position = saveFile.Checkpoint;
+        UpdateLevelState(saveFile.LevelState);
+    }
 }
 
 public enum LevelState
 {
     BastionState_Intro,
     BastionState_Puzzle1,
+    WindTunnel,
     BastionState_Puzzle2,
     BastionState_Puzzle3,
     BastionState_Ending,
