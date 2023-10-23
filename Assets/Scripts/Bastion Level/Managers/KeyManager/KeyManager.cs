@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyManager : MonoBehaviour, IManager
+public class KeyManager : MonoBehaviour, ISavable
 {
     public List<Key> Keys = new();
     public int CollectedKeys = 0;

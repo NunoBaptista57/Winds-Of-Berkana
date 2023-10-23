@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using TMPro;
 
-public class MainVitralManager : MonoBehaviour, IManager
+public class MainVitralManager : MonoBehaviour, ISavable
 {
 
     [SerializeField] GameObject[] puzzlePieces;

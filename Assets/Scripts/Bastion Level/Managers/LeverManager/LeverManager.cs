@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LeverManager : MonoBehaviour, IManager
+public class LeverManager : MonoBehaviour, ISavable
 {
     public List<ILever> Levers = new();
 

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CheckpointManager : MonoBehaviour, IManager
+public class CheckpointManager : MonoBehaviour, ISavable
 {
     public Vector3 CurrentCheckpoint;
 

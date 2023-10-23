@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 
-public class DoorManager : MonoBehaviour, IManager
+public class DoorManager : MonoBehaviour, ISavable
 {
     public List<IDoor> Doors = new();
 

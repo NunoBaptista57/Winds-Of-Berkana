@@ -10,7 +10,7 @@ public class Bastion1Manager : MonoBehaviour
     public LevelState levelState;
     Vector3 originalCameraPosition;
     public event Action<LevelState> OnLevelStateChanged;
-    private List<IManager> _managers = new();
+    private readonly List<ISavable> _toSave = new();
 
     public void PickUpKey(int keyNumber)
     {
@@ -63,8 +63,10 @@ public class Bastion1Manager : MonoBehaviour
 
         foreach (Transform child in transform)
         {
-            _managers.Add(child.GetComponent<IManager>());
+            _toSave.Add(child.GetComponent<ISavable>());
         }
+
+        _toSave.Add(ServiceLocator.instance.GetService<SanctumEntrance>());
     }
 
     private void UpdateLevelState(LevelState newState)
@@ -119,12 +121,11 @@ public class Bastion1Manager : MonoBehaviour
     {
         SaveFile saveFile = new();
 
-        foreach (IManager manager in _managers)
+        foreach (ISavable savable in _toSave)
         {
-            saveFile = manager.Save(saveFile);
+            saveFile = savable.Save(saveFile);
         }
         saveFile.LevelState = levelState;
-        saveFile.PlacedKeys = ServiceLocator.instance.GetService<SanctumEntrance>().PlacedKeys;
         SaveSystem.Save(saveFile);
     }
 
@@ -132,14 +133,12 @@ public class Bastion1Manager : MonoBehaviour
     {
         SaveFile saveFile = SaveSystem.Load();
 
-        foreach (IManager manager in _managers)
+        foreach (ISavable savable in _toSave)
         {
-            manager.Load(saveFile);
+            savable.Load(saveFile);
         }
 
-        SanctumEntrance sanctumEntrance = ServiceLocator.instance.GetService<SanctumEntrance>();
-        player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
-        sanctumEntrance.PlacedKeys = saveFile.PlacedKeys;
+        player.position = saveFile.Checkpoint;
         UpdateLevelState(saveFile.LevelState);
     }
 }

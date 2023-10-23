@@ -1,13 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SanctumEntrance : MonoBehaviour
+public class SanctumEntrance : MonoBehaviour, ISavable
 {
     public int NKeysToOpen = 0;
     [HideInInspector] public int PlacedKeys = 0;
 
     private List<GameObject> _altars = new();
     private bool _playerIsNear = false;
+
+    public SaveFile Save(SaveFile saveFile)
+    {
+        saveFile.PlacedKeys = PlacedKeys;
+        return saveFile;
+    }
+
+    public void Load(SaveFile saveFile)
+    {
+        PlacedKeys = saveFile.PlacedKeys;
+    }
 
     public void UpdateKeys()
     {
@@ -50,6 +61,7 @@ public class SanctumEntrance : MonoBehaviour
 
     private void PlaceKey(GameObject altar)
     {
+        Debug.Log("Placed key.");
     }
 
     private void OnTriggerEnter(Collider other)
