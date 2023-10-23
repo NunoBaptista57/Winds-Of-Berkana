@@ -18,6 +18,7 @@ public class KeyManager : MonoBehaviour, IManager
         {
             Keys[i].Collect();
         }
+        CollectedKeys = saveFile.CollectedKeys;
     }
 
     public void UpdateKeys()
