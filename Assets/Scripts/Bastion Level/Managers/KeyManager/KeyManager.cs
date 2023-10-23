@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class KeyManager : MonoBehaviour, IManager
 {
-    public List<IKey> Keys = new();
+    public List<Key> Keys = new();
     public int CollectedKeys = 0;
 
     public SaveFile Save(SaveFile saveFile)
@@ -24,9 +24,9 @@ public class KeyManager : MonoBehaviour, IManager
     {
         int nKeys = 0;
 
-        foreach (IKey key in Keys)
+        foreach (Key key in Keys)
         {
-            if (key.IsCollected())
+            if (key.Collected)
             {
                 nKeys++;
             }
@@ -40,9 +40,9 @@ public class KeyManager : MonoBehaviour, IManager
     {
         foreach (Transform child in transform)
         {
-            IKey key = child.gameObject.GetComponent<IKey>();
+            Key key = child.gameObject.GetComponent<Key>();
             Keys.Add(key);
-            key.SetKeyManager(this);
+            key.KeyManager = this;
         }
     }
 }

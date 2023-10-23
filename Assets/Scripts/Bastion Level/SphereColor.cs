@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SphereColor : MonoBehaviour
 {
-    private IKey closestKey;
+    private Key closestKey;
     private bool _collectedKeys;
-    private List<IKey> _keys;
+    private List<Key> _keys;
 
     private void Start()
     {
@@ -16,9 +16,9 @@ public class SphereColor : MonoBehaviour
 
     public void UpdateKeys()
     {
-        foreach (IKey key in _keys)
+        foreach (Key key in _keys)
         {
-            if (!key.IsCollected())
+            if (!key.Collected)
             {
                 GetClosestKey();
                 return;
@@ -36,12 +36,12 @@ public class SphereColor : MonoBehaviour
 
         foreach (var p in _keys)
         {
-            if (p.IsCollected())
+            if (p.Collected)
             {
                 continue;
             }
 
-            var distance = Vector3.Distance(p.GetPosition().position, transform.position);
+            var distance = Vector3.Distance(p.transform.position, transform.position);
 
             if (distance < maxDistance)
             {
@@ -65,7 +65,7 @@ public class SphereColor : MonoBehaviour
         // Get Distance to closest sphere
         if (closestKey != null)
         {
-            var currentDistance = Vector3.Distance(closestKey.GetPosition().position, this.transform.position);
+            var currentDistance = Vector3.Distance(closestKey.transform.position, transform.position);
 
             // Change color of the sphere incrementally
             if (currentDistance > 30)
