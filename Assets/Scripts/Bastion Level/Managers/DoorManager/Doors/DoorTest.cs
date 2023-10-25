@@ -33,4 +33,9 @@ public class DoorTest : MonoBehaviour, IDoor
     {
         ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged += Activate;
     }
+
+    private void OnDestroy()
+    {
+        ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged -= Activate;
+    }
 }

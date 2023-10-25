@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LeverManager : MonoBehaviour, ISavable
 {
-    public List<ILever> Levers = new();
+    public List<Lever> Levers = new();
 
     public SaveFile Save(SaveFile saveFile)
     {
@@ -11,7 +11,7 @@ public class LeverManager : MonoBehaviour, ISavable
 
         for (int i = 0; i < Levers.Count; i++)
         {
-            levers[i] = Levers[i].IsActivated();
+            levers[i] = Levers[i].IsActivated;
         }
 
         saveFile.Levers = levers;
@@ -23,18 +23,19 @@ public class LeverManager : MonoBehaviour, ISavable
     {
         for (int i = 0; i < Levers.Count; i++)
         {
-            Levers[i].SetActivated(saveFile.Levers[i]);
+            Levers[i].IsActivated = true;
+            Levers[i].DoorOpened = true;
         }
     }
 
     public void UpdateLevers()
     {
-        foreach (ILever lever in Levers)
+        foreach (Lever lever in Levers)
         {
-            if (!lever.IsActivated() && lever.ToActivate())
+            if (!lever.DoorOpened && lever.IsActivated)
             {
-                lever.SetActivated(true);
-                ServiceLocator.instance.GetService<Bastion1Manager>().ActivateLever(lever.GetID());
+                lever.DoorOpened = true;
+                ServiceLocator.instance.GetService<Bastion1Manager>().ActivateLever(lever.ID);
             }
         }
     }
@@ -43,7 +44,9 @@ public class LeverManager : MonoBehaviour, ISavable
     {
         foreach (Transform child in transform)
         {
-            Levers.Add(child.gameObject.GetComponent<ILever>());
+            Lever lever = child.gameObject.GetComponent<Lever>();
+            lever.LeverManager = this;
+            Levers.Add(lever);
         }
     }
 }

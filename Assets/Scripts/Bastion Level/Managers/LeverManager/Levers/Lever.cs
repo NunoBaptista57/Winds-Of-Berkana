@@ -1,32 +1,13 @@
 using System;
 using UnityEngine;
 
-public class TestLever : MonoBehaviour, ILever
+public class Lever : MonoBehaviour
 {
     public int ID = 0;
-    private bool _isActivated = false;
-    private bool _toActivate = false;
+    [HideInInspector] public LeverManager LeverManager;
+    [HideInInspector] public bool IsActivated = false;
+    [HideInInspector] public bool DoorOpened = false;
     private bool _playerIsNear = false;
-
-    public bool ToActivate()
-    {
-        return _toActivate;
-    }
-
-    public void SetActivated(bool activated)
-    {
-        _isActivated = activated;
-    }
-
-    public bool IsActivated()
-    {
-        return _isActivated;
-    }
-
-    public int GetID()
-    {
-        return ID;
-    }
 
     private void Start()
     {
@@ -43,11 +24,11 @@ public class TestLever : MonoBehaviour, ILever
 
     private void Activate()
     {
-        if (!_playerIsNear)
+        if (!_playerIsNear || IsActivated)
         {
             return;
         }
-        _toActivate = true;
+        IsActivated = true;
         ServiceLocator.instance.GetService<LeverManager>().UpdateLevers();
     }
 
