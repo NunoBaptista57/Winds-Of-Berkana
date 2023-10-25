@@ -3,28 +3,50 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-// TODO
-public static class SaveSystem
+public class SaveSystem : MonoBehaviour
 {
-
+    [SerializeField] private List<GameObject> _toSave = new();
+    private readonly List<ISavable> _savables = new();
     private const string saveName = "Save01.json";
 
-    public static void Save(SaveFile saveFile)
+    public void Save()
     {
+        SaveFile saveFile = new();
+
+        foreach (ISavable savable in _savables)
+        {
+            saveFile = savable.Save(saveFile);
+        }
+
         string json = JsonUtility.ToJson(saveFile);
         Debug.Log(json);
         File.WriteAllText(Application.persistentDataPath + saveName, json);
     }
 
-    public static SaveFile Load()
+    public void Load()
     {
-        SaveFile saveFile;
 
         string loadSaveFile = File.ReadAllText(Application.persistentDataPath + saveName);
         Debug.Log(loadSaveFile);
-        saveFile = JsonUtility.FromJson<SaveFile>(loadSaveFile);
+        SaveFile saveFile = JsonUtility.FromJson<SaveFile>(loadSaveFile);
 
-        return saveFile;
+        foreach (ISavable savable in _savables)
+        {
+            savable.Load(saveFile);
+        }
+    }
+
+    private void Start()
+    {
+        foreach (GameObject _gameObject in _toSave)
+        {
+            ISavable savable = _gameObject.GetComponent<ISavable>();
+            if (savable == null)
+            {
+                Debug.Log(_gameObject.name + " has no ISavable interface.");
+            }
+            _savables.Add(savable);
+        }
     }
 }
 

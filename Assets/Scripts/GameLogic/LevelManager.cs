@@ -14,10 +14,7 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
-        DontDestroyOnLoad(this);
     }
-
 
     public void UpdateGameState(GameState newState)
     {
@@ -47,6 +44,14 @@ public class LevelManager : MonoBehaviour
 
             case GameState.Remake:
                 RestartCurrentScene();
+                break;
+
+            case GameState.Load:
+                ServiceLocator.instance.GetService<SaveSystem>().Load();
+                break;
+
+            case GameState.Save:
+                ServiceLocator.instance.GetService<SaveSystem>().Save();
                 break;
 
             default:

@@ -4,13 +4,25 @@ using System.Collections.Generic;
 using UnityEditorInternal;
 using UnityEngine;
 
-public class Bastion1Manager : MonoBehaviour
+public class Bastion1Manager : MonoBehaviour, ISavable
 {
     Transform player;
     public LevelState levelState;
     Vector3 originalCameraPosition;
     public event Action<LevelState> OnLevelStateChanged;
     private readonly List<ISavable> _toSave = new();
+
+    public SaveFile Save(SaveFile saveFile)
+    {
+        saveFile.LevelState = levelState;
+        return saveFile;
+    }
+
+    public void Load(SaveFile saveFile)
+    {
+        player.position = saveFile.Checkpoint;
+        UpdateLevelState(saveFile.LevelState);
+    }
 
     public void PickUpKey(int keyNumber)
     {
@@ -50,10 +62,6 @@ public class Bastion1Manager : MonoBehaviour
     {
         LevelManager levelManager = ServiceLocator.instance.GetService<LevelManager>();
         Debug.Log(levelManager.State);
-        if (levelManager.State == GameState.Load)
-        {
-            Load();
-        }
 
         LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
@@ -89,14 +97,6 @@ public class Bastion1Manager : MonoBehaviour
                 GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
                 ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
                 break;
-
-            case GameState.Save:
-                Save();
-                break;
-
-            case GameState.Load:
-                Load();
-                break;
         }
 
     }
@@ -115,31 +115,6 @@ public class Bastion1Manager : MonoBehaviour
         }
 
         ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Respawn);
-    }
-
-    private void Save()
-    {
-        SaveFile saveFile = new();
-
-        foreach (ISavable savable in _toSave)
-        {
-            saveFile = savable.Save(saveFile);
-        }
-        saveFile.LevelState = levelState;
-        SaveSystem.Save(saveFile);
-    }
-
-    private void Load()
-    {
-        SaveFile saveFile = SaveSystem.Load();
-
-        foreach (ISavable savable in _toSave)
-        {
-            savable.Load(saveFile);
-        }
-
-        player.position = saveFile.Checkpoint;
-        UpdateLevelState(saveFile.LevelState);
     }
 }
 
