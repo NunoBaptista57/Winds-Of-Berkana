@@ -517,7 +517,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!154 &1065703026
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -942,6 +942,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 2d9cfea3a3879a94185e5119bac52e84, type: 2}
+    - target: {fileID: 4742473837712756890, guid: 83c41a5601638364a8bff3ca26852bff, type: 3}
+      propertyPath: m_LODs.Array.data[0].screenRelativeHeight
+      value: 0.35900003
+      objectReference: {fileID: 0}
     - target: {fileID: 5394183749341705502, guid: 83c41a5601638364a8bff3ca26852bff, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
