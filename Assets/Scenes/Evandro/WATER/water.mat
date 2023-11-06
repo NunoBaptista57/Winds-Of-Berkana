@@ -24,8 +24,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: water
-  m_Shader: {fileID: -6465566751694194690, guid: 78c0ac505b58ff94baffea52b67865de,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 78c0ac505b58ff94baffea52b67865de, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -84,9 +83,9 @@ Material:
     - _Amplitude: 0.1
     - _BlendMode: 0
     - _ConservativeDepthOffsetEnable: 0
-    - _Crest_Falloff: 2.95
-    - _Crest_Offset: 8.1
-    - _Crest_Size: -1.08
+    - _Crest_Falloff: 4.16
+    - _Crest_Offset: 8.4
+    - _Crest_Size: -1.02
     - _CullMode: 0
     - _CullModeForward: 0
     - _DepthOffsetEnable: 0
@@ -98,31 +97,31 @@ Material:
     - _Edge_Hardness: 10
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
-    - _Extra_Dispersion: -1.51
+    - _Extra_Dispersion: -1.16
     - _Extra_Expersion: 0
-    - _Foam_Bands: 0.65
-    - _Foam_Fall_Off: 3.16
-    - _Foam_Removal: 0.04
-    - _Foam_Width: 0.06
-    - _Frequency: 0.02
+    - _Foam_Bands: 0.63
+    - _Foam_Fall_Off: 1.55
+    - _Foam_Removal: 0.02
+    - _Foam_Width: -0.33
+    - _Frequency: 0.25
     - _OpaqueCullMode: 2
     - _RayTracing: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 1
     - _RefractionModel: 0
-    - _Refraction_Strength: 0.07
+    - _Refraction_Strength: 4.95
     - _RenderQueueType: 4
     - _RequireSplitLighting: 0
     - _Ripple_Speed: 0.005
     - _Ripple_Spepd: 0.02
-    - _Ripple_Strength: 0.14
-    - _Ripple_Tilling: 0.001
-    - _SecFrequenc: 0.01
+    - _Ripple_Strength: 0.1
+    - _Ripple_Tilling: 0.002
+    - _SecFrequenc: 0.03
     - _SecSpeed: 0.5
-    - _Smoothness: 0.9
-    - _Speed: 0.05
+    - _Smoothness: 1.08
+    - _Speed: 0.9
     - _SrcBlend: 1
-    - _Steepness: 0.05
+    - _Steepness: -0.55
     - _StencilRef: 0
     - _StencilRefDepth: 8
     - _StencilRefDistortionVec: 4
@@ -150,7 +149,7 @@ Material:
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 1
     - _UseShadowThreshold: 0
-    - _Water_Edge_Opacity: 0.5
+    - _Water_Edge_Opacity: 0.419
     - _Water_Opacity: 1
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
@@ -159,9 +158,9 @@ Material:
     m_Colors:
     - _Color_1: {r: 0.20372018, g: 0.33354992, b: 0.3962264, a: 0}
     - _Color_2: {r: 0.56287825, g: 0.8584906, b: 0.8584906, a: 0}
-    - _Direction: {r: 1, g: 0.43, b: 0, a: 0}
+    - _Direction: {r: -17.8, g: -4.2, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _Foam_COlor: {r: 1, g: 1, b: 1, a: 0}
-    - _SecDirection: {r: 1, g: 1.33, b: 0, a: 0}
+    - _SecDirection: {r: 1, g: 1.56, b: 0, a: 0}
   m_BuildTextureStacks: []
