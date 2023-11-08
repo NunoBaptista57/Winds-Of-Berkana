@@ -117,7 +117,7 @@ public class Bastion1Manager : MonoBehaviour, ISavable
         ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Respawn);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         LevelManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
     }
