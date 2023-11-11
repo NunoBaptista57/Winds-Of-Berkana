@@ -6,19 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager Instance;
-
-    public GameState State;
-    public static event Action<GameState> OnGameStateChanged;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
+    public event Action<GameState> OnGameStateChanged;
+    [SerializeField] private GameState _state;
 
     public void UpdateGameState(GameState newState)
     {
-        GameState PreviousState = State;
+        GameState PreviousState = _state;
 
         if (PreviousState == GameState.Paused)
         {
@@ -59,8 +52,8 @@ public class LevelManager : MonoBehaviour
 
         }
 
-        State = newState;
-        OnGameStateChanged?.Invoke(State);
+        _state = newState;
+        OnGameStateChanged?.Invoke(_state);
     }
 
 

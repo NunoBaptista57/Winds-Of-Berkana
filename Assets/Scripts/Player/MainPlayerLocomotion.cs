@@ -53,7 +53,7 @@ public class MainPlayerLocomotion : MonoBehaviour
     private Camera cam;
     private bool doublejumped;
     public GameObject gliderObject;
-    
+
     private void Awake()
     {
         inputManager = GetComponent<MainPlayerInputHandler>();
@@ -65,7 +65,7 @@ public class MainPlayerLocomotion : MonoBehaviour
 
     public void HandleAllMovement()
     {
-        if (ServiceLocator.instance.GetService<LevelManager>().State == GameState.Paused || ServiceLocator.instance.GetService<LevelManager>().State == GameState.Death)
+        if (ServiceLocator.instance.GetService<LevelManager>()._state == GameState.Paused || ServiceLocator.instance.GetService<LevelManager>()._state == GameState.Death)
             return;
 
         HandleFallingandLanding();
@@ -143,74 +143,76 @@ public class MainPlayerLocomotion : MonoBehaviour
         targetPosition = transform.position;
         if (!isGrounded && !isJumping)
         {
-           
+
             if (!playerManager.isInteracting)
             {
                 animatorManager.PlayTargetAnimation("Falling", true);
             }
 
-                //  inAirTimer += + Time.deltaTime;
-                // rb.AddForce(transform.forward * leapingVelocity);
-                //rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
+            //  inAirTimer += + Time.deltaTime;
+            // rb.AddForce(transform.forward * leapingVelocity);
+            //rb.AddForce(-Vector3.up * currentFallingVelocity * inAirTimer);
 
 
-                // Controlling direction of movement
-                moveDirection = cam.transform.forward * inputManager.horizontalInput; //Movement Input
-                moveDirection = moveDirection + cam.transform.right * inputManager.verticalInput;
-                //moveDirection = moveDirection * walkingSpeed;
-                // moveDirection.Normalize();
+            // Controlling direction of movement
+            moveDirection = cam.transform.forward * inputManager.horizontalInput; //Movement Input
+            moveDirection = moveDirection + cam.transform.right * inputManager.verticalInput;
+            //moveDirection = moveDirection * walkingSpeed;
+            // moveDirection.Normalize();
 
-                if (isGliding)
+            if (isGliding)
+            {
+                var x = moveDirection.x * glideControlCoeficient;
+                var y = glideAcceleration;
+                var z = moveDirection.z * glideControlCoeficient;
+                //playerRigidBody.AddForce(x, y, z, ForceMode.Acceleration);
+                Vector3 movement = new Vector3(x, y, z);
+                float maxSpeed = 10f; // Adjust this value to your desired maximum speed
+                if (movement.x * playerRigidBody.velocity.x < 0 || movement.y * playerRigidBody.velocity.y < 0 ||
+                    movement.z * playerRigidBody.velocity.z < 0)
                 {
-                    var x = moveDirection.x * glideControlCoeficient;
-                    var y = glideAcceleration;
-                    var z = moveDirection.z * glideControlCoeficient;
-                    //playerRigidBody.AddForce(x, y, z, ForceMode.Acceleration);
-                    Vector3 movement = new Vector3(x, y, z);
-                    float maxSpeed = 10f; // Adjust this value to your desired maximum speed
-                    if (movement.x * playerRigidBody.velocity.x < 0 || movement.y * playerRigidBody.velocity.y < 0 ||
-                        movement.z * playerRigidBody.velocity.z < 0)
-                    {
-                        playerRigidBody.velocity = new Vector3(0,y,0);
-                    }
-                    
-                    if (playerRigidBody.velocity.magnitude < maxSpeed)
-                    {
-                        playerRigidBody.velocity += movement;                    }
+                    playerRigidBody.velocity = new Vector3(0, y, 0);
                 }
-                else
-                {
-                    var x = moveDirection.x * jumpControlCoeficient;
-                    var y = 0.0f;
-                    var z = moveDirection.z * jumpControlCoeficient;
-                    Vector3 movement = new Vector3(moveDirection.x*jumpCoeficient, 0f, moveDirection.z*jumpCoeficient);
-                    
-                    float maxSpeed = 10f; // Adjust this value to your desired maximum speed
-                    if (movement.x * playerRigidBody.velocity.x < 0 || movement.y * playerRigidBody.velocity.y < 0 ||
-                        movement.z * playerRigidBody.velocity.z < 0)
-                    {
-                        playerRigidBody.velocity = new Vector3(0,0,0);
-                    }
-                    
-                    if (playerRigidBody.velocity.magnitude < maxSpeed)
-                    {
-                        playerRigidBody.velocity += movement;                    }
 
-                    //Vector3 movement = new Vector3(moveDirection.x, 0f, moveDirection.z).normalized;
-                    //playerRigidBody.velocity = new Vector3(movement.x*jumpControlCoeficient, playerRigidBody.velocity.y, movement.z*jumpControlCoeficient);
-                    //playerRigidBody.velocity = Vector3.ClampMagnitude(playerRigidBody.velocity, airborneMax);
+                if (playerRigidBody.velocity.magnitude < maxSpeed)
+                {
+                    playerRigidBody.velocity += movement;
                 }
-                //Rotation while falling
-                HandleRotation();
+            }
+            else
+            {
+                var x = moveDirection.x * jumpControlCoeficient;
+                var y = 0.0f;
+                var z = moveDirection.z * jumpControlCoeficient;
+                Vector3 movement = new Vector3(moveDirection.x * jumpCoeficient, 0f, moveDirection.z * jumpCoeficient);
+
+                float maxSpeed = 10f; // Adjust this value to your desired maximum speed
+                if (movement.x * playerRigidBody.velocity.x < 0 || movement.y * playerRigidBody.velocity.y < 0 ||
+                    movement.z * playerRigidBody.velocity.z < 0)
+                {
+                    playerRigidBody.velocity = new Vector3(0, 0, 0);
+                }
+
+                if (playerRigidBody.velocity.magnitude < maxSpeed)
+                {
+                    playerRigidBody.velocity += movement;
+                }
+
+                //Vector3 movement = new Vector3(moveDirection.x, 0f, moveDirection.z).normalized;
+                //playerRigidBody.velocity = new Vector3(movement.x*jumpControlCoeficient, playerRigidBody.velocity.y, movement.z*jumpControlCoeficient);
+                //playerRigidBody.velocity = Vector3.ClampMagnitude(playerRigidBody.velocity, airborneMax);
+            }
+            //Rotation while falling
+            HandleRotation();
         }
 
         // Carefull with the floor distance. If needed reduce the 0.2f value
-        if (Physics.SphereCast(raycastOrigin, 0.1f, -Vector3.up, out hit, 1.0f ,groundLayer))
+        if (Physics.SphereCast(raycastOrigin, 0.1f, -Vector3.up, out hit, 1.0f, groundLayer))
         {
             Debug.DrawRay(raycastOrigin, -Vector3.up, Color.red, 1.0f);
-         //   Debug.DrawRay(this.transform.position, Vector3.forward, Color.green);
-         //   Debug.Log("Drawing Ray " + raycastOrigin + " dir: " + -Vector3.up);
-           
+            //   Debug.DrawRay(this.transform.position, Vector3.forward, Color.green);
+            //   Debug.Log("Drawing Ray " + raycastOrigin + " dir: " + -Vector3.up);
+
             if (!isGrounded)
             {
                 animatorManager.PlayTargetAnimation("Land", true);
@@ -281,7 +283,7 @@ public class MainPlayerLocomotion : MonoBehaviour
     {
         if (!isGrounded && glideAbility)
         {
-           
+
             animatorManager.animator.SetBool("IsGliding", true);
             animatorManager.PlayTargetAnimation("Glide", true);
             gliderObject?.SetActive(true);
@@ -303,7 +305,7 @@ public class MainPlayerLocomotion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Death" && ServiceLocator.instance.GetService<LevelManager>().State != GameState.Death)
+        if (other.gameObject.tag == "Death" && ServiceLocator.instance.GetService<LevelManager>()._state != GameState.Death)
         {
             Debug.Log("Player has fallen to its Death");
             ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Death);

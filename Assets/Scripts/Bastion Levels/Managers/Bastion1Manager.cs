@@ -10,7 +10,7 @@ public class Bastion1Manager : MonoBehaviour, ISavable
     public LevelState levelState;
     Vector3 originalCameraPosition;
     public event Action<LevelState> OnLevelStateChanged;
-    private readonly List<ISavable> _toSave = new();
+    private LevelManager _levelManager;
 
     public SaveFile Save(SaveFile saveFile)
     {
@@ -60,21 +60,14 @@ public class Bastion1Manager : MonoBehaviour, ISavable
 
     private void Start()
     {
-        LevelManager levelManager = ServiceLocator.instance.GetService<LevelManager>();
-        Debug.Log(levelManager.State);
+        _levelManager = ServiceLocator.instance.GetService<LevelManager>();
+        _levelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+        _levelManager.UpdateGameState(GameState.Play);
 
-        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
-        levelManager.UpdateGameState(GameState.Play);
         player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
 
-        foreach (Transform child in transform)
-        {
-            _toSave.Add(child.GetComponent<ISavable>());
-        }
-
-        _toSave.Add(ServiceLocator.instance.GetService<SanctumEntrance>());
+        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
     }
 
     private void UpdateLevelState(LevelState newState)
@@ -119,7 +112,7 @@ public class Bastion1Manager : MonoBehaviour, ISavable
 
     private void OnDisable()
     {
-        LevelManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+        _levelManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
     }
 }
 
