@@ -1,40 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEngine;
 
-public class MainPlayerManager : MonoBehaviour
-{
-    MainPlayerInputHandler inputManager;
-    MainPlayerLocomotion playerLocomotion;
-    Animator animator;
+// public class MainPlayerManager : MonoBehaviour
+// {
+//     MainPlayerInputHandler inputManager;
+//     MainPlayerLocomotion playerLocomotion;
+//     Animator animator;
 
-    public bool isInteracting;
-    public bool isUsingRootMotion;
+//     public bool isInteracting;
+//     public bool isUsingRootMotion;
 
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
-        inputManager = GetComponent<MainPlayerInputHandler>();
-        playerLocomotion = GetComponent<MainPlayerLocomotion>();
-    }
+//     private void Awake()
+//     {
+//         animator = GetComponent<Animator>();
+//         inputManager = GetComponent<MainPlayerInputHandler>();
+//         playerLocomotion = GetComponent<MainPlayerLocomotion>();
+//     }
 
-    void Update()
-    {
+//     void Update()
+//     {
 
-        inputManager.HandleAllInputs();
-    }
+//         inputManager.HandleAllInputs();
+//     }
 
-    void FixedUpdate()
-    {
-        playerLocomotion.HandleAllMovement();
+//     void FixedUpdate()
+//     {
+//         playerLocomotion.HandleAllMovement();
 
-    }
+//     }
 
-    void LateUpdate()
-    {
-        isInteracting = animator.GetBool("IsInteracting");
-        isUsingRootMotion = animator.GetBool("IsUsingRootMotion");
-        playerLocomotion.isJumping = animator.GetBool("IsJumping");
-        animator.SetBool("IsGrounded", playerLocomotion.isGrounded);
-    }
-}
+//     void LateUpdate()
+//     {
+//         isInteracting = animator.GetBool("IsInteracting");
+//         isUsingRootMotion = animator.GetBool("IsUsingRootMotion");
+//         playerLocomotion.isJumping = animator.GetBool("IsJumping");
+//         animator.SetBool("IsGrounded", playerLocomotion.isGrounded);
+//     }
+// }
