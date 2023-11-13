@@ -151,7 +151,7 @@ public class CharacterLocomotion : MonoBehaviour
         _rigidbody.velocity = new(newVelocity.x, _rigidbody.velocity.y, newVelocity.y);
     }
 
-    // TODO: chould be smoother
+    // TODO: should be smoother
     private void Rotate(Vector2 direction)
     {
         Body.transform.rotation = Quaternion.Euler(0, -(Vector2.SignedAngle(Vector2.right, direction) - 90), 0);
