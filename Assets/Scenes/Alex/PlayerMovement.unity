@@ -1867,6 +1867,7 @@ GameObject:
   - component: {fileID: 1825963076}
   - component: {fileID: 1825963078}
   - component: {fileID: 1825963077}
+  - component: {fileID: 1825963079}
   m_Layer: 0
   m_Name: Locomotion
   m_TagString: Untagged
@@ -1904,8 +1905,10 @@ MonoBehaviour:
   MaxSpeed: 10
   Acceleration: 1
   Deceleration: 1
-  RotationSpeed: 30
+  RotationSpeed: 25
+  MaxFallSpeed: 10
   Locomotion: {fileID: 0}
+  _jumpForce: 5
 --- !u!114 &1825963078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1918,15 +1921,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172e29144bf06c148a6544c5491b0918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  State: {fileID: 0}
   Body: {fileID: 9182904697430485237}
+  State: {fileID: 0}
   BaseAngle: {x: 0, y: 1}
-  Deadzone: 0.9
-  BaseVelocity: {x: 0, y: 0}
-  WalkDeadzone: 0.5
   InputDirection: {x: 0, y: 0}
+  BaseVelocity: {x: 0, y: 0, z: 0}
+  _deadzone: 0.9
+  _walkDeadzone: 0.5
   CanMove: 1
   _cameraPosition: {fileID: 9072376625563097460}
+--- !u!114 &1825963079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825963075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2aab6df3d8d3c41b7700726617676c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxSpeed: 8
+  Acceleration: 1
+  Deceleration: 1
+  RotationSpeed: 30
+  MaxFallSpeed: 10
+  Locomotion: {fileID: 0}
+  _stopJumpForce: 2.5
 --- !u!1 &1911166517
 GameObject:
   m_ObjectHideFlags: 0
@@ -8216,7 +8238,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9072376625464305144}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0033021155, y: 0.9933955, z: -0.11080678, w: 0.029603846}
+  m_LocalRotation: {x: 0.0033021166, y: 0.9933955, z: -0.11080678, w: 0.029603856}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

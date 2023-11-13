@@ -7,6 +7,8 @@ public class LocomotionState : MonoBehaviour
     public float Acceleration = 1f;
     public float Deceleration = 1f;
     public float RotationSpeed = 30f;
+    public float MaxFallSpeed = 10f;
+
     public CharacterLocomotion Locomotion;
 
     public virtual void StartJump()

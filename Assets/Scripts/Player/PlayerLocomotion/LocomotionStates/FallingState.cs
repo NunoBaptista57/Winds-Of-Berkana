@@ -1,19 +1,18 @@
 using System;
 using UnityEngine;
 
-public class RunningState : LocomotionState
+public class FallingState : LocomotionState
 {
-    [SerializeField] private float _jumpForce = 5f;
+    [SerializeField] private float _stopJumpForce = 2.5f;
 
     public override void StartJump()
     {
-        Locomotion.Jump(_jumpForce);
-        Locomotion.ChangeState(GetComponent<FallingState>());
+        Debug.Log("LocomotionState: Current State is Parent Class.");
     }
 
     public override void StopJump()
     {
-        Debug.Log("LocomotionState: Current State is Parent Class.");
+        Locomotion.StopJump(_stopJumpForce);
     }
 
     public override void Move(Vector2 direction)

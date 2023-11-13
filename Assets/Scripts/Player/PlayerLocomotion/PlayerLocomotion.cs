@@ -6,27 +6,25 @@ public class PlayerLocomotion : CharacterLocomotion
     public bool CanMove = true;
     [SerializeField] private Transform _cameraPosition;
 
-    public void ChangeState(LocomotionState locomotionState)
-    {
-        State = locomotionState;
-    }
-
-    public void StartJump()
+    public void OnStartJump()
     {
         State.StartJump();
     }
 
-    public void StopJump()
+    public void OnStopJump()
     {
         State.StopJump();
     }
 
-    public void Move(Vector2 direction)
+    public void OnMove(Vector2 direction)
     {
-        State.Move(direction);
+        if (CanMove)
+        {
+            State.Move(direction);
+        }
     }
 
-    public void Run()
+    public void OnRun()
     {
         State.Run();
     }

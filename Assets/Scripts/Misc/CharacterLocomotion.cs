@@ -1,30 +1,54 @@
 using System;
-using AmplifyShaderEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Scripting.APIUpdating;
 
 public class CharacterLocomotion : MonoBehaviour
 {
-    public LocomotionState State;
     public GameObject Body;
+    public LocomotionState State;
+
     public Vector2 BaseAngle = Vector2.right;
-    public float Deadzone = 0.9f;
-    public Vector2 BaseVelocity = Vector3.zero;
-    public float WalkDeadzone = 0.5f;
     public Vector2 InputDirection = Vector2.zero;
+    public Vector3 BaseVelocity = Vector3.zero;
+
+    [SerializeField] private float _deadzone = 0.9f;
+    [SerializeField] private float _walkDeadzone = 0.5f;
 
     private Rigidbody _rigidbody;
-    private bool _isMoving = false;
 
-    public void Fall()
+    public void ChangeState(LocomotionState locomotionState)
     {
-
+        State = locomotionState;
     }
 
-    public void Jump()
+    public void Jump(float jumpForce)
     {
+        _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, _rigidbody.velocity.y + jumpForce, _rigidbody.velocity.z);
+    }
 
+    public void StopJump(float force)
+    {
+        float fallSpeed = _rigidbody.velocity.y;
+        if (fallSpeed < BaseVelocity.y)
+        {
+            return;
+        }
+
+        fallSpeed -= force;
+        if (fallSpeed < BaseVelocity.y)
+        {
+            fallSpeed = BaseVelocity.y;
+        }
+        _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, fallSpeed, _rigidbody.velocity.z);
+    }
+
+    private void Fall()
+    {
+        float fallSpeed = _rigidbody.velocity.y;
+
+        if (fallSpeed > State.MaxFallSpeed)
+        {
+            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, fallSpeed, _rigidbody.velocity.z);
+        }
     }
 
     private void Move()
@@ -52,7 +76,7 @@ public class CharacterLocomotion : MonoBehaviour
         _rigidbody.velocity = new(newVelocity.x + BaseVelocity.x, _rigidbody.velocity.y, newVelocity.y + BaseVelocity.y);
     }
 
-    // TODO: Study a new way of doing thiss
+    // TODO: Study a new way of doing this
     private Vector2 GetNewDirection(Vector2 direction)
     {
         // Camera
@@ -120,14 +144,14 @@ public class CharacterLocomotion : MonoBehaviour
         float inputMagnitude = InputDirection.magnitude;
 
         Vector2 currentVelocity = new(_rigidbody.velocity.x, _rigidbody.velocity.z);
-        currentVelocity -= BaseVelocity;
+        currentVelocity -= new Vector2(BaseVelocity.x, BaseVelocity.z);
         Vector2 newVelocity = currentVelocity;
 
         float maxSpeed = State.MaxSpeed;
         float acceleration = State.Acceleration;
         Debug.Log(InputDirection + "," + inputMagnitude);
         // Walking
-        if (inputMagnitude <= WalkDeadzone)
+        if (inputMagnitude <= _walkDeadzone)
         {
             maxSpeed /= 2;
             acceleration /= 2;
@@ -148,10 +172,10 @@ public class CharacterLocomotion : MonoBehaviour
             }
         }
 
+        newVelocity += new Vector2(BaseVelocity.x, BaseVelocity.z);
         _rigidbody.velocity = new(newVelocity.x, _rigidbody.velocity.y, newVelocity.y);
     }
 
-    // TODO: should be smoother
     private void Rotate(Vector2 direction)
     {
         Body.transform.rotation = Quaternion.Euler(0, -(Vector2.SignedAngle(Vector2.right, direction) - 90), 0);
@@ -170,7 +194,7 @@ public class CharacterLocomotion : MonoBehaviour
     private void FixedUpdate()
     {
         // Stopping
-        if (InputDirection.magnitude <= (1 - Deadzone))
+        if (InputDirection.magnitude <= (1 - _deadzone))
         {
             Decelerate();
         }
@@ -178,5 +202,11 @@ public class CharacterLocomotion : MonoBehaviour
         {
             Move();
         }
+        Fall();
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        ChangeState(GetComponent<RunningState>());
     }
 }
