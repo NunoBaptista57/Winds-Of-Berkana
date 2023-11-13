@@ -56,7 +56,8 @@ public class SanctumEntrance : MonoBehaviour, ISavable
             _altars.Add(child.gameObject);
         }
 
-        ServiceLocator.instance.GetService<MainPlayerInputHandler>().Interact += UpdateKeys;
+        // TODO FIX
+        // ServiceLocator.instance.GetService<MainPlayerInputHandler>().Interact += UpdateKeys;
     }
 
     private void PlaceKey(GameObject altar)

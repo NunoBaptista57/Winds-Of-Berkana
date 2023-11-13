@@ -13,18 +13,20 @@ public class MainMenuHandler : MonoBehaviour
 
     void Awake()
     {
-        LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+        // TODO FIX
+        // LevelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
     }
 
     // Its good practice to unsubscribe from events
     void OnDestroy()
     {
-        LevelManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+        // TODO FIX
+        // LevelManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
     }
 
     private void GameManagerOnGameStateChanged(GameState state)
     {
-       if(state == GameState.Paused)
+        if (state == GameState.Paused)
         {
             Pause();
         }
@@ -42,7 +44,7 @@ public class MainMenuHandler : MonoBehaviour
 
 
 
-   public void QuitGame()
+    public void QuitGame()
     {
         Application.Quit();
     }
@@ -50,11 +52,11 @@ public class MainMenuHandler : MonoBehaviour
     public void MainMenu()
     {
         SceneManager.LoadScene(0);
-    } 
+    }
 
     public void HandlePause()
     {
-      ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Paused);
+        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Paused);
     }
 
     public void Resume()
@@ -62,7 +64,7 @@ public class MainMenuHandler : MonoBehaviour
         paused = false;
         Time.timeScale = 1f;
         _pauseMenu.SetActive(false);
-       
+
     }
 
     public void Pause()

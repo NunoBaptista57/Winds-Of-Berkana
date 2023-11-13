@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PauseMenu : MonoBehaviour
 {
     private GameObject _content;
     private readonly LevelManager levelManager;
 
-    public void Pause()
+    public void Pause(InputAction.CallbackContext context)
     {
         if (_content.activeSelf)
         {

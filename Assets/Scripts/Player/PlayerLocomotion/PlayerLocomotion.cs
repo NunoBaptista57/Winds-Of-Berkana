@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerLocomotion : CharacterLocomotion
 {
     public bool CanMove = true;
-    public Rigidbody _rigidbody;
+    [SerializeField] private Transform _cameraPosition;
 
     public void ChangeState(LocomotionState locomotionState)
     {
@@ -30,9 +30,9 @@ public class PlayerLocomotion : CharacterLocomotion
     {
         State.Run();
     }
-
-    private void Start()
+    private void Update()
     {
-        _rigidbody = gameObject.GetComponent<Rigidbody>();
+        BaseAngle = new(_cameraPosition.position.x - transform.position.x, _cameraPosition.position.z - transform.position.z);
+        BaseAngle.Normalize();
     }
 }

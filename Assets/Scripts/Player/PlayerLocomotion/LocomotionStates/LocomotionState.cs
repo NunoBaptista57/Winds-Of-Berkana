@@ -3,28 +3,34 @@ using UnityEngine;
 
 public class LocomotionState : MonoBehaviour
 {
-    public float _maxVelocity = 10f;
-    public float _acceleration = 1f;
-    public float _deceleration = 1f;
-    public float _rotationSpeed = 0.5f;
+    public float MaxSpeed = 10f;
+    public float Acceleration = 1f;
+    public float Deceleration = 1f;
+    public float RotationSpeed = 30f;
+    public CharacterLocomotion Locomotion;
 
-    public void StartJump()
+    public virtual void StartJump()
     {
-        Debug.Log("LocomotionState: Current State is Parent Class.");
+        Debug.Log("LocomotionState: StartJump not implemented.");
     }
 
-    public void StopJump()
+    public virtual void StopJump()
     {
-        Debug.Log("LocomotionState: Current State is Parent Class.");
+        Debug.Log("LocomotionState: StopJump not implemented.");
     }
 
-    public void Move(Vector2 direction)
+    public virtual void Move(Vector2 direction)
     {
-        Debug.Log("LocomotionState: Current State is Parent Class.");
+        Debug.Log("LocomotionState: Move not implemented.");
     }
 
-    public void Run()
+    public virtual void Run()
     {
-        Debug.Log("LocomotionState: Current State is Parent Class.");
+        Debug.Log("LocomotionState: Run not implemented.");
+    }
+
+    private void Start()
+    {
+        Locomotion = GetComponent<CharacterLocomotion>();
     }
 }

@@ -19,7 +19,8 @@ public class Lever : MonoBehaviour
         }
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<MainPlayerInputHandler>().Interact += Activate;
+        // TODO FIX
+        // player.GetComponent<MainPlayerInputHandler>().Interact += Activate;
     }
 
     private void Activate()
