@@ -1,171 +1,117 @@
-using System;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.TextCore.Text;
 
 public class CharacterLocomotion : MonoBehaviour
 {
-    public GameObject Body;
-    public LocomotionState State;
+    // public GameObject Body;
+    // public LocomotionState State;
 
-    public Vector2 BaseAngle = Vector2.right;
-    public Vector2 InputDirection = Vector2.zero;
+    // public Vector2 BaseAngle;
+    // public Vector2 InputDirection = Vector2.zero;
+    // public Vector3 BaseVelocity = Vector3.zero;
+
+    // [SerializeField] private float _deadzone = 0.9f;
+    // [SerializeField] private float _walkDeadzone = 0.5f;
+
+    // private CharacterController _characterController;
+
+    // public void ChangeState(LocomotionState locomotionState)
+    // {
+    //     State = locomotionState;
+    // }
+
+    // public void Jump(float jumpForce)
+    // {
+    //     _characterController.Move(new Vector3(_characterController.velocity.x, _characterController.velocity.y + jumpForce, _characterController.velocity.z));
+    // }
+
+    // public void StopJump(float force)
+    // {
+    //     float fallSpeed = _characterController.velocity.y;
+    //     if (fallSpeed < BaseVelocity.y)
+    //     {
+    //         return;
+    //     }
+
+    //     fallSpeed -= force;
+    //     if (fallSpeed < BaseVelocity.y)
+    //     {
+    //         fallSpeed = BaseVelocity.y;
+    //     }
+    //     _characterController.Move(new Vector3(_characterController.velocity.x, fallSpeed, _characterController.velocity.z));
+    // }
+
+    // private Vector3 Fall(Vector3 velocity)
+    // {
+    //     float fallSpeed = velocity.y;
+    //     fallSpeed -= State.FallSpeed;
+
+    //     if (-fallSpeed > State.MaxFallSpeed)
+    //     {
+    //         fallSpeed = -State.MaxFallSpeed;
+    //     }
+    //     return new Vector3(velocity.x, fallSpeed, velocity.z);
+    // }
+
+    // private Vector3 Move(Vector3 velocity)
+    // {
+    //     Vector2 newDirection = GetNewDirection(InputDirection);
+    //     Rotate(newDirection);
+    //     return GetHorizontalVelocity(newDirection, velocity);
+    // }
+
+    public float BaseRotation = 0;
     public Vector3 BaseVelocity = Vector3.zero;
+    public Transform Body;
+    public Vector2 Input;
+    private CharacterController _characterController;
+    private ILocomotionState _locomotionState;
 
-    [SerializeField] private float _deadzone = 0.9f;
-    [SerializeField] private float _walkDeadzone = 0.5f;
-
-    private Rigidbody _rigidbody;
-
-    public void ChangeState(LocomotionState locomotionState)
+    public void StartJump()
     {
-        State = locomotionState;
+        _locomotionState.StartJump();
     }
 
-    public void Jump(float jumpForce)
+    public void StopJump()
     {
-        _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, _rigidbody.velocity.y + jumpForce, _rigidbody.velocity.z);
+        _locomotionState.StopJump();
     }
 
-    public void StopJump(float force)
+    public void Run()
     {
-        float fallSpeed = _rigidbody.velocity.y;
-        if (fallSpeed < BaseVelocity.y)
-        {
-            return;
-        }
-
-        fallSpeed -= force;
-        if (fallSpeed < BaseVelocity.y)
-        {
-            fallSpeed = BaseVelocity.y;
-        }
-        _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, fallSpeed, _rigidbody.velocity.z);
+        _locomotionState.Run();
     }
 
-    private void Fall()
+    public void ChangeState<T>() where T : MonoBehaviour, ILocomotionState
     {
-        float fallSpeed = _rigidbody.velocity.y;
-
-        if (fallSpeed > State.MaxFallSpeed)
-        {
-            _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, fallSpeed, _rigidbody.velocity.z);
-        }
+        _locomotionState = GetComponent<T>();
+        _locomotionState.SetCharacterLocomotion(this);
     }
 
-    private void Move()
+    public Vector3 GetNewHorizontalVelocity(float acceleration, float maxSpeed, float deceleration)
     {
-        Vector2 newDirection = GetNewDirection(InputDirection);
-        Rotate(newDirection);
-        ChangeVelocity(newDirection);
-    }
+        Vector2 newVelocity = new(_characterController.velocity.x, _characterController.velocity.z);
+        newVelocity -= new Vector2(BaseVelocity.x, BaseVelocity.z);
+        Vector2 forward = new(Body.forward.x, Body.forward.z);
 
-    private void Decelerate()
-    {
-        Vector2 currentVelocity = new(_rigidbody.velocity.x - BaseVelocity.x, _rigidbody.velocity.z - BaseVelocity.y);
-        if (currentVelocity == Vector2.zero)
+        if (Input == Vector2.zero && newVelocity != Vector2.zero)
         {
-            return;
-        }
+            newVelocity -= deceleration * Time.deltaTime * newVelocity.normalized;
 
-        Vector2 newVelocity = currentVelocity - currentVelocity.normalized * State.Deceleration;
-
-        if (currentVelocity.normalized != newVelocity.normalized)
-        {
-            newVelocity = Vector2.zero;
-        }
-
-        _rigidbody.velocity = new(newVelocity.x + BaseVelocity.x, _rigidbody.velocity.y, newVelocity.y + BaseVelocity.y);
-    }
-
-    // TODO: Study a new way of doing this
-    private Vector2 GetNewDirection(Vector2 direction)
-    {
-        // Camera
-        float angle = Vector2.SignedAngle(Vector2.right, BaseAngle);
-        float directionAngle = Vector2.SignedAngle(Vector2.right, direction);
-        float targetAngle = (angle + directionAngle + 90) % 360;
-        if (targetAngle < 0)
-        {
-            targetAngle += 360;
-        }
-
-        float newRotation = -(Body.transform.rotation.eulerAngles.y - 90) % 360;
-        if (newRotation < 0)
-        {
-            newRotation += 360;
-        }
-
-        if (targetAngle > newRotation)
-        {
-            if (targetAngle - newRotation > 180)
+            if (newVelocity.normalized != newVelocity.normalized)
             {
-                newRotation -= State.RotationSpeed;
-                if (newRotation < 0 && newRotation + 360 < targetAngle)
-                {
-                    newRotation = targetAngle;
-                }
-            }
-            else
-            {
-                newRotation += State.RotationSpeed;
-                if (newRotation > targetAngle)
-                {
-                    newRotation = targetAngle;
-                }
+                newVelocity = Vector2.zero;
             }
         }
-        else if (targetAngle < newRotation)
+        else if (newVelocity.magnitude > maxSpeed)
         {
-            if (newRotation - targetAngle > 180)
-            {
-                newRotation += State.RotationSpeed;
-                if (newRotation > 360 && newRotation - 360 > targetAngle)
-                {
-                    newRotation = targetAngle;
-                }
-            }
-            else
-            {
-                newRotation -= State.RotationSpeed;
-                if (newRotation < targetAngle)
-                {
-                    newRotation = targetAngle;
-                }
-            }
+            newVelocity -= deceleration * Time.deltaTime * newVelocity.normalized;
         }
-
-        newRotation *= Mathf.PI / 180;
-
-        Vector2 newDirection = new(Mathf.Cos(newRotation), Mathf.Sin(newRotation));
-        return newDirection;
-    }
-
-    private void ChangeVelocity(Vector2 direction)
-    {
-        float inputMagnitude = InputDirection.magnitude;
-
-        Vector2 currentVelocity = new(_rigidbody.velocity.x, _rigidbody.velocity.z);
-        currentVelocity -= new Vector2(BaseVelocity.x, BaseVelocity.z);
-        Vector2 newVelocity = currentVelocity;
-
-        float maxSpeed = State.MaxSpeed;
-        float acceleration = State.Acceleration;
-        Debug.Log(InputDirection + "," + inputMagnitude);
-        // Walking
-        if (inputMagnitude <= _walkDeadzone)
+        else if (Input != Vector2.zero)
         {
-            maxSpeed /= 2;
-            acceleration /= 2;
-        }
-
-        if (currentVelocity.magnitude > maxSpeed)
-        {
-            newVelocity -= currentVelocity.normalized * State.Deceleration;
-            newVelocity += direction.normalized * acceleration;
-        }
-        else
-        {
-            newVelocity += direction.normalized * acceleration;
-
+            newVelocity += acceleration * Time.deltaTime * forward;
             if (newVelocity.magnitude > maxSpeed)
             {
                 newVelocity = newVelocity.normalized * maxSpeed;
@@ -173,40 +119,36 @@ public class CharacterLocomotion : MonoBehaviour
         }
 
         newVelocity += new Vector2(BaseVelocity.x, BaseVelocity.z);
-        _rigidbody.velocity = new(newVelocity.x, _rigidbody.velocity.y, newVelocity.y);
+        return new Vector3(newVelocity.x, 0, newVelocity.y);
     }
 
-    private void Rotate(Vector2 direction)
+    public float GetNewVerticalSpeed(float acceleration, float maxSpeed, float deceleration)
     {
-        Body.transform.rotation = Quaternion.Euler(0, -(Vector2.SignedAngle(Vector2.right, direction) - 90), 0);
+        return 0;
+    }
+
+    public void Rotate(float rotationSpeed)
+    {
+        if (Input == Vector2.zero)
+        {
+            return;
+        }
+
+        float newAngle = Body.transform.eulerAngles.y - BaseRotation;
+        transform.parent.rotation = Quaternion.Euler(transform.parent.rotation.x, BaseRotation, transform.parent.rotation.z);
+        float targetAngle = Vector2.SignedAngle(Input, Vector2.up);
+        newAngle = Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed);
+        Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
+    }
+
+    private void Update()
+    {
+        _characterController.Move(_locomotionState.Move() * Time.deltaTime);
     }
 
     private void Start()
     {
-        _rigidbody = GetComponentInParent<Rigidbody>();
-        State = GetComponent<RunningState>();
-        if (State == null)
-        {
-            Debug.Log("RunningState component not added to object.");
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        // Stopping
-        if (InputDirection.magnitude <= (1 - _deadzone))
-        {
-            Decelerate();
-        }
-        else
-        {
-            Move();
-        }
-        Fall();
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        ChangeState(GetComponent<RunningState>());
+        ChangeState<RunningState>();
+        _characterController = GetComponentInParent<CharacterController>();
     }
 }

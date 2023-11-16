@@ -1,28 +1,40 @@
 using System;
 using UnityEngine;
 
-public class RunningState : LocomotionState
+public class RunningState : MonoBehaviour, ILocomotionState
 {
-    [SerializeField] private float _jumpForce = 5f;
+    [SerializeField] private float _acceleration = 5f;
+    [SerializeField] private float _maxSpeed = 10f;
+    [SerializeField] private float _deceleration = 5f;
+    [SerializeField] private float _rotationSpeed = 10f;
 
-    public override void StartJump()
+    private CharacterLocomotion _characterLocomotion;
+
+    public void StartJump()
     {
-        Locomotion.Jump(_jumpForce);
-        Locomotion.ChangeState(GetComponent<FallingState>());
+
     }
 
-    public override void StopJump()
+    public void StopJump()
     {
-        Debug.Log("LocomotionState: Current State is Parent Class.");
+
     }
 
-    public override void Move(Vector2 direction)
+    public Vector3 Move()
     {
-        Locomotion.InputDirection = direction;
+        _characterLocomotion.Rotate(_rotationSpeed);
+        Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
+
+        return newVelocity;
     }
 
-    public override void Run()
+    public void Run()
     {
-        Debug.Log("LocomotionState: Current State is Parent Class.");
+
+    }
+
+    public void SetCharacterLocomotion(CharacterLocomotion characterLocomotion)
+    {
+        _characterLocomotion = characterLocomotion;
     }
 }
