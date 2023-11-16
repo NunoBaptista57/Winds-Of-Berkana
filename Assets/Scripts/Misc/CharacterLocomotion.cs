@@ -22,38 +22,6 @@ public class CharacterLocomotion : MonoBehaviour
     //     State = locomotionState;
     // }
 
-    // public void Jump(float jumpForce)
-    // {
-    //     _characterController.Move(new Vector3(_characterController.velocity.x, _characterController.velocity.y + jumpForce, _characterController.velocity.z));
-    // }
-
-    // public void StopJump(float force)
-    // {
-    //     float fallSpeed = _characterController.velocity.y;
-    //     if (fallSpeed < BaseVelocity.y)
-    //     {
-    //         return;
-    //     }
-
-    //     fallSpeed -= force;
-    //     if (fallSpeed < BaseVelocity.y)
-    //     {
-    //         fallSpeed = BaseVelocity.y;
-    //     }
-    //     _characterController.Move(new Vector3(_characterController.velocity.x, fallSpeed, _characterController.velocity.z));
-    // }
-
-    // private Vector3 Fall(Vector3 velocity)
-    // {
-    //     float fallSpeed = velocity.y;
-    //     fallSpeed -= State.FallSpeed;
-
-    //     if (-fallSpeed > State.MaxFallSpeed)
-    //     {
-    //         fallSpeed = -State.MaxFallSpeed;
-    //     }
-    //     return new Vector3(velocity.x, fallSpeed, velocity.z);
-    // }
 
     // private Vector3 Move(Vector3 velocity)
     // {
@@ -66,8 +34,8 @@ public class CharacterLocomotion : MonoBehaviour
     public Vector3 BaseVelocity = Vector3.zero;
     public Transform Body;
     public Vector2 Input;
-    private CharacterController _characterController;
     private ILocomotionState _locomotionState;
+    private CharacterController _characterController;
 
     public void StartJump()
     {
@@ -87,7 +55,22 @@ public class CharacterLocomotion : MonoBehaviour
     public void ChangeState<T>() where T : MonoBehaviour, ILocomotionState
     {
         _locomotionState = GetComponent<T>();
-        _locomotionState.SetCharacterLocomotion(this);
+        Debug.Log(_locomotionState);
+    }
+
+    public float DecelerateJump(float force, float fallSpeed)
+    {
+        if (fallSpeed < BaseVelocity.y)
+        {
+            return fallSpeed;
+        }
+
+        fallSpeed -= force;
+        if (fallSpeed < BaseVelocity.y)
+        {
+            fallSpeed = BaseVelocity.y;
+        }
+        return fallSpeed;
     }
 
     public Vector3 GetNewHorizontalVelocity(float acceleration, float maxSpeed, float deceleration)
@@ -98,14 +81,15 @@ public class CharacterLocomotion : MonoBehaviour
 
         if (Input == Vector2.zero && newVelocity != Vector2.zero)
         {
-            newVelocity -= deceleration * Time.deltaTime * newVelocity.normalized;
+            Vector2 friction = newVelocity - deceleration * Time.deltaTime * newVelocity.normalized;
 
-            if (newVelocity.normalized != newVelocity.normalized)
+            if (friction.normalized == newVelocity.normalized)
             {
-                newVelocity = Vector2.zero;
+                newVelocity = friction;
             }
         }
-        else if (newVelocity.magnitude > maxSpeed)
+
+        if (newVelocity.magnitude > maxSpeed)
         {
             newVelocity -= deceleration * Time.deltaTime * newVelocity.normalized;
         }
@@ -124,7 +108,18 @@ public class CharacterLocomotion : MonoBehaviour
 
     public float GetNewVerticalSpeed(float acceleration, float maxSpeed, float deceleration)
     {
-        return 0;
+        float fallSpeed = _characterController.velocity.y - BaseVelocity.y;
+        fallSpeed -= acceleration * Time.deltaTime;
+
+        if (-fallSpeed > maxSpeed)
+        {
+            fallSpeed += deceleration * Time.deltaTime;
+            if (-fallSpeed < maxSpeed)
+            {
+                fallSpeed = -maxSpeed;
+            }
+        }
+        return fallSpeed + BaseVelocity.y;
     }
 
     public void Rotate(float rotationSpeed)
@@ -144,6 +139,14 @@ public class CharacterLocomotion : MonoBehaviour
     private void Update()
     {
         _characterController.Move(_locomotionState.Move() * Time.deltaTime);
+        if (_characterController.isGrounded)
+        {
+            _locomotionState.Ground();
+        }
+        else
+        {
+            _locomotionState.Fall();
+        }
     }
 
     private void Start()
