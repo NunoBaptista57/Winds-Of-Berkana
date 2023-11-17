@@ -1,24 +1,17 @@
 using UnityEngine;
 
-public class FallingState : MonoBehaviour, ILocomotionState
+public class WalkingState : MonoBehaviour, ILocomotionState
 {
-    [SerializeField] private float _gravity = 3f;
-    [SerializeField] private float _maxFallSpeed = 10f;
     [SerializeField] private float _acceleration = 5f;
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
-    [HideInInspector] public bool CanStopJump = false;
+
     private CharacterLocomotion _characterLocomotion;
-
-    public void StartState()
-    {
-
-    }
 
     public void StartJump()
     {
-        _characterLocomotion.ChangeState<GlidingState>();
+        _characterLocomotion.ChangeState<JumpingState>();
     }
 
     public void StopJump()
@@ -30,7 +23,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion.Rotate(_rotationSpeed);
         Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
-        newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _maxFallSpeed, _gravity);
+        newVelocity.y -= 0.1f; // So that the CharaterController detects the ground
         _characterLocomotion.CharacterController.Move(newVelocity * Time.deltaTime);
     }
 
@@ -41,11 +34,18 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void Fall()
     {
+        GetComponent<FallingState>().CanStopJump = false;
+        _characterLocomotion.ChangeState<FallingState>();
     }
 
     public void Ground()
     {
-        _characterLocomotion.ChangeState<RunningState>();
+
+    }
+
+    public void StartState()
+    {
+
     }
 
     private void Start()

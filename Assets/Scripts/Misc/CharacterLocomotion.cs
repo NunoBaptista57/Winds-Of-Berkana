@@ -5,37 +5,12 @@ using UnityEngine.TextCore.Text;
 
 public class CharacterLocomotion : MonoBehaviour
 {
-    // public GameObject Body;
-    // public LocomotionState State;
-
-    // public Vector2 BaseAngle;
-    // public Vector2 InputDirection = Vector2.zero;
-    // public Vector3 BaseVelocity = Vector3.zero;
-
-    // [SerializeField] private float _deadzone = 0.9f;
-    // [SerializeField] private float _walkDeadzone = 0.5f;
-
-    // private CharacterController _characterController;
-
-    // public void ChangeState(LocomotionState locomotionState)
-    // {
-    //     State = locomotionState;
-    // }
-
-
-    // private Vector3 Move(Vector3 velocity)
-    // {
-    //     Vector2 newDirection = GetNewDirection(InputDirection);
-    //     Rotate(newDirection);
-    //     return GetHorizontalVelocity(newDirection, velocity);
-    // }
-
     public float BaseRotation = 0;
     public Vector3 BaseVelocity = Vector3.zero;
     public Transform Body;
+    [HideInInspector] public CharacterController CharacterController;
     public Vector2 Input;
     private ILocomotionState _locomotionState;
-    private CharacterController _characterController;
 
     public void StartJump()
     {
@@ -55,27 +30,13 @@ public class CharacterLocomotion : MonoBehaviour
     public void ChangeState<T>() where T : MonoBehaviour, ILocomotionState
     {
         _locomotionState = GetComponent<T>();
+        _locomotionState.StartState();
         Debug.Log(_locomotionState);
-    }
-
-    public float DecelerateJump(float force, float fallSpeed)
-    {
-        if (fallSpeed < BaseVelocity.y)
-        {
-            return fallSpeed;
-        }
-
-        fallSpeed -= force;
-        if (fallSpeed < BaseVelocity.y)
-        {
-            fallSpeed = BaseVelocity.y;
-        }
-        return fallSpeed;
     }
 
     public Vector3 GetNewHorizontalVelocity(float acceleration, float maxSpeed, float deceleration)
     {
-        Vector2 newVelocity = new(_characterController.velocity.x, _characterController.velocity.z);
+        Vector2 newVelocity = new(CharacterController.velocity.x, CharacterController.velocity.z);
         newVelocity -= new Vector2(BaseVelocity.x, BaseVelocity.z);
         Vector2 forward = new(Body.forward.x, Body.forward.z);
 
@@ -108,7 +69,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     public float GetNewVerticalSpeed(float acceleration, float maxSpeed, float deceleration)
     {
-        float fallSpeed = _characterController.velocity.y - BaseVelocity.y;
+        float fallSpeed = CharacterController.velocity.y - BaseVelocity.y;
         fallSpeed -= acceleration * Time.deltaTime;
 
         if (-fallSpeed > maxSpeed)
@@ -138,8 +99,8 @@ public class CharacterLocomotion : MonoBehaviour
 
     private void Update()
     {
-        _characterController.Move(_locomotionState.Move() * Time.deltaTime);
-        if (_characterController.isGrounded)
+        _locomotionState.Move();
+        if (CharacterController.isGrounded)
         {
             _locomotionState.Ground();
         }
@@ -152,6 +113,6 @@ public class CharacterLocomotion : MonoBehaviour
     private void Start()
     {
         ChangeState<RunningState>();
-        _characterController = GetComponentInParent<CharacterController>();
+        CharacterController = GetComponentInParent<CharacterController>();
     }
 }

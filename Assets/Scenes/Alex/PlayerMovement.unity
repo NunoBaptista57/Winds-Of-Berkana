@@ -1813,7 +1813,9 @@ GameObject:
   - component: {fileID: 1825963078}
   - component: {fileID: 1825963080}
   - component: {fileID: 1825963077}
+  - component: {fileID: 1825963083}
   - component: {fileID: 1825963081}
+  - component: {fileID: 1825963082}
   m_Layer: 0
   m_Name: Locomotion
   m_TagString: Untagged
@@ -1848,11 +1850,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8059e4db42018274b998d7b38c4b40f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpForce: 15
-  _acceleration: 5
+  _acceleration: 50
   _maxSpeed: 10
-  _deceleration: 6
-  _rotationSpeed: 10
+  _deceleration: 60
+  _rotationSpeed: 15
 --- !u!114 &1825963078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1882,6 +1883,7 @@ MonoBehaviour:
   BaseRotation: 0
   BaseVelocity: {x: 0, y: 0, z: 0}
   Body: {fileID: 9182904697430485238}
+  CharacterController: {fileID: 0}
   Input: {x: 0, y: 0}
 --- !u!114 &1825963081
 MonoBehaviour:
@@ -1896,13 +1898,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gravity: 30
-  _stoppingJumpForce: 5
   _maxFallSpeed: 10
-  _acceleration: 3
+  _acceleration: 30
   _maxSpeed: 10
-  _deceleration: 4
+  _deceleration: 40
   _rotationSpeed: 3
   CanStopJump: 0
+--- !u!114 &1825963082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825963075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d417b281098fe41bb6aac0e5ef0fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gravity: 30
+  _maxFallSpeed: 3
+  _acceleration: 50
+  _maxSpeed: 10
+  _deceleration: 50
+  _rotationSpeed: 10
+--- !u!114 &1825963083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825963075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98439946a0ced174cb7f88361bfb75db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gravity: 30
+  _jumpForce: 10
+  _stoppingJumpForce: 7
+  _acceleration: 30
+  _maxSpeed: 10
+  _deceleration: 40
+  _rotationSpeed: 3
 --- !u!1 &1911166517
 GameObject:
   m_ObjectHideFlags: 0
@@ -8657,7 +8695,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9072376626011936574}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15926243, y: -0.6434376, z: 0.13929407, w: 0.735677}
+  m_LocalRotation: {x: 0.15926245, y: -0.6434377, z: 0.13929409, w: 0.735677}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
