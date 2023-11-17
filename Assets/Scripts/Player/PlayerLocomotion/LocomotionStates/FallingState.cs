@@ -39,6 +39,11 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     }
 
+    public void Walk(bool walk)
+    {
+
+    }
+
     public void Fall()
     {
     }

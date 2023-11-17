@@ -37,6 +37,11 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     }
 
+    public void Walk(bool walk)
+    {
+
+    }
+
     public void Fall()
     {
     }

@@ -32,6 +32,14 @@ public class WalkingState : MonoBehaviour, ILocomotionState
 
     }
 
+    public void Walk(bool walk)
+    {
+        if (!walk)
+        {
+            _characterLocomotion.ChangeState<RunningState>();
+        }
+    }
+
     public void Fall()
     {
         GetComponent<FallingState>().CanStopJump = false;

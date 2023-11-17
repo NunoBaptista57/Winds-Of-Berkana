@@ -70,6 +70,11 @@ public class JumpingState : MonoBehaviour, ILocomotionState
 
     }
 
+    public void Walk(bool walk)
+    {
+
+    }
+
     public void StartState()
     {
         _jump = true;

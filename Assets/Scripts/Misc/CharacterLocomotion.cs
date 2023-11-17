@@ -27,6 +27,11 @@ public class CharacterLocomotion : MonoBehaviour
         _locomotionState.Run();
     }
 
+    public void Walk(bool walk)
+    {
+        _locomotionState.Walk(walk);
+    }
+
     public void ChangeState<T>() where T : MonoBehaviour, ILocomotionState
     {
         _locomotionState = GetComponent<T>();

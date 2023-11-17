@@ -44,6 +44,14 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     }
 
+    public void Walk(bool walk)
+    {
+        if (walk)
+        {
+            _characterLocomotion.ChangeState<WalkingState>();
+        }
+    }
+
     public void StartState()
     {
 
