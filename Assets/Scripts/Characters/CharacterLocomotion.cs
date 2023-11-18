@@ -1,3 +1,4 @@
+using System;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
@@ -98,7 +99,7 @@ public class CharacterLocomotion : MonoBehaviour
         float newAngle = Body.transform.eulerAngles.y - BaseRotation;
         transform.parent.rotation = Quaternion.Euler(transform.parent.rotation.x, BaseRotation, transform.parent.rotation.z);
         float targetAngle = Vector2.SignedAngle(Input, Vector2.up);
-        newAngle = Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed);
+        newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed));
         Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
     }
 

@@ -12,6 +12,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     private CharacterLocomotion _characterLocomotion;
     private bool _jump = false;
     private bool _stopJump = false;
+    private bool _walk = false;
 
     public void StartJump()
     {
@@ -26,6 +27,18 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     public void Move()
     {
         _characterLocomotion.Rotate(_rotationSpeed);
+
+        float acceleration = _acceleration;
+        float maxSpeed = _maxSpeed;
+        float deceleration = _deceleration;
+
+        if (_walk)
+        {
+            acceleration /= 2;
+            maxSpeed /= 2;
+            deceleration /= 2;
+        }
+
         Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
         newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _gravity, _gravity);
 
@@ -72,7 +85,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
 
     public void Walk(bool walk)
     {
-
+        _walk = walk;
     }
 
     public void StartState()

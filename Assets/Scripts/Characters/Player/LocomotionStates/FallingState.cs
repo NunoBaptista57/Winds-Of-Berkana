@@ -9,6 +9,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
     [HideInInspector] public bool CanStopJump = false;
+    private bool _walk = false;
     private CharacterLocomotion _characterLocomotion;
 
     public void StartState()
@@ -29,6 +30,18 @@ public class FallingState : MonoBehaviour, ILocomotionState
     public void Move()
     {
         _characterLocomotion.Rotate(_rotationSpeed);
+
+        float acceleration = _acceleration;
+        float maxSpeed = _maxSpeed;
+        float deceleration = _deceleration;
+
+        if (_walk)
+        {
+            acceleration /= 2;
+            maxSpeed /= 2;
+            deceleration /= 2;
+        }
+
         Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
         newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _maxFallSpeed, _gravity);
         _characterLocomotion.CharacterController.Move(newVelocity * Time.deltaTime);
@@ -41,7 +54,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void Walk(bool walk)
     {
-
+        _walk = walk;
     }
 
     public void Fall()

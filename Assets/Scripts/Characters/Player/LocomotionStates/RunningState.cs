@@ -7,6 +7,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
+    private bool _walk = false;
 
     private CharacterLocomotion _characterLocomotion;
 
@@ -23,6 +24,18 @@ public class RunningState : MonoBehaviour, ILocomotionState
     public void Move()
     {
         _characterLocomotion.Rotate(_rotationSpeed);
+
+        float acceleration = _acceleration;
+        float maxSpeed = _maxSpeed;
+        float deceleration = _deceleration;
+
+        if (_walk)
+        {
+            acceleration /= 2;
+            maxSpeed /= 2;
+            deceleration /= 2;
+        }
+
         Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
         newVelocity.y -= 0.1f; // So that the CharaterController detects the ground
         _characterLocomotion.CharacterController.Move(newVelocity * Time.deltaTime);
@@ -46,10 +59,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void Walk(bool walk)
     {
-        if (walk)
-        {
-            _characterLocomotion.ChangeState<WalkingState>();
-        }
+        _walk = walk;
     }
 
     public void StartState()
