@@ -1,4 +1,5 @@
 using System;
+using tripolygon.UModelerLite;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
@@ -53,6 +54,10 @@ public class CharacterLocomotion : MonoBehaviour
             if (friction.normalized == newVelocity.normalized)
             {
                 newVelocity = friction;
+            }
+            else
+            {
+                newVelocity = Vector2.zero;
             }
         }
 
@@ -109,9 +114,26 @@ public class CharacterLocomotion : MonoBehaviour
         if (CharacterController.isGrounded)
         {
             _locomotionState.Ground();
+
+            Vector3 p1 = transform.position + CharacterController.center;
+
+            // Cast a sphere wrapping character controller 10 meters forward
+            // to see if it is about to hit anything.
+            if (Physics.SphereCast(p1, CharacterController.height / 2, -transform.up, out RaycastHit hit, 1))
+            {
+                if (hit.rigidbody != null)
+                {
+                    BaseVelocity = hit.rigidbody.velocity;
+                }
+                else
+                {
+                    BaseVelocity = Vector3.zero;
+                }
+            }
         }
         else
         {
+            BaseVelocity = Vector3.zero;
             _locomotionState.Fall();
         }
     }
