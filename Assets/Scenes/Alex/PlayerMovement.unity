@@ -1499,8 +1499,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57deee37cf04759499dd58ffc288f411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 100
-  _distance: 10
+  _speed: 10
+  _distance: 20
 --- !u!65 &1477230219
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1609,11 +1609,11 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 116
-  m_CollisionDetection: 0
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 2
 --- !u!1 &1547803058
 GameObject:
   m_ObjectHideFlags: 0
@@ -2051,7 +2051,7 @@ MonoBehaviour:
   _maxFallSpeed: 10
   _acceleration: 30
   _maxSpeed: 10
-  _deceleration: 40
+  _deceleration: 5
   _rotationSpeed: 3
   CanStopJump: 0
 --- !u!114 &1825963082
@@ -2089,7 +2089,7 @@ MonoBehaviour:
   _stoppingJumpForce: 7
   _acceleration: 30
   _maxSpeed: 10
-  _deceleration: 40
+  _deceleration: 5
   _rotationSpeed: 3
 --- !u!1 &1911166517
 GameObject:
