@@ -91,6 +91,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     public void StartState()
     {
         _jump = true;
+        _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.jumping);
     }
 
     public void Start()

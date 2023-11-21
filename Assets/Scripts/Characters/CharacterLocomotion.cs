@@ -10,6 +10,7 @@ public class CharacterLocomotion : MonoBehaviour
     public float BaseRotation = 0;
     public Vector3 BaseVelocity = Vector3.zero;
     public Transform Body;
+    public PlayerAnimation PlayerAnimation;
     [HideInInspector] public CharacterController CharacterController;
     public Vector2 Input;
     private ILocomotionState _locomotionState;
@@ -100,6 +101,10 @@ public class CharacterLocomotion : MonoBehaviour
         {
             return;
         }
+        else if (CharacterController.velocity.x == 0 && CharacterController.velocity.z == 0)
+        {
+            rotationSpeed = 360f;
+        }
 
         float newAngle = Body.transform.eulerAngles.y - BaseRotation;
         transform.parent.rotation = Quaternion.Euler(transform.parent.rotation.x, BaseRotation, transform.parent.rotation.z);
@@ -114,26 +119,9 @@ public class CharacterLocomotion : MonoBehaviour
         if (CharacterController.isGrounded)
         {
             _locomotionState.Ground();
-
-            Vector3 p1 = transform.position + CharacterController.center;
-
-            // Cast a sphere wrapping character controller 10 meters forward
-            // to see if it is about to hit anything.
-            if (Physics.SphereCast(p1, CharacterController.height / 2, -transform.up, out RaycastHit hit, 1))
-            {
-                if (hit.rigidbody != null)
-                {
-                    BaseVelocity = hit.rigidbody.velocity;
-                }
-                else
-                {
-                    BaseVelocity = Vector3.zero;
-                }
-            }
         }
         else
         {
-            BaseVelocity = Vector3.zero;
             _locomotionState.Fall();
         }
     }

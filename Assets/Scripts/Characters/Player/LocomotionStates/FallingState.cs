@@ -14,7 +14,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void StartState()
     {
-
+        _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.falling);
     }
 
     public void StartJump()

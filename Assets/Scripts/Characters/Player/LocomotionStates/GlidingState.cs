@@ -8,12 +8,13 @@ public class GlidingState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
+    [SerializeField] private GameObject _glider;
     private bool _walk = false;
     private CharacterLocomotion _characterLocomotion;
 
     public void StartState()
     {
-
+        _glider.SetActive(true);
     }
 
     public void StartJump()
@@ -22,6 +23,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void StopJump()
     {
+        _glider.SetActive(false);
         _characterLocomotion.ChangeState<FallingState>();
     }
 
@@ -62,6 +64,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
     public void Ground()
     {
         _characterLocomotion.ChangeState<RunningState>();
+        _glider.SetActive(false);
     }
 
     private void Start()

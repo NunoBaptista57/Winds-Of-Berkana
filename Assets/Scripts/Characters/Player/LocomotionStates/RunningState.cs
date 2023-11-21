@@ -1,4 +1,5 @@
 using System;
+using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 
 public class RunningState : MonoBehaviour, ILocomotionState
@@ -24,7 +25,6 @@ public class RunningState : MonoBehaviour, ILocomotionState
     public void Move()
     {
         _characterLocomotion.Rotate(_rotationSpeed);
-
         float acceleration = _acceleration;
         float maxSpeed = _maxSpeed;
         float deceleration = _deceleration;
@@ -64,7 +64,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void StartState()
     {
-
+        _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.idle);
     }
 
     private void Start()
