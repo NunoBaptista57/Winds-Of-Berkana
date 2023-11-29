@@ -65,7 +65,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
             _characterLocomotion.ChangeState<FallingState>();
         }
 
-        _characterLocomotion.CharacterController.Move(newVelocity * Time.deltaTime);
+        _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
     }
 
     public void Fall()
@@ -91,7 +91,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     public void StartState()
     {
         _jump = true;
-        _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.jumping);
+        // _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.jumping);
     }
 
     public void Start()

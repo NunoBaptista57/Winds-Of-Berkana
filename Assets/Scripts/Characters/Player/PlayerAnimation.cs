@@ -3,25 +3,19 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    private Animator _animator;
+    [HideInInspector] public Animator Animator;
     private CharacterController _characterController;
 
 
     public void ChangeAnimation(AnimationState animationState)
     {
-        _animator.Play(animationState.ToString());
+        Animator.Play(animationState.ToString());
     }
 
-    private void Update()
+    private void Awake()
     {
-        Vector2 horizontalSpeed = new(_characterController.velocity.x, _characterController.velocity.z);
-        _animator.SetFloat("HorizontalSpeed", horizontalSpeed.magnitude);
-    }
-
-    private void Start()
-    {
-        _animator = GetComponent<Animator>();
         _characterController = GetComponentInParent<CharacterController>();
+        Animator = GetComponent<Animator>();
     }
 
     public enum AnimationState

@@ -24,10 +24,10 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void Move()
     {
-        _characterLocomotion.Rotate(_rotationSpeed);
         float acceleration = _acceleration;
         float maxSpeed = _maxSpeed;
         float deceleration = _deceleration;
+        float rotationSpeed = _rotationSpeed;
 
         if (_walk)
         {
@@ -37,8 +37,23 @@ public class RunningState : MonoBehaviour, ILocomotionState
         }
 
         Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
+        if (newVelocity.magnitude <= _maxSpeed / 2)
+        {
+            rotationSpeed *= 4;
+        }
+
+        Vector3 localVelocity = newVelocity - _characterLocomotion.BaseVelocity;
+        float horizontalSpeed = localVelocity.magnitude;
+        if (_characterLocomotion.Input == Vector2.zero)
+        {
+            horizontalSpeed = 0;
+        }
+
+        _characterLocomotion.PlayerAnimation.Animator.SetFloat("HorizontalSpeed", horizontalSpeed);
+
+        _characterLocomotion.Rotate(rotationSpeed);
         newVelocity.y -= 0.1f; // So that the CharaterController detects the ground
-        _characterLocomotion.CharacterController.Move(newVelocity * Time.deltaTime);
+        _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
     }
 
     public void Run()
@@ -64,7 +79,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void StartState()
     {
-        _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.idle);
+        _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.running);
     }
 
     private void Start()

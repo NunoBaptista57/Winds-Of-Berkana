@@ -1,18 +1,21 @@
 using System;
+using AmplifyShaderEditor;
 using tripolygon.UModelerLite;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.TextCore.Text;
 
 public class CharacterLocomotion : MonoBehaviour
 {
     public float BaseRotation = 0;
+    public PlayerAnimation PlayerAnimation;
     public Vector3 BaseVelocity = Vector3.zero;
     public Transform Body;
-    public PlayerAnimation PlayerAnimation;
-    [HideInInspector] public CharacterController CharacterController;
     public Vector2 Input;
+    public Vector3 NewVelocity;
+    [HideInInspector] public CharacterController Controller;
     private ILocomotionState _locomotionState;
 
     public void StartJump()
@@ -39,12 +42,11 @@ public class CharacterLocomotion : MonoBehaviour
     {
         _locomotionState = GetComponent<T>();
         _locomotionState.StartState();
-        Debug.Log(_locomotionState);
     }
 
     public Vector3 GetNewHorizontalVelocity(float acceleration, float maxSpeed, float deceleration)
     {
-        Vector2 newVelocity = new(CharacterController.velocity.x, CharacterController.velocity.z);
+        Vector2 newVelocity = new(Controller.velocity.x, Controller.velocity.z);
         newVelocity -= new Vector2(BaseVelocity.x, BaseVelocity.z);
         Vector2 forward = new(Body.forward.x, Body.forward.z);
 
@@ -64,7 +66,7 @@ public class CharacterLocomotion : MonoBehaviour
 
         if (newVelocity.magnitude > maxSpeed)
         {
-            newVelocity -= deceleration * Time.deltaTime * newVelocity.normalized;
+            newVelocity -= deceleration / 2 * Time.deltaTime * newVelocity.normalized;
         }
         else if (Input != Vector2.zero)
         {
@@ -81,7 +83,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     public float GetNewVerticalSpeed(float acceleration, float maxSpeed, float deceleration)
     {
-        float fallSpeed = CharacterController.velocity.y - BaseVelocity.y;
+        float fallSpeed = Controller.velocity.y - BaseVelocity.y;
         fallSpeed -= acceleration * Time.deltaTime;
 
         if (-fallSpeed > maxSpeed)
@@ -101,10 +103,6 @@ public class CharacterLocomotion : MonoBehaviour
         {
             return;
         }
-        else if (CharacterController.velocity.x == 0 && CharacterController.velocity.z == 0)
-        {
-            rotationSpeed = 360f;
-        }
 
         float newAngle = Body.transform.eulerAngles.y - BaseRotation;
         transform.parent.rotation = Quaternion.Euler(transform.parent.rotation.x, BaseRotation, transform.parent.rotation.z);
@@ -116,19 +114,36 @@ public class CharacterLocomotion : MonoBehaviour
     private void Update()
     {
         _locomotionState.Move();
-        if (CharacterController.isGrounded)
+        if (Controller.isGrounded)
         {
-            _locomotionState.Ground();
+            Vector3 spherePosition = transform.position + Controller.center + Vector3.up * (-Controller.height * 0.5F + Controller.radius + 0.02f);
+            if (Physics.SphereCast(spherePosition, Controller.radius, Vector3.down, out RaycastHit hit, 3))
+            {
+                if (hit.transform.gameObject.TryGetComponent<MovingPlatform>(out MovingPlatform movingPlatform))
+                {
+                    BaseVelocity = movingPlatform.Velocity;
+                }
+                _locomotionState.Ground();
+            }
         }
         else
         {
+            BaseVelocity = Vector3.zero;
             _locomotionState.Fall();
         }
+
+        Controller.Move(NewVelocity);
+        NewVelocity = Vector3.zero;
     }
 
     private void Start()
     {
+        NewVelocity = Vector3.zero;
         ChangeState<RunningState>();
-        CharacterController = GetComponentInParent<CharacterController>();
+    }
+
+    private void Awake()
+    {
+        Controller = GetComponentInParent<CharacterController>();
     }
 }

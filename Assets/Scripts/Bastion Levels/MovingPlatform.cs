@@ -1,29 +1,35 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
+    [SerializeField] private float _rotationSpeed = 5f;
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _distance = 10f;
-    private Vector3 _direction;
+    [SerializeField] private bool _rotate = false;
+    [SerializeField] private bool _move = false;
+    private Vector3 _direction = Vector3.forward;
     private Vector3 _initialPosition;
-    private Rigidbody _rigidbody;
+    public Vector3 Velocity = Vector3.zero;
+    private Vector3 _lastPosition = Vector3.zero;
 
     private void Update()
     {
-        _rigidbody.MovePosition(transform.position + _speed * Time.deltaTime * _direction);
-        if (Vector3.Distance(transform.position, _initialPosition) >= _distance)
+        transform.Translate(Time.deltaTime * _speed * _direction);
+        if (Vector3.Distance(_initialPosition, transform.position) > _distance)
         {
             _direction *= -1;
-            _initialPosition = transform.position;
         }
+        Velocity = (transform.position - _lastPosition) / Time.deltaTime;
+        _lastPosition = transform.position;
     }
 
     private void Start()
     {
         _direction = transform.forward;
         _initialPosition = transform.position;
-        _rigidbody = GetComponent<Rigidbody>();
+        _initialPosition = transform.position;
     }
 }
