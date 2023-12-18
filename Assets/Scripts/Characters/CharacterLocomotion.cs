@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
 
 public class CharacterLocomotion : MonoBehaviour
 {
@@ -117,12 +118,8 @@ public class CharacterLocomotion : MonoBehaviour
         if (Controller.isGrounded)
         {
             Vector3 spherePosition = transform.position + Controller.center + Vector3.up * (-Controller.height * 0.5F + Controller.radius + 0.02f);
-            if (Physics.SphereCast(spherePosition, Controller.radius, Vector3.down, out RaycastHit hit, 3))
+            if (Physics.SphereCast(spherePosition, Controller.radius, Vector3.down, out RaycastHit _, 3))
             {
-                if (hit.transform.gameObject.TryGetComponent<MovingPlatform>(out MovingPlatform movingPlatform))
-                {
-                    BaseVelocity = movingPlatform.Velocity;
-                }
                 _locomotionState.Ground();
             }
         }

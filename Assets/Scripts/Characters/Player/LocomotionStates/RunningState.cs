@@ -36,10 +36,10 @@ public class RunningState : MonoBehaviour, ILocomotionState
             deceleration /= 2;
         }
 
-        Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
+        Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(acceleration, maxSpeed, deceleration);
         if (newVelocity.magnitude <= _maxSpeed / 2)
         {
-            rotationSpeed *= 4;
+            rotationSpeed = 180f;
         }
 
         Vector3 localVelocity = newVelocity - _characterLocomotion.BaseVelocity;
