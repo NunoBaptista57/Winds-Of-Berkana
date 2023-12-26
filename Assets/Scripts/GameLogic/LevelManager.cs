@@ -40,11 +40,11 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case GameState.Load:
-                ServiceLocator.instance.GetService<SaveSystem>().Load();
+                ServiceLocator.Instance.GetService<SaveSystem>().Load();
                 break;
 
             case GameState.Save:
-                ServiceLocator.instance.GetService<SaveSystem>().Save();
+                ServiceLocator.Instance.GetService<SaveSystem>().Save();
                 break;
 
             default:

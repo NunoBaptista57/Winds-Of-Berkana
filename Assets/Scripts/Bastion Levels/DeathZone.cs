@@ -6,7 +6,7 @@ public class DeathZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Death);
+            ServiceLocator.Instance.GetService<LevelManager>().UpdateGameState(GameState.Death);
         }
     }
 }

@@ -8,7 +8,6 @@ public class FallingState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
-    [HideInInspector] public bool CanStopJump = false;
     private bool _walk = false;
     private CharacterLocomotion _characterLocomotion;
 
@@ -66,7 +65,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
         _characterLocomotion.ChangeState<RunningState>();
     }
 
-    private void Start()
+    private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
     }

@@ -56,7 +56,7 @@ public class MainMenuHandler : MonoBehaviour
 
     public void HandlePause()
     {
-        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Paused);
+        ServiceLocator.Instance.GetService<LevelManager>().UpdateGameState(GameState.Paused);
     }
 
     public void Resume()

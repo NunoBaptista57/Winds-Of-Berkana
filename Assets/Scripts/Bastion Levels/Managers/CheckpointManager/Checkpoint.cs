@@ -9,7 +9,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint = RespawnPosition.position;
+            ServiceLocator.Instance.GetService<CheckpointManager>().CurrentCheckpoint = RespawnPosition.position;
         }
     }
 }

@@ -27,7 +27,7 @@ public class SanctumEntrance : MonoBehaviour, ISavable
             return;
         }
 
-        if (ServiceLocator.instance.GetService<KeyManager>().CollectedKeys <= 0)
+        if (ServiceLocator.Instance.GetService<KeyManager>().CollectedKeys <= 0)
         {
             return;
         }
@@ -37,9 +37,9 @@ public class SanctumEntrance : MonoBehaviour, ISavable
 
     public void PlaceKeys()
     {
-        for (int i = PlacedKeys; i < ServiceLocator.instance.GetService<KeyManager>().CollectedKeys; i++)
+        for (int i = PlacedKeys; i < ServiceLocator.Instance.GetService<KeyManager>().CollectedKeys; i++)
         {
-            ServiceLocator.instance.GetService<Bastion1Manager>().PickUpKey(i + 1);
+            ServiceLocator.Instance.GetService<Bastion1Manager>().PickUpKey(i + 1);
             PlaceKey(_altars[i]);
             PlacedKeys++;
         }

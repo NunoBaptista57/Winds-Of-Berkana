@@ -35,7 +35,7 @@ public class LeverManager : MonoBehaviour, ISavable
             if (!lever.DoorOpened && lever.IsActivated)
             {
                 lever.DoorOpened = true;
-                ServiceLocator.instance.GetService<Bastion1Manager>().ActivateLever(lever.ID);
+                ServiceLocator.Instance.GetService<Bastion1Manager>().ActivateLever(lever.ID);
             }
         }
     }

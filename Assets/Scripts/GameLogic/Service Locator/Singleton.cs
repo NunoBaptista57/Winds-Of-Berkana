@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Singleton<T> : MonoBehaviour
 {
     private static T _instance;
-    public static T instance
+    public static T Instance
     {
         get
         {
@@ -30,7 +30,7 @@ public abstract class Singleton<T> : MonoBehaviour
         var instanceGO = FindObjectsOfType<Singleton<T>>();
         if (instanceGO.Length > 1)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
 

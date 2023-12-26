@@ -39,7 +39,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
             deceleration /= 2;
         }
 
-        Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
+        Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(acceleration, maxSpeed, deceleration);
         newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _gravity, _gravity);
 
         if (_jump)
@@ -94,7 +94,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
         // _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.jumping);
     }
 
-    public void Start()
+    public void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
     }

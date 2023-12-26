@@ -8,7 +8,7 @@ public class Beacon : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             _entered = true;
             Entered();
@@ -18,7 +18,7 @@ public class Beacon : MonoBehaviour
     public void Entered()
     {
         gameObject.SetActive(false);
-        ServiceLocator.instance.GetService<BoatTutorialManager>().Next();
+        ServiceLocator.Instance.GetService<BoatTutorialManager>().Next();
     }
 
     public void Appear()

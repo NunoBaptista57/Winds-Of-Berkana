@@ -67,7 +67,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
         _glider.SetActive(false);
     }
 
-    private void Start()
+    private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
     }

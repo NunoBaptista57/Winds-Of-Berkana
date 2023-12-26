@@ -4,8 +4,6 @@ using UnityEngine;
 public class PlayerAnimation : MonoBehaviour
 {
     [HideInInspector] public Animator Animator;
-    private CharacterController _characterController;
-
 
     public void ChangeAnimation(AnimationState animationState)
     {
@@ -14,7 +12,6 @@ public class PlayerAnimation : MonoBehaviour
 
     private void Awake()
     {
-        _characterController = GetComponentInParent<CharacterController>();
         Animator = GetComponent<Animator>();
     }
 

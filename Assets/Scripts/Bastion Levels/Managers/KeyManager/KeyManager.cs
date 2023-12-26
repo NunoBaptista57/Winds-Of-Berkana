@@ -34,7 +34,7 @@ public class KeyManager : MonoBehaviour, ISavable
         }
 
         CollectedKeys = nKeys;
-        ServiceLocator.instance.GetService<SphereColor>().UpdateKeys();
+        ServiceLocator.Instance.GetService<SphereColor>().UpdateKeys();
     }
 
     private void Start()

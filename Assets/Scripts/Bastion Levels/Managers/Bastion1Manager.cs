@@ -6,21 +6,21 @@ using UnityEngine;
 
 public class Bastion1Manager : MonoBehaviour, ISavable
 {
-    Transform player;
-    public LevelState levelState;
-    Vector3 originalCameraPosition;
+    public LevelState LevelState;
     public event Action<LevelState> OnLevelStateChanged;
+    private Vector3 _originalCameraPosition;
+    private Transform _player;
     private LevelManager _levelManager;
 
     public SaveFile Save(SaveFile saveFile)
     {
-        saveFile.LevelState = levelState;
+        saveFile.LevelState = LevelState;
         return saveFile;
     }
 
     public void Load(SaveFile saveFile)
     {
-        player.position = saveFile.Checkpoint;
+        _player.position = saveFile.Checkpoint;
         UpdateLevelState(saveFile.LevelState);
     }
 
@@ -58,21 +58,21 @@ public class Bastion1Manager : MonoBehaviour, ISavable
         }
     }
 
-    private void Start()
+    private void Awake()
     {
-        _levelManager = ServiceLocator.instance.GetService<LevelManager>();
+        _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
         _levelManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         _levelManager.UpdateGameState(GameState.Play);
 
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        _player.position = ServiceLocator.Instance.GetService<CheckpointManager>().CurrentCheckpoint;
 
-        originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
+        _originalCameraPosition = GameObject.Find("Cameras").GetComponent<Transform>().position;
     }
 
     private void UpdateLevelState(LevelState newState)
     {
-        levelState = newState;
+        LevelState = newState;
         OnLevelStateChanged?.Invoke(newState);
     }
 
@@ -85,10 +85,10 @@ public class Bastion1Manager : MonoBehaviour, ISavable
                 break;
 
             case GameState.Respawn:
-                player.position = ServiceLocator.instance.GetService<CheckpointManager>().CurrentCheckpoint;
-                player.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                GameObject.Find("Cameras").GetComponent<Transform>().position = originalCameraPosition;
-                ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
+                _player.position = ServiceLocator.Instance.GetService<CheckpointManager>().CurrentCheckpoint;
+                _player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                GameObject.Find("Cameras").GetComponent<Transform>().position = _originalCameraPosition;
+                ServiceLocator.Instance.GetService<LevelManager>().UpdateGameState(GameState.Play);
                 break;
         }
 
@@ -107,7 +107,7 @@ public class Bastion1Manager : MonoBehaviour, ISavable
             GameObject.Find("Death Camera").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 8;
         }
 
-        ServiceLocator.instance.GetService<LevelManager>().UpdateGameState(GameState.Respawn);
+        ServiceLocator.Instance.GetService<LevelManager>().UpdateGameState(GameState.Respawn);
     }
 
     private void OnDisable()

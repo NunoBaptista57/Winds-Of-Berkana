@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SphereColor : MonoBehaviour
 {
-    private Key closestKey;
+    private Key _closestKey;
     private bool _collectedKeys;
     private List<Key> _keys;
 
@@ -30,7 +30,7 @@ public class SphereColor : MonoBehaviour
     // Get Closest key from the List
     public void GetClosestKey()
     {
-        _keys = ServiceLocator.instance.GetService<KeyManager>().Keys;
+        _keys = ServiceLocator.Instance.GetService<KeyManager>().Keys;
 
         float maxDistance = float.MaxValue;
 
@@ -46,7 +46,7 @@ public class SphereColor : MonoBehaviour
             if (distance < maxDistance)
             {
                 maxDistance = distance;
-                closestKey = p;
+                _closestKey = p;
             }
         }
     }
@@ -63,9 +63,9 @@ public class SphereColor : MonoBehaviour
     private void ChangeColor()
     {
         // Get Distance to closest sphere
-        if (closestKey != null)
+        if (_closestKey != null)
         {
-            var currentDistance = Vector3.Distance(closestKey.transform.position, transform.position);
+            var currentDistance = Vector3.Distance(_closestKey.transform.position, transform.position);
 
             // Change color of the sphere incrementally
             if (currentDistance > 30)

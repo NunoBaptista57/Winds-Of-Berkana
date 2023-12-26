@@ -25,12 +25,12 @@ public class MovingTree : MonoBehaviour, IDoor
 
     private void Start()
     {
-        ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged += CheckState;
+        ServiceLocator.Instance.GetService<Bastion1Manager>().OnLevelStateChanged += CheckState;
     }
 
     private void OnDestroy()
     {
-        ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged -= CheckState;
+        ServiceLocator.Instance.GetService<Bastion1Manager>().OnLevelStateChanged -= CheckState;
     }
 
     private void CheckState(LevelState levelState)

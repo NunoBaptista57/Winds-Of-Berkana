@@ -31,11 +31,11 @@ public class DoorTest : MonoBehaviour, IDoor
 
     private void Start()
     {
-        ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged += Activate;
+        ServiceLocator.Instance.GetService<Bastion1Manager>().OnLevelStateChanged += Activate;
     }
 
     private void OnDisable()
     {
-        ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged -= Activate;
+        ServiceLocator.Instance.GetService<Bastion1Manager>().OnLevelStateChanged -= Activate;
     }
 }

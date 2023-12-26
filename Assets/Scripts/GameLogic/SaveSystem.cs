@@ -40,8 +40,7 @@ public class SaveSystem : MonoBehaviour
     {
         foreach (GameObject _gameObject in _toSave)
         {
-            ISavable savable = _gameObject.GetComponent<ISavable>();
-            if (savable == null)
+            if (!TryGetComponent<ISavable>(out ISavable savable))
             {
                 Debug.Log(_gameObject.name + " has no ISavable interface.");
             }

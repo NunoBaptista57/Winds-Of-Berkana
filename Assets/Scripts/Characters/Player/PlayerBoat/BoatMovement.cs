@@ -48,16 +48,11 @@ public class BoatMovement : MonoBehaviour
         CurrentMaxVelocity = MaxVelocity;
     }
 
-    void Update()
-    {
-
-    }
-
     void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.P))
         {
-            if (CurrentMaxVelocity < MaxVelocity*2)
+            if (CurrentMaxVelocity < MaxVelocity * 2)
             {
                 CurrentMaxVelocity += .1f;
             }
@@ -95,7 +90,7 @@ public class BoatMovement : MonoBehaviour
 
     void OnTurn(InputValue value)
     {
-       // Debug.Log("Landing");
+        // Debug.Log("Landing");
         input.Turn = value.Get<float>();
     }
 

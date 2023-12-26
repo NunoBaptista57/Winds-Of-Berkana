@@ -30,7 +30,7 @@ public class Elevator : MonoBehaviour, IDoor
 
     private void Start()
     {
-        ServiceLocator.instance.GetService<Bastion1Manager>().OnLevelStateChanged += CallElevator;
+        ServiceLocator.Instance.GetService<Bastion1Manager>().OnLevelStateChanged += CallElevator;
         player = GameObject.FindGameObjectWithTag("Player");
         // TODO: FIX
         // player.GetComponent<MainPlayerInputHandler>().Interact += SendElevator;

@@ -9,7 +9,6 @@ public class RunningState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
     private bool _walk = false;
-
     private CharacterLocomotion _characterLocomotion;
 
     public void StartJump()
@@ -63,7 +62,6 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void Fall()
     {
-        GetComponent<FallingState>().CanStopJump = false;
         _characterLocomotion.ChangeState<FallingState>();
     }
 
@@ -82,7 +80,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
         _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.running);
     }
 
-    private void Start()
+    private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
     }

@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PauseMenu : MonoBehaviour
 {
     private GameObject _content;
-    private readonly LevelManager levelManager;
+    private readonly LevelManager _levelManager;
 
     public void Pause(InputAction.CallbackContext context)
     {
@@ -15,28 +15,28 @@ public class PauseMenu : MonoBehaviour
             return;
         }
         _content.SetActive(true);
-        levelManager.UpdateGameState(GameState.Paused);
+        _levelManager.UpdateGameState(GameState.Paused);
     }
     public void Resume()
     {
-        levelManager.UpdateGameState(GameState.Play);
+        _levelManager.UpdateGameState(GameState.Play);
     }
 
     public void Load()
     {
-        levelManager.UpdateGameState(GameState.Load);
-        levelManager.UpdateGameState(GameState.Play);
+        _levelManager.UpdateGameState(GameState.Load);
+        _levelManager.UpdateGameState(GameState.Play);
     }
 
     public void Save()
     {
-        levelManager.UpdateGameState(GameState.Save);
-        levelManager.UpdateGameState(GameState.Paused);
+        _levelManager.UpdateGameState(GameState.Save);
+        _levelManager.UpdateGameState(GameState.Paused);
     }
 
     public void Restart()
     {
-        levelManager.UpdateGameState(GameState.Remake);
+        _levelManager.UpdateGameState(GameState.Remake);
     }
 
     private void Start()
