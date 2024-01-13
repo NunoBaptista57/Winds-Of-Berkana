@@ -1,65 +1,29 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public event Action<GameState> OnGameStateChanged;
-    [SerializeField] private GameState _state;
+    private CheckpointManager _checkpointManager;
+    private PlayerManager _playerManager;
+    private BastionManager _bastionManager;
+    private InputManager _inputManager;
+    // TODO private BoatLevelManager _boatLevelManager;
 
-    public void UpdateGameState(GameState newState)
+    public void SpawnPlayer()
     {
-        GameState PreviousState = _state;
 
-        if (PreviousState == GameState.Paused)
-        {
-            Time.timeScale = 1;
-        }
-
-        switch (newState)
-        {
-            case GameState.Paused:
-                if (PreviousState == GameState.Paused)
-                {
-                    newState = GameState.Play;
-                }
-                else
-                {
-                    Time.timeScale = 0;
-                }
-                break;
-
-            case GameState.Victory:
-                // Transition Between modes
-                break;
-
-            case GameState.Remake:
-                RestartCurrentScene();
-                break;
-
-            case GameState.Load:
-                ServiceLocator.Instance.GetService<SaveSystem>().Load();
-                break;
-
-            case GameState.Save:
-                ServiceLocator.Instance.GetService<SaveSystem>().Save();
-                break;
-
-            default:
-                break;
-
-        }
-
-        _state = newState;
-        OnGameStateChanged?.Invoke(_state);
     }
 
-
-    public void RestartCurrentScene()
+    private void Awake()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        _checkpointManager = GetComponentInChildren<CheckpointManager>();
+        _playerManager = GetComponentInChildren<PlayerManager>();
+        _bastionManager = GetComponentInChildren<BastionManager>();
+        // TODO _boatLevelManager = GetComponentInChildren<BoatLevelManager>();
+    }
+
+    private void Start()
+    {
+        SpawnPlayer();
     }
 }
 

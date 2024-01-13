@@ -15,6 +15,10 @@ public abstract class BastionManager : MonoBehaviour
 
     public int GetCollectedKeys()
     {
+        if (KeyManager == null)
+        {
+            throw new NullReferenceException("KeyManager doesn't exist");
+        };
         int collectedKeys = 0;
         foreach (Key key in KeyManager.Keys)
         {
@@ -28,25 +32,53 @@ public abstract class BastionManager : MonoBehaviour
 
     public Bastion SaveBastion()
     {
-        Bastion bastionSave = new()
+        Bastion bastionSave = new();
+        if (LeverManager != null)
         {
-            Levers = LeverManager.SaveLevers(),
-            Doors = DoorManager.SaveDoors(),
-            Keys = KeyManager.SaveKeys(),
-            PlacedKeys = SanctumEntrance.PlacedKeys,
-            VitralIsComplete = VitralPuzzleManager.IsComplete
-        };
+            bastionSave.Levers = LeverManager.SaveLevers();
+        }
+        if (DoorManager != null)
+        {
+            bastionSave.Doors = DoorManager.SaveDoors();
+        }
+        if (KeyManager != null)
+        {
+            bastionSave.Keys = KeyManager.SaveKeys();
+        }
+        if (SanctumEntrance != null)
+        {
+            bastionSave.PlacedKeys = SanctumEntrance.PlacedKeys;
+        }
+        if (VitralPuzzleManager != null)
+        {
+            bastionSave.VitralIsComplete = VitralPuzzleManager.IsComplete;
+        }
         return bastionSave;
     }
 
     public void LoadBastion(Bastion bastion)
     {
-        LeverManager.LoadLevers(bastion.Levers);
-        DoorManager.LoadDoors(bastion.Doors);
-        KeyManager.LoadKeys(bastion.Keys);
-        SanctumEntrance.LoadAltars(bastion.PlacedKeys);
-        VitralPuzzleManager.IsComplete = bastion.VitralIsComplete;
-        VitralPuzzleManager.CompletedVitral();
+        if (LeverManager != null)
+        {
+            LeverManager.LoadLevers(bastion.Levers);
+        }
+        if (DoorManager != null)
+        {
+            DoorManager.LoadDoors(bastion.Doors);
+        }
+        if (KeyManager != null)
+        {
+            KeyManager.LoadKeys(bastion.Keys);
+        }
+        if (SanctumEntrance != null)
+        {
+            SanctumEntrance.LoadAltars(bastion.PlacedKeys);
+        }
+        if (VitralPuzzleManager != null)
+        {
+            VitralPuzzleManager.IsComplete = bastion.VitralIsComplete;
+            VitralPuzzleManager.CompletedVitral();
+        }
     }
     private void Awake()
     {
@@ -58,7 +90,7 @@ public abstract class BastionManager : MonoBehaviour
 
     private void Start()
     {
-        if (SanctumEntrance.KeysToOpen != 0)
+        if (SanctumEntrance != null && SanctumEntrance.KeysToOpen != 0)
         {
             SanctumEntrance.KeysToOpen = KeyManager.Keys.Count;
         }
