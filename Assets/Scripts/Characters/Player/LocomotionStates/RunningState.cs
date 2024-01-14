@@ -48,11 +48,9 @@ public class RunningState : MonoBehaviour, ILocomotionState
             horizontalSpeed = 0;
         }
 
-        _characterLocomotion.PlayerAnimation.Animator.SetFloat("HorizontalSpeed", horizontalSpeed);
-
         _characterLocomotion.Rotate(rotationSpeed);
         newVelocity.y -= 0.1f; // So that the CharaterController detects the ground
-        _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
+        _characterLocomotion.Velocity += newVelocity * Time.deltaTime;
     }
 
     public void Run()
@@ -77,7 +75,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void StartState()
     {
-        _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.running);
+        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.running);
     }
 
     private void Awake()

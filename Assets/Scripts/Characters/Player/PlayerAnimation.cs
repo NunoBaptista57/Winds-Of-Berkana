@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
+public class CharacterAnimation : MonoBehaviour
 {
     [HideInInspector] public Animator Animator;
 

@@ -5,7 +5,7 @@ using UnityEngine.Windows;
 
 public class InputManager : MonoBehaviour
 {
-    private PlayerInput _playerInput;
+    private PlayerManager _playerManager;
     private PauseMenu _pauseMenu;
     private PlayerActions _playerActions;
 
@@ -13,13 +13,13 @@ public class InputManager : MonoBehaviour
     {
         _playerActions = new();
 
-        _playerInput = ServiceLocator.Instance.GetService<PlayerInput>();
+        _playerManager = ServiceLocator.Instance.GetService<PlayerManager>();
         _pauseMenu = ServiceLocator.Instance.GetService<PauseMenu>();
 
-        _playerActions.Character.Jump.started += _playerInput.Jump;
-        _playerActions.Character.Jump.canceled += _playerInput.Jump;
-        _playerActions.Character.Move.performed += _playerInput.Move;
-        _playerActions.Character.Run.performed += _playerInput.Run;
+        _playerActions.Character.Jump.started += _playerManager.Jump;
+        _playerActions.Character.Jump.canceled += _playerManager.Jump;
+        _playerActions.Character.Move.performed += _playerManager.Move;
+        _playerActions.Character.Run.performed += _playerManager.Run;
 
         _playerActions.UI.Pause.performed += _pauseMenu.Pause;
         _playerActions.Enable();
@@ -27,10 +27,10 @@ public class InputManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        _playerActions.Character.Jump.started -= _playerInput.Jump;
-        _playerActions.Character.Jump.canceled -= _playerInput.Jump;
-        _playerActions.Character.Move.performed -= _playerInput.Move;
-        _playerActions.Character.Run.performed -= _playerInput.Run;
+        _playerActions.Character.Jump.started -= _playerManager.Jump;
+        _playerActions.Character.Jump.canceled -= _playerManager.Jump;
+        _playerActions.Character.Move.performed -= _playerManager.Move;
+        _playerActions.Character.Run.performed -= _playerManager.Run;
 
         _playerActions.UI.Pause.performed -= _pauseMenu.Pause;
 

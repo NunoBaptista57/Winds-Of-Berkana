@@ -10,12 +10,12 @@ using UnityEngine.UIElements;
 
 public class CharacterLocomotion : MonoBehaviour
 {
+    public PlayerManager PlayerManager;
     public float BaseRotation = 0;
-    public PlayerAnimation PlayerAnimation;
     public Vector3 BaseVelocity = Vector3.zero;
     public Transform Body;
     public Vector2 Input;
-    public Vector3 NewVelocity;
+    public Vector3 Velocity;
     [HideInInspector] public CharacterController Controller;
     private ILocomotionState _locomotionState;
 
@@ -43,6 +43,11 @@ public class CharacterLocomotion : MonoBehaviour
     {
         _locomotionState = GetComponent<T>();
         _locomotionState.StartState();
+    }
+
+    public void ChangeAnimationState(CharacterAnimation.AnimationState animationState)
+    {
+        PlayerManager.ChangeAnimation(animationState);
     }
 
     public Vector3 GetNewHorizontalVelocity(float acceleration, float maxSpeed, float deceleration)
@@ -129,13 +134,13 @@ public class CharacterLocomotion : MonoBehaviour
             _locomotionState.Fall();
         }
 
-        Controller.Move(NewVelocity);
-        NewVelocity = Vector3.zero;
+        Controller.Move(Velocity);
+        Velocity = Vector3.zero;
     }
 
     private void Start()
     {
-        NewVelocity = Vector3.zero;
+        Velocity = Vector3.zero;
         ChangeState<RunningState>();
     }
 

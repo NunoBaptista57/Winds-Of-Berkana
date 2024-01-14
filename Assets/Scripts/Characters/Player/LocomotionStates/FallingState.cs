@@ -13,7 +13,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void StartState()
     {
-        _characterLocomotion.PlayerAnimation.ChangeAnimation(PlayerAnimation.AnimationState.falling);
+        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
     }
 
     public void StartJump()
@@ -43,7 +43,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
         Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
         newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _maxFallSpeed, _gravity);
-        _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
+        _characterLocomotion.Velocity += newVelocity * Time.deltaTime;
     }
 
     public void Run()
