@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0775cbb206825d541bf6c0297ee524ca, type: 3}
   m_Name: SplitToning
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   shadows:
     m_OverrideState: 1
     m_Value: {r: 0.19063722, g: 0.26415092, b: 0.2626166, a: 1}
@@ -272,16 +272,16 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   colorMode:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   color:
     m_OverrideState: 1
     m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   tint:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {r: 0.4009434, g: 1, b: 0.98255175, a: 1}
   maxFogDistance:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1303
   mipFogMaxMip:
     m_OverrideState: 0
@@ -293,29 +293,29 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1000
   baseHeight:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 55
   maximumHeight:
     m_OverrideState: 1
-    m_Value: 3272
+    m_Value: 500
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 2727
+    m_Value: 5000
   enableVolumetricFog:
     m_OverrideState: 1
     m_Value: 1
   albedo:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
   globalLightProbeDimmer:
     m_OverrideState: 1
     m_Value: 1
   depthExtent:
     m_OverrideState: 1
-    m_Value: 62.5
+    m_Value: 50
   denoisingMode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 3
   anisotropy:
     m_OverrideState: 0
     m_Value: 0
@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da5ab44aadfb1804db5fd470983ac1b8, type: 3}
   m_Name: LiftGammaGain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   lift:
     m_OverrideState: 0
     m_Value: {x: 1, y: 1, z: 1, w: 0}
@@ -383,21 +383,21 @@ MonoBehaviour:
     m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 2.6
+    m_Value: 0.6
   directLightingStrength:
     m_OverrideState: 1
-    m_Value: 0.193
+    m_Value: 0.1
   radius:
     m_OverrideState: 1
-    m_Value: 5
+    m_Value: 0.5
   spatialBilateralAggressiveness:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0.15
   temporalAccumulation:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   ghostingReduction:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0.455
   blurSharpness:
     m_OverrideState: 1
@@ -430,19 +430,19 @@ MonoBehaviour:
     m_Value: 1
   m_DirectionCount:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 4
   m_RayLength:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 20
   m_SampleCount:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 8
   m_Denoise:
     m_OverrideState: 1
     m_Value: 1
   m_DenoiserRadius:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.65
 --- !u!114 &-4133646322479470850
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -455,7 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b8bcdf71d7fafa419fca1ed162f5fc9, type: 3}
   m_Name: ColorAdjustments
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   postExposure:
     m_OverrideState: 0
     m_Value: 0
@@ -899,7 +899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f077503be6ae942a1e1245dbd53ea9, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   quality:
     m_OverrideState: 1
     m_Value: 1
@@ -945,7 +945,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b24b200358312b4fa1004e2431c2f1f, type: 3}
   m_Name: ShadowsMidtonesHighlights
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   shadows:
     m_OverrideState: 1
     m_Value: {x: 0.97, y: 0.9715, z: 1, w: -0.011827321}
@@ -983,18 +983,19 @@ MonoBehaviour:
   - {fileID: 775908757084544965}
   - {fileID: -7228873098663599672}
   - {fileID: -2330583811772693191}
-  - {fileID: 228826638526598095}
+  - {fileID: 6838107755243044217}
   - {fileID: -6770652086802910445}
-  - {fileID: -236286815870869555}
+  - {fileID: 4599320590654003711}
+  - {fileID: 9180366359804360287}
   - {fileID: -5025707035357223294}
+  - {fileID: 228826638526598095}
+  - {fileID: -236286815870869555}
   - {fileID: -78475058204934622}
   - {fileID: -5351102783638697938}
   - {fileID: -4133646322479470850}
   - {fileID: -7133050650455558888}
   - {fileID: -905604287026513964}
   - {fileID: -8591070566246673449}
-  - {fileID: 9180366359804360287}
-  - {fileID: 6838107755243044217}
 --- !u!114 &228826638526598095
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1007,7 +1008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f034cba68ab55e046ae1445a42f18c0e, type: 3}
   m_Name: IndirectLightingController
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   indirectDiffuseLightingMultiplier:
     m_OverrideState: 1
     m_Value: 0.54
@@ -1054,6 +1055,49 @@ MonoBehaviour:
   fogType:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &4599320590654003711
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddcec8a8eb2d684d833ac8f5d26aebd, type: 3}
+  m_Name: HDShadowSettings
+  m_EditorClassIdentifier: 
+  active: 1
+  maxShadowDistance:
+    m_OverrideState: 1
+    m_Value: 70
+  directionalTransmissionMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  cascadeShadowSplitCount:
+    m_OverrideState: 0
+    m_Value: 4
+  cascadeShadowSplit0:
+    m_OverrideState: 1
+    m_Value: 0.028571429
+  cascadeShadowSplit1:
+    m_OverrideState: 1
+    m_Value: 0.057142857
+  cascadeShadowSplit2:
+    m_OverrideState: 1
+    m_Value: 0.22857143
+  cascadeShadowBorder0:
+    m_OverrideState: 1
+    m_Value: 0.25
+  cascadeShadowBorder1:
+    m_OverrideState: 1
+    m_Value: 0.5
+  cascadeShadowBorder2:
+    m_OverrideState: 1
+    m_Value: 0.375
+  cascadeShadowBorder3:
+    m_OverrideState: 0
+    m_Value: 0
 --- !u!114 &6838107755243044217
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1066,13 +1110,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d08ce26990eb1a4a9177b860541e702, type: 3}
   m_Name: Exposure
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   mode:
     m_OverrideState: 1
     m_Value: 1
   meteringMode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 4
   luminanceSource:
     m_OverrideState: 1
     m_Value: 1
@@ -1084,10 +1128,10 @@ MonoBehaviour:
     m_Value: 0
   limitMin:
     m_OverrideState: 1
-    m_Value: -1
+    m_Value: 5
   limitMax:
     m_OverrideState: 1
-    m_Value: 13.52528
+    m_Value: 13
   curveMap:
     m_OverrideState: 1
     m_Value:
@@ -1171,10 +1215,10 @@ MonoBehaviour:
     m_Value: 1
   adaptationSpeedDarkToLight:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 4
   adaptationSpeedLightToDark:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 4
   weightTextureMask:
     m_OverrideState: 1
     m_Value: {fileID: 0}
@@ -1188,10 +1232,10 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   centerAroundExposureTarget:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
   proceduralCenter:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
   proceduralRadii:
     m_OverrideState: 1
@@ -1204,7 +1248,7 @@ MonoBehaviour:
     m_Value: 30
   proceduralSoftness:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 1
 --- !u!114 &9180366359804360287
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1217,40 +1261,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56b145d2b9ee1ac4f846968484e7485a, type: 3}
   m_Name: ContactShadows
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   quality:
     m_OverrideState: 1
     m_Value: 3
   enable:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   length:
     m_OverrideState: 1
-    m_Value: 0.15
+    m_Value: 0.05
   opacity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0.854
   distanceScaleFactor:
     m_OverrideState: 1
     m_Value: 0.5
   maxDistance:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 50
   minDistance:
     m_OverrideState: 1
     m_Value: 0
   fadeDistance:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 5
   fadeInDistance:
     m_OverrideState: 1
     m_Value: 0
   rayBias:
     m_OverrideState: 1
-    m_Value: 0.2
+    m_Value: 1
   thicknessScale:
     m_OverrideState: 1
     m_Value: 0.15
   m_SampleCount:
     m_OverrideState: 1
-    m_Value: 64
+    m_Value: 24
