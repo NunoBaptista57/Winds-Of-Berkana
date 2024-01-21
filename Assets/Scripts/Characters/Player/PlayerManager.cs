@@ -3,39 +3,28 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : CharacterManager
 {
-    public bool CanMove = true;
     public bool CanMoveCamera = true;
-    private PlayerInput _playerInput;
-    private CharacterAnimation _playerAnimation;
-    private CharacterLocomotion _playerLocomotion;
     [SerializeField] private float _deadzone = 0.2f;
     [SerializeField] private float _walkDeadzone = 0.5f;
     [SerializeField] private Transform _cameraPosition;
+    private PlayerActions _playerActions;
 
-    public void Jump(InputAction.CallbackContext context)
+    public void OnJump(InputAction.CallbackContext context)
     {
-        if (!CanMove)
-        {
-            return;
-        }
         if (context.started)
         {
-            _playerLocomotion.StartJump();
+            Jump(true);
         }
         else if (context.canceled)
         {
-            _playerLocomotion.StopJump();
+            Jump(false);
         }
     }
 
-    public void Move(InputAction.CallbackContext context)
+    public void OnMove(InputAction.CallbackContext context)
     {
-        if (!CanMove)
-        {
-            return;
-        }
         Vector2 input = context.ReadValue<Vector2>();
         if (input.magnitude < _deadzone)
         {
@@ -45,58 +34,46 @@ public class PlayerManager : MonoBehaviour
         {
             input = input.normalized * 0.5f;
         }
-
-        _playerLocomotion.Input = input;
+        Move(input);
     }
 
-    public void Walk(InputAction.CallbackContext context)
+    public void OnWalk(InputAction.CallbackContext context)
     {
-        if (!CanMove)
-        {
-            return;
-        }
         if (context.started)
         {
-            _playerLocomotion.Walk(true);
+            Walk(true);
         }
         else if (context.canceled)
         {
-            _playerLocomotion.Walk(false);
+            Walk(false);
         }
-    }
-
-    public void Run(InputAction.CallbackContext context)
-    {
-        if (!CanMove)
-        {
-            return;
-        }
-        _playerLocomotion.Run();
     }
 
     private void Update()
     {
-        if (!CanMoveCamera)
+        if (CanMoveCamera)
         {
-            return;
+            CharacterLocomotion.BaseRotation = MathF.Round(_cameraPosition.rotation.eulerAngles.y, 2);
         }
-        _playerLocomotion.BaseRotation = _cameraPosition.rotation.eulerAngles.y;
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        _playerLocomotion = GetComponent<CharacterLocomotion>();
+        _playerActions = new();
+
+        _playerActions.Character.Jump.started += OnJump;
+        _playerActions.Character.Jump.canceled += OnJump;
+        _playerActions.Character.Move.performed += OnMove;
+
+        _playerActions.Enable();
     }
 
-    public void ChangeAnimation(CharacterAnimation.AnimationState animationState)
+    private void OnDestroy()
     {
-        _playerAnimation.ChangeAnimation(animationState);
-    }
+        _playerActions.Character.Jump.started -= OnJump;
+        _playerActions.Character.Jump.canceled -= OnJump;
+        _playerActions.Character.Move.performed -= OnMove;
 
-    private void Awake()
-    {
-        _playerInput = GetComponentInChildren<PlayerInput>();
-        _playerAnimation = GetComponentInChildren<CharacterAnimation>();
-        _playerLocomotion = GetComponentInChildren<CharacterLocomotion>();
+        _playerActions.Disable();
     }
 }

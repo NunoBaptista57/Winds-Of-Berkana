@@ -1,18 +1,13 @@
 using System;
 using UnityEngine;
 
-public class CheckpointManager : MonoBehaviour, ISavable
+public class CheckpointManager : MonoBehaviour
 {
-    public Vector3 CurrentCheckpoint;
+    public Checkpoint CurrentCheckpoint;
 
-    public SaveFile Save(SaveFile saveFile)
+    public void ChangeCheckpoint(Checkpoint checkpoint)
     {
-        saveFile.Checkpoint = CurrentCheckpoint;
-        return saveFile;
-    }
-
-    public void Load(SaveFile saveFile)
-    {
-        CurrentCheckpoint = saveFile.Checkpoint;
+        CurrentCheckpoint = checkpoint;
+        // TODO AutoSave maybe...
     }
 }

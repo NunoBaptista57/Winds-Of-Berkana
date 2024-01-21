@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 public class CharacterLocomotion : MonoBehaviour
 {
-    public PlayerManager PlayerManager;
+    [HideInInspector] public CharacterManager CharacterManager;
     public float BaseRotation = 0;
     public Vector3 BaseVelocity = Vector3.zero;
     public Transform Body;
@@ -47,7 +47,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     public void ChangeAnimationState(CharacterAnimation.AnimationState animationState)
     {
-        PlayerManager.ChangeAnimation(animationState);
+        CharacterManager.ChangeAnimation(animationState);
     }
 
     public Vector3 GetNewHorizontalVelocity(float acceleration, float maxSpeed, float deceleration)
@@ -146,6 +146,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     private void Awake()
     {
+        CharacterManager = GetComponentInParent<CharacterManager>();
         Controller = GetComponentInParent<CharacterController>();
     }
 }
