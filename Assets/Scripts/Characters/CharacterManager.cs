@@ -5,6 +5,7 @@ public class CharacterManager : MonoBehaviour
     public bool CanMove = true;
     protected CharacterLocomotion CharacterLocomotion;
     protected CharacterAnimation CharacterAnimation;
+    protected CharacterController CharacterController;
 
     public void Spawn(Transform transform)
     {
@@ -58,9 +59,18 @@ public class CharacterManager : MonoBehaviour
         CharacterAnimation.ChangeAnimation(animationState);
     }
 
+    private void Update()
+    {
+        Vector3 localVelocity = CharacterController.velocity - CharacterLocomotion.BaseVelocity;
+        Vector2 horizontalVelocity = new(localVelocity.x, localVelocity.z);
+        Debug.Log(horizontalVelocity);
+        CharacterAnimation.Animator.SetFloat("HorizontalSpeed", horizontalVelocity.magnitude);
+    }
+
     private void Awake()
     {
         CharacterAnimation = GetComponentInChildren<CharacterAnimation>();
         CharacterLocomotion = GetComponentInChildren<CharacterLocomotion>();
+        CharacterController = GetComponentInChildren<CharacterController>();
     }
 }

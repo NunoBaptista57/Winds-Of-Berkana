@@ -49,14 +49,6 @@ public class PlayerManager : CharacterManager
         }
     }
 
-    private void Update()
-    {
-        if (CanMoveCamera)
-        {
-            CharacterLocomotion.BaseRotation = MathF.Round(_cameraPosition.rotation.eulerAngles.y, 2);
-        }
-    }
-
     private void OnEnable()
     {
         _playerActions = new();

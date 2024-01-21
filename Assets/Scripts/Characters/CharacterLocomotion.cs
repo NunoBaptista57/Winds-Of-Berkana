@@ -1,22 +1,14 @@
-using System;
-using AmplifyShaderEditor;
-using tripolygon.UModelerLite;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Scripting.APIUpdating;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
 
 public class CharacterLocomotion : MonoBehaviour
 {
-    [HideInInspector] public CharacterManager CharacterManager;
-    public float BaseRotation = 0;
+    public Transform BasePosition;
     public Vector3 BaseVelocity = Vector3.zero;
     public Transform Body;
     public Vector2 Input;
-    public Vector3 Velocity;
-    [HideInInspector] public CharacterController Controller;
+    [HideInInspector] public Vector3 NewVelocity;
+    private CharacterManager _characterManager;
+    private CharacterController _controller;
     private ILocomotionState _locomotionState;
 
     public void StartJump()
@@ -47,12 +39,12 @@ public class CharacterLocomotion : MonoBehaviour
 
     public void ChangeAnimationState(CharacterAnimation.AnimationState animationState)
     {
-        CharacterManager.ChangeAnimation(animationState);
+        _characterManager.ChangeAnimation(animationState);
     }
 
     public Vector3 GetNewHorizontalVelocity(float acceleration, float maxSpeed, float deceleration)
     {
-        Vector2 newVelocity = new(Controller.velocity.x, Controller.velocity.z);
+        Vector2 newVelocity = new(_controller.velocity.x, _controller.velocity.z);
         newVelocity -= new Vector2(BaseVelocity.x, BaseVelocity.z);
         Vector2 forward = new(Body.forward.x, Body.forward.z);
 
@@ -89,7 +81,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     public float GetNewVerticalSpeed(float acceleration, float maxSpeed, float deceleration)
     {
-        float fallSpeed = Controller.velocity.y - BaseVelocity.y;
+        float fallSpeed = _controller.velocity.y - BaseVelocity.y;
         fallSpeed -= acceleration * Time.deltaTime;
 
         if (-fallSpeed > maxSpeed)
@@ -110,8 +102,9 @@ public class CharacterLocomotion : MonoBehaviour
             return;
         }
 
-        float newAngle = Body.transform.eulerAngles.y - BaseRotation;
-        transform.parent.rotation = Quaternion.Euler(transform.parent.rotation.x, BaseRotation, transform.parent.rotation.z);
+        float baseRotation = BasePosition.rotation.eulerAngles.y;
+        float newAngle = Body.transform.eulerAngles.y - baseRotation;
+        transform.parent.rotation = Quaternion.Euler(transform.parent.rotation.x, baseRotation, transform.parent.rotation.z);
         float targetAngle = Vector2.SignedAngle(Input, Vector2.up);
         newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed));
         Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
@@ -120,13 +113,9 @@ public class CharacterLocomotion : MonoBehaviour
     private void Update()
     {
         _locomotionState.Move();
-        if (Controller.isGrounded)
+        if (_controller.isGrounded)
         {
-            Vector3 spherePosition = transform.position + Controller.center + Vector3.up * (-Controller.height * 0.5F + Controller.radius + 0.02f);
-            if (Physics.SphereCast(spherePosition, Controller.radius, Vector3.down, out RaycastHit _, 3))
-            {
-                _locomotionState.Ground();
-            }
+            _locomotionState.Ground();
         }
         else
         {
@@ -134,19 +123,19 @@ public class CharacterLocomotion : MonoBehaviour
             _locomotionState.Fall();
         }
 
-        Controller.Move(Velocity);
-        Velocity = Vector3.zero;
+        _controller.Move(NewVelocity);
+        NewVelocity = Vector3.zero;
     }
 
     private void Start()
     {
-        Velocity = Vector3.zero;
+        NewVelocity = Vector3.zero;
         ChangeState<RunningState>();
     }
 
     private void Awake()
     {
-        CharacterManager = GetComponentInParent<CharacterManager>();
-        Controller = GetComponentInParent<CharacterController>();
+        _characterManager = GetComponentInParent<CharacterManager>();
+        _controller = GetComponentInParent<CharacterController>();
     }
 }
