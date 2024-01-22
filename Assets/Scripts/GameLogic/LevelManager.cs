@@ -34,7 +34,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void Save()
+    public Level Save()
     {
         _gameState = GameState.Save;
         Level level = new();
@@ -47,9 +47,11 @@ public class LevelManager : MonoBehaviour
 
         if (_bastionManager != null)
         {
-            Bastion bastion = _bastionManager.SaveBastion();
+            level.Bastion = _bastionManager.SaveBastion();
         }
+
         // TODO boatLevel
+        return level;
     }
 
     public void Load()
