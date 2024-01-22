@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WindTunnel : MonoBehaviour
+public class WindTunnel : MonoBehaviour, ILocomotionState
 {
     public GameObject pointB;
     [SerializeField] private float _maxSpeed = 1f;
@@ -26,7 +26,12 @@ public class WindTunnel : MonoBehaviour
 
         _characterLocomotion.Rotate(_rotationSpeed);
 
-        Vector3 newVelocity = pointB.transform.position - _characterLocomotion.Body.position;         
+        Vector3 newVelocity = pointB.transform.position - _characterLocomotion.Body.position;  
+        Debug.Log(newVelocity);
+        if(newVelocity.x < 1 && newVelocity.y<1 && newVelocity.z < 1){
+            Debug.Log("Entered fall state");
+            Fall();
+        }       
         newVelocity.Normalize();
         newVelocity = newVelocity*maxSpeed;
 
@@ -41,12 +46,11 @@ public class WindTunnel : MonoBehaviour
 
     public void Fall()
     {
-        //_characterLocomotion.ChangeState<FallingState>();
+        _characterLocomotion.ChangeState<FallingState>();
     }
 
     public void Ground()
     {
-
     }
     
     public void Tunnel(){
@@ -60,6 +64,7 @@ public class WindTunnel : MonoBehaviour
 
     public void StartState()
     {
+        Move();
 
     }
 

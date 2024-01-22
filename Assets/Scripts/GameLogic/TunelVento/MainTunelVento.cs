@@ -9,6 +9,7 @@ using Vector3 = UnityEngine.Vector3;
 public class MainTunelVento : MonoBehaviour
 {
     public GameObject _player;
+    private CharacterLocomotion _characterLocomotion;
 
     private bool overworldCamera = true;
 
@@ -19,12 +20,21 @@ public class MainTunelVento : MonoBehaviour
     [SerializeField]
     private CinemachineFreeLook vcam2;
 
-    void OnTriggerEnter(Collider target)
-    {
-        Debug.Log("Poop");
+    void Start(){
+        _characterLocomotion = _player.GetComponentInChildren<CharacterLocomotion>();
+    }
+
+    void OnTriggerEnter(Collider target){
         if (target.gameObject.CompareTag("Player"))
         {
             SwitchPriority();
+        }
+    }
+    void OnTriggerStay(Collider target)
+    {
+        if (target.gameObject.CompareTag("Player"))
+        {
+            _characterLocomotion.Tunnel();
         }
         
     }
