@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
@@ -36,7 +37,19 @@ public class LevelManager : MonoBehaviour
     public void Save()
     {
         _gameState = GameState.Save;
-        // TODO
+        Level level = new();
+
+        if (_checkpointManager != null)
+        {
+            Vector3 checkpoint = _checkpointManager.CurrentCheckpoint.transform.position;
+            level.Checkpoint = checkpoint;
+        }
+
+        if (_bastionManager != null)
+        {
+            Bastion bastion = _bastionManager.SaveBastion();
+        }
+        // TODO boatLevel
     }
 
     public void Load()
@@ -48,6 +61,11 @@ public class LevelManager : MonoBehaviour
     public void Restart()
     {
         _gameState = GameState.Remake;
+        // TODO
+    }
+
+    public void Quit()
+    {
         // TODO
     }
 
@@ -68,17 +86,25 @@ public class LevelManager : MonoBehaviour
             SpawnPlayer();
         }
     }
+
+    public enum GameState
+    {
+        Play,
+        Paused,
+        Save,
+        Load,
+        Victory,
+        Death,
+        Respawn,
+        Remake
+    }
 }
 
 
-public enum GameState
+[Serializable]
+public struct Level
 {
-    Play,
-    Paused,
-    Save,
-    Load,
-    Victory,
-    Death,
-    Respawn,
-    Remake
+    public Bastion Bastion;
+    // TODO BoatLevel BoatLevel;
+    public Vector2 Checkpoint;
 }

@@ -63,7 +63,6 @@ public class CharacterManager : MonoBehaviour
     {
         Vector3 localVelocity = CharacterController.velocity - CharacterLocomotion.BaseVelocity;
         Vector2 horizontalVelocity = new(localVelocity.x, localVelocity.z);
-        Debug.Log(horizontalVelocity);
         CharacterAnimation.Animator.SetFloat("HorizontalSpeed", horizontalVelocity.magnitude);
     }
 

@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PauseMenu : MonoBehaviour
 {
-    private GameObject _content;
+    [SerializeField] private GameObject _content;
     private LevelManager _levelManager;
     private PlayerActions _playerActions;
 
@@ -20,6 +20,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void Resume()
     {
+        _content.SetActive(false);
         _levelManager.Pause(false);
     }
 
@@ -38,12 +39,12 @@ public class PauseMenu : MonoBehaviour
         _levelManager.Restart();
     }
 
-    private void Start()
+    public void Quit()
     {
-        _content = transform.GetChild(0).gameObject;
+        _levelManager.Quit();
     }
 
-    private void Awake()
+    private void Start()
     {
         _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
     }
