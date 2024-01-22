@@ -87,19 +87,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public enum GameState
-    {
-        Play,
-        Paused,
-        Save,
-        Load,
-        Victory,
-        Death,
-        Respawn,
-        Remake
-    }
 }
-
 
 [Serializable]
 public struct Level
@@ -107,4 +95,15 @@ public struct Level
     public Bastion Bastion;
     // TODO BoatLevel BoatLevel;
     public Vector2 Checkpoint;
+}
+public enum GameState
+{
+    Play,
+    Paused,
+    Save,
+    Load,
+    Victory,
+    Death,
+    Respawn,
+    Remake
 }
