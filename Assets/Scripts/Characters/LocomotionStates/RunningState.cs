@@ -41,13 +41,6 @@ public class RunningState : MonoBehaviour, ILocomotionState
             rotationSpeed = 180f;
         }
 
-        Vector3 localVelocity = newVelocity - _characterLocomotion.BaseVelocity;
-        float horizontalSpeed = localVelocity.magnitude;
-        if (_characterLocomotion.Input == Vector2.zero)
-        {
-            horizontalSpeed = 0;
-        }
-
         _characterLocomotion.Rotate(rotationSpeed);
         newVelocity.y -= 1f; // So that the CharaterController detects the ground
         _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
@@ -67,8 +60,8 @@ public class RunningState : MonoBehaviour, ILocomotionState
     {
 
     }
-    
-    public void Tunnel(){}
+
+    public void Tunnel() { }
 
     public void Walk(bool walk)
     {

@@ -2,14 +2,37 @@ using System;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 public class PlayerManager : CharacterManager
 {
     public bool CanMoveCamera = true;
+    [SerializeField] private bool _canDebug = false;
     [SerializeField] private float _deadzone = 0.2f;
     [SerializeField] private float _walkDeadzone = 0.5f;
     [SerializeField] private Transform _cameraPosition;
     private PlayerActions _playerActions;
+    private bool _debugMode = false;
+
+    public void DebugMode(InputAction.CallbackContext context)
+    {
+        if (_canDebug && context.started)
+        {
+            _debugMode = !_debugMode;
+            Debug.Log("Debug mode: " + _debugMode);
+            if (_debugMode)
+            {
+                CharacterController.enabled = false;
+                CharacterLocomotion.ChangeState<DebugState>();
+
+            }
+            else
+            {
+                CharacterController.enabled = false;
+                CharacterLocomotion.ChangeState<RunningState>();
+            }
+        }
+    }
 
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -56,6 +79,7 @@ public class PlayerManager : CharacterManager
         _playerActions.Character.Jump.started += OnJump;
         _playerActions.Character.Jump.canceled += OnJump;
         _playerActions.Character.Move.performed += OnMove;
+        _playerActions.Character.Debug.started += DebugMode;
 
         _playerActions.Enable();
     }
@@ -65,6 +89,7 @@ public class PlayerManager : CharacterManager
         _playerActions.Character.Jump.started -= OnJump;
         _playerActions.Character.Jump.canceled -= OnJump;
         _playerActions.Character.Move.performed -= OnMove;
+        _playerActions.Character.Debug.started -= DebugMode;
 
         _playerActions.Disable();
     }

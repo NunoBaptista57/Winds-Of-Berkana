@@ -26,14 +26,15 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
 
         _characterLocomotion.Rotate(_rotationSpeed);
 
-        Vector3 newVelocity = pointB.transform.position - _characterLocomotion.Body.position;  
+        Vector3 newVelocity = pointB.transform.position - _characterLocomotion.Body.position;
         Debug.Log(newVelocity);
-        if(newVelocity.x < 1 && newVelocity.y<1 && newVelocity.z < 1){
+        if (newVelocity.x < 1 && newVelocity.y < 1 && newVelocity.z < 1)
+        {
             Debug.Log("Entered fall state");
             Fall();
-        }       
+        }
         newVelocity.Normalize();
-        newVelocity = newVelocity*maxSpeed;
+        newVelocity = newVelocity * maxSpeed;
 
         _characterLocomotion.NewVelocity = newVelocity;
 
@@ -52,8 +53,9 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
     public void Ground()
     {
     }
-    
-    public void Tunnel(){
+
+    public void Tunnel()
+    {
 
     }
 
@@ -64,8 +66,6 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
 
     public void StartState()
     {
-        Move();
-
     }
 
     private void Awake()

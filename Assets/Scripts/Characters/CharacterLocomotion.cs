@@ -30,7 +30,8 @@ public class CharacterLocomotion : MonoBehaviour
     {
         _locomotionState.Walk(walk);
     }
-    public void Tunnel(){
+    public void Tunnel()
+    {
         _locomotionState.Tunnel();
     }
 
@@ -121,7 +122,7 @@ public class CharacterLocomotion : MonoBehaviour
             _locomotionState.Ground();
         }
 
-        else if(_locomotionState != null && !(_locomotionState is WindTunnel))
+        else if (_locomotionState != null && _locomotionState is not WindTunnel)
         {
             BaseVelocity = Vector3.zero;
             _locomotionState.Fall();
