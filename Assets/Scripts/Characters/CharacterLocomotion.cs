@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CharacterLocomotion : MonoBehaviour
@@ -50,7 +51,7 @@ public class CharacterLocomotion : MonoBehaviour
     {
         Vector2 newVelocity = new(_controller.velocity.x, _controller.velocity.z);
         newVelocity -= new Vector2(BaseVelocity.x, BaseVelocity.z);
-        Vector2 forward = new(Body.forward.x, Body.forward.z);
+        Vector2 forward = new(transform.forward.x, transform.forward.z);
 
         if (Input == Vector2.zero && newVelocity != Vector2.zero)
         {
@@ -99,8 +100,7 @@ public class CharacterLocomotion : MonoBehaviour
         return fallSpeed + BaseVelocity.y;
     }
 
-    // TODOD - Refactor this method
-    public void Rotate(float rotationSpeed)
+    public void Rotate(float rotationSpeed, bool canDo180)
     {
         if (Input == Vector2.zero)
         {
@@ -113,16 +113,26 @@ public class CharacterLocomotion : MonoBehaviour
         Vector2 targetVector = new(newInput.x, newInput.z);
         float targetAngle = Vector2.SignedAngle(targetVector, Vector2.up);
 
+        float newAngle = transform.eulerAngles.y;
 
-        float newAngle = Body.transform.eulerAngles.y;
-        Debug.Log(targetAngle);
-        Debug.Log(newAngle);
-        newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle,
-                                                    targetAngle,
-                                                    rotationSpeed));
-        Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x,
-                                                        newAngle,
-                                                        Body.transform.rotation.z);
+        if (_controller.velocity.x == BaseVelocity.x
+           && _controller.velocity.z == BaseVelocity.z && canDo180)
+        {
+            newAngle = targetAngle;
+        }
+        else
+        {
+            newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed));
+        }
+        transform.localRotation = Quaternion.Euler(transform.rotation.x, newAngle, transform.rotation.z);
+
+        // Rotate body
+        if (Body.transform.eulerAngles.y != transform.eulerAngles.y)
+        {
+            float bodyAngle = Body.transform.eulerAngles.y;
+            newAngle = Mathf.Round(Mathf.MoveTowardsAngle(bodyAngle, transform.eulerAngles.y, rotationSpeed));
+            Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
+        }
     }
 
     private void Update()

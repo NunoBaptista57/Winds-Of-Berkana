@@ -23,7 +23,7 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
     {
         float maxSpeed = _maxSpeed;
 
-        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime);
+        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime, true);
 
         Vector3 newVelocity = pointB.transform.position - _characterLocomotion.Body.position;
         Debug.Log(newVelocity);

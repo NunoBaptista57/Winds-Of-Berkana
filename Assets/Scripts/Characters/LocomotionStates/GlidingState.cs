@@ -29,7 +29,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Move()
     {
-        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime);
+        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime, true);
 
         float acceleration = _acceleration;
         float maxSpeed = _maxSpeed;
