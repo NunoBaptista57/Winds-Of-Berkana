@@ -579,7 +579,7 @@ MonoBehaviour:
   BaseVelocity: {x: 0, y: 0, z: 0}
   Body: {fileID: 3830320074959559723}
   Input: {x: 0, y: 0}
-  Velocity: {x: 0, y: 0, z: 0}
+  NewVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &3717863710734408558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,7 +595,7 @@ MonoBehaviour:
   _acceleration: 100
   _maxSpeed: 10
   _deceleration: 90
-  _rotationSpeed: 15
+  _rotationSpeed: 500
 --- !u!114 &2917542045596974822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,7 +614,7 @@ MonoBehaviour:
   _acceleration: 30
   _maxSpeed: 10
   _deceleration: 30
-  _rotationSpeed: 15
+  _rotationSpeed: 500
 --- !u!114 &3095985453964783814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -632,7 +632,7 @@ MonoBehaviour:
   _acceleration: 30
   _maxSpeed: 10
   _deceleration: 30
-  _rotationSpeed: 15
+  _rotationSpeed: 500
 --- !u!114 &4353972677535549361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,7 +650,7 @@ MonoBehaviour:
   _acceleration: 50
   _maxSpeed: 10
   _deceleration: 50
-  _rotationSpeed: 3
+  _rotationSpeed: 500
   _glider: {fileID: 6641489599947643242}
 --- !u!1 &1307623412803485872
 GameObject:
@@ -886,6 +886,7 @@ GameObject:
   - component: {fileID: 2904054917238734526}
   - component: {fileID: 912085501397594223}
   - component: {fileID: 7046747478877011319}
+  - component: {fileID: 5579760244530259545}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -927,6 +928,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CanMove: 1
   CanMoveCamera: 1
+  _canDebug: 0
   _deadzone: 0.2
   _walkDeadzone: 0.5
   _cameraPosition: {fileID: 1161488057314929380}
@@ -956,6 +958,22 @@ CharacterController:
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.81, z: 0}
+--- !u!114 &5579760244530259545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619116532626761120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa17b5ee35db2b246a638478379dc54a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DebugMode: 0
+  Input: {x: 0, y: 0}
+  speed: 25
+  _cameraPosition: {fileID: 1161488057314929380}
 --- !u!1 &1766701391941543426
 GameObject:
   m_ObjectHideFlags: 0
@@ -4192,6 +4210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 383b1129424a0ac4e8b6734ff75aa4a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Animator: {fileID: 0}
 --- !u!1 &8504506644237460576
 GameObject:
   m_ObjectHideFlags: 0
