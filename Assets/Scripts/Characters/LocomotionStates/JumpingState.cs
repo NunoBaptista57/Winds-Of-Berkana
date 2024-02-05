@@ -26,7 +26,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
 
     public void Move()
     {
-        _characterLocomotion.Rotate(_rotationSpeed);
+        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime);
 
         float acceleration = _acceleration;
         float maxSpeed = _maxSpeed;
@@ -73,7 +73,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
 
     }
 
-    public void Tunnel(){}
+    public void Tunnel() { }
 
     public void Ground()
     {

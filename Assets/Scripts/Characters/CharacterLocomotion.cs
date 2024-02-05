@@ -99,19 +99,30 @@ public class CharacterLocomotion : MonoBehaviour
         return fallSpeed + BaseVelocity.y;
     }
 
+    // TODOD - Refactor this method
     public void Rotate(float rotationSpeed)
     {
         if (Input == Vector2.zero)
         {
             return;
         }
+        Vector3 newInput = BasePosition.forward * Input.y
+                        + BasePosition.right * Input.x;
+        newInput.y = 0;
 
-        float baseRotation = BasePosition.rotation.eulerAngles.y;
-        float newAngle = Body.transform.eulerAngles.y - baseRotation;
-        transform.parent.rotation = Quaternion.Euler(transform.parent.rotation.x, baseRotation, transform.parent.rotation.z);
-        float targetAngle = Vector2.SignedAngle(Input, Vector2.up);
-        newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed));
-        Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
+        Vector2 targetVector = new(newInput.x, newInput.z);
+        float targetAngle = Vector2.SignedAngle(targetVector, Vector2.up);
+
+
+        float newAngle = Body.transform.eulerAngles.y;
+        Debug.Log(targetAngle);
+        Debug.Log(newAngle);
+        newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle,
+                                                    targetAngle,
+                                                    rotationSpeed));
+        Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x,
+                                                        newAngle,
+                                                        Body.transform.rotation.z);
     }
 
     private void Update()

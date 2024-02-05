@@ -8,7 +8,6 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
     [SerializeField] private float _maxSpeed = 1f;
     [SerializeField] private float _rotationSpeed = 10f;
 
-
     private CharacterLocomotion _characterLocomotion;
 
     public void StartJump()
@@ -24,7 +23,7 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
     {
         float maxSpeed = _maxSpeed;
 
-        _characterLocomotion.Rotate(_rotationSpeed);
+        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime);
 
         Vector3 newVelocity = pointB.transform.position - _characterLocomotion.Body.position;
         Debug.Log(newVelocity);

@@ -41,7 +41,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
             rotationSpeed = 180f;
         }
 
-        _characterLocomotion.Rotate(rotationSpeed);
+        _characterLocomotion.Rotate(rotationSpeed * Time.deltaTime);
         newVelocity.y -= 1f; // So that the CharaterController detects the ground
         _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
     }

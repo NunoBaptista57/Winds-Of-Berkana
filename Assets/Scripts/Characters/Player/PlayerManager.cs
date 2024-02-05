@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.TextCore.Text;
 
 public class PlayerManager : CharacterManager
@@ -12,25 +13,17 @@ public class PlayerManager : CharacterManager
     [SerializeField] private float _walkDeadzone = 0.5f;
     [SerializeField] private Transform _cameraPosition;
     private PlayerActions _playerActions;
-    private bool _debugMode = false;
+    private PlayerDebugMode _debugMode;
 
     public void DebugMode(InputAction.CallbackContext context)
     {
         if (_canDebug && context.started)
         {
-            _debugMode = !_debugMode;
-            Debug.Log("Debug mode: " + _debugMode);
-            if (_debugMode)
-            {
-                CharacterController.enabled = false;
-                CharacterLocomotion.ChangeState<DebugState>();
-
-            }
-            else
-            {
-                CharacterController.enabled = false;
-                CharacterLocomotion.ChangeState<RunningState>();
-            }
+            _debugMode.DebugMode = !_debugMode.DebugMode;
+            CanMove = !_debugMode.DebugMode;
+            CharacterController.enabled = !_debugMode.DebugMode;
+            Move(Vector2.zero);
+            CharacterLocomotion.gameObject.SetActive(!_debugMode.DebugMode);
         }
     }
 
@@ -38,10 +31,20 @@ public class PlayerManager : CharacterManager
     {
         if (context.started)
         {
+            if (_debugMode.DebugMode)
+            {
+                _debugMode.GoUp();
+                return;
+            }
             Jump(true);
         }
         else if (context.canceled)
         {
+            if (_debugMode.DebugMode)
+            {
+                _debugMode.StopGoingUp();
+                return;
+            }
             Jump(false);
         }
     }
@@ -56,6 +59,14 @@ public class PlayerManager : CharacterManager
         else if (input.magnitude <= _walkDeadzone)
         {
             input = input.normalized * 0.5f;
+        }
+        else
+        {
+            input = input.normalized;
+        }
+        if (_debugMode.DebugMode)
+        {
+            _debugMode.Input = input;
         }
         Move(input);
     }
@@ -92,5 +103,10 @@ public class PlayerManager : CharacterManager
         _playerActions.Character.Debug.started -= DebugMode;
 
         _playerActions.Disable();
+    }
+
+    private void Start()
+    {
+        _debugMode = GetComponent<PlayerDebugMode>();
     }
 }

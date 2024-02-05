@@ -29,7 +29,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Move()
     {
-        _characterLocomotion.Rotate(_rotationSpeed);
+        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime);
 
         float acceleration = _acceleration;
         float maxSpeed = _maxSpeed;
@@ -67,7 +67,8 @@ public class GlidingState : MonoBehaviour, ILocomotionState
         _glider.SetActive(false);
     }
 
-    public void Tunnel(){
+    public void Tunnel()
+    {
         _characterLocomotion.ChangeState<WindTunnel>();
     }
 
