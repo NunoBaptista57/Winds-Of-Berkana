@@ -37,8 +37,6 @@ public class PlayerDebugMode : MonoBehaviour
             return;
         }
 
-        Debug.Log(Input);
-
         Vector3 velocity = _cameraPosition.forward * Input.y +
                            _cameraPosition.right * Input.x;
         velocity.y = 0;
