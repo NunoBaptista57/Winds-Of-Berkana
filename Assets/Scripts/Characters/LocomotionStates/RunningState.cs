@@ -77,4 +77,8 @@ public class RunningState : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
     }
+
+    public void Break()
+    {
+    }
 }

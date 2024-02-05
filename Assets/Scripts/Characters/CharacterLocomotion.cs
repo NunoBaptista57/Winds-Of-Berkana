@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
 
 public class CharacterLocomotion : MonoBehaviour
 {
@@ -115,10 +116,14 @@ public class CharacterLocomotion : MonoBehaviour
 
         float newAngle = transform.eulerAngles.y;
 
-        if (_controller.velocity.x == BaseVelocity.x
-           && _controller.velocity.z == BaseVelocity.z && canDo180)
+        if (_controller.velocity.x == BaseVelocity.x && _controller.velocity.z == BaseVelocity.z && canDo180)
         {
             newAngle = targetAngle;
+        }
+        else if (Vector2.SignedAngle(targetVector, new Vector2(_controller.velocity.x - BaseVelocity.x, _controller.velocity.z - BaseVelocity.z)) > 90f)
+        {
+            newAngle = targetAngle;
+            _locomotionState.Break();
         }
         else
         {

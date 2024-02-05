@@ -71,4 +71,8 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
     }
+
+    public void Break()
+    {
+    }
 }

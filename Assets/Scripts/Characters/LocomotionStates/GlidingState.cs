@@ -43,7 +43,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
         }
 
         Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
-        newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _maxFallSpeed, _gravity);
+        newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _maxFallSpeed, _gravity * 2);
         _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
     }
 
@@ -75,5 +75,9 @@ public class GlidingState : MonoBehaviour, ILocomotionState
     private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
+    }
+
+    public void Break()
+    {
     }
 }
