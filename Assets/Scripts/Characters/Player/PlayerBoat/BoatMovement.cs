@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using AmplifyShaderEditor;
 
 public class BoatMovement : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class BoatMovement : MonoBehaviour
 
     [Header("Boat Mode")]
     [SerializeField] bool boat_mode;
+
+    [Header("Control Settings")]
+    public bool canMove = true;
 
     [Header("Wind")]
     [Min(0), SerializeField] float WindForce;
@@ -48,8 +52,12 @@ public class BoatMovement : MonoBehaviour
         CurrentMaxVelocity = MaxVelocity;
     }
 
+    public void AllowPlayerControl(bool setTo) { canMove = setTo; }
+
     void FixedUpdate()
     {
+        if (!canMove) { return; }
+
         if (Input.GetKey(KeyCode.P))
         {
             if (CurrentMaxVelocity < MaxVelocity * 2)
