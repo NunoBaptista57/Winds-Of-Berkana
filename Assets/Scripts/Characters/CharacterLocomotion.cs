@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 
 public class CharacterLocomotion : MonoBehaviour
 {
@@ -12,6 +11,8 @@ public class CharacterLocomotion : MonoBehaviour
     private CharacterManager _characterManager;
     private CharacterController _controller;
     private ILocomotionState _locomotionState;
+    private Vector3 _lastPosition = Vector3.zero;
+    private Transform _standingOn;
 
     public void StartJump()
     {
@@ -143,21 +144,34 @@ public class CharacterLocomotion : MonoBehaviour
     private void Update()
     {
         _locomotionState.Move();
-        if (_controller.isGrounded)
+
+        if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, _controller.height / 4))
         {
             _locomotionState.Ground();
+            Debug.Log(hit.barycentricCoordinate);
         }
-
         else if (_locomotionState != null && _locomotionState is not WindTunnel)
         {
             BaseVelocity = Vector3.zero;
             _locomotionState.Fall();
         }
 
+        _standingOn = hit.transform;
+
         _controller.Move(NewVelocity);
         NewVelocity = Vector3.zero;
+
+        if (transform.position != _lastPosition)
+        {
+            _lastPosition = transform.position;
+        }
+        else
+        {
+
+        }
     }
 
+    // private Vector3 GetBarocenti
 
 
     private void Start()
