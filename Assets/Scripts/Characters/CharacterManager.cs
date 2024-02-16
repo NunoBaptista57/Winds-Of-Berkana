@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     public bool CanMove = true;
-    protected CharacterLocomotion CharacterLocomotion;
+    public CharacterLocomotion CharacterLocomotion;
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
 

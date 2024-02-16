@@ -148,7 +148,7 @@ public class CharacterLocomotion : MonoBehaviour
         if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, _controller.height / 4))
         {
             _locomotionState.Ground();
-            Debug.Log(hit.barycentricCoordinate);
+            // Debug.Log(hit.barycentricCoordinate);
         }
         else if (_locomotionState != null && _locomotionState is not WindTunnel)
         {
