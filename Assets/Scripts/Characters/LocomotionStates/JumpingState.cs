@@ -24,48 +24,27 @@ public class JumpingState : MonoBehaviour, ILocomotionState
         _stopJump = true;
     }
 
-    public void Move()
+    public void Move(Vector2 input)
     {
-        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime, true);
-
-        float acceleration = _acceleration;
-        float maxSpeed = _maxSpeed;
-        float deceleration = _deceleration;
-
-        if (_walk)
-        {
-            acceleration /= 2;
-            maxSpeed /= 2;
-            deceleration /= 2;
-        }
-
-        Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(acceleration, maxSpeed, deceleration);
-        newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _gravity, _gravity);
+        _characterLocomotion.Rotate(input, _rotationSpeed, true);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
+        _characterLocomotion.ChangeGravity(_gravity);
 
         if (_jump)
         {
-            newVelocity.y += _jumpForce;
+            _characterLocomotion.AddJumpForce(_jumpForce);
             _jump = false;
         }
         else if (_stopJump)
         {
-            if (newVelocity.y >= _characterLocomotion.BaseVelocity.y)
-            {
-                newVelocity.y -= _stoppingJumpForce;
-                if (newVelocity.y < _characterLocomotion.BaseVelocity.y)
-                {
-                    newVelocity.y = _characterLocomotion.BaseVelocity.y;
-                }
-            }
+            _characterLocomotion.StopJumpForce(_stoppingJumpForce);
             _stopJump = false;
             _characterLocomotion.ChangeState<FallingState>();
         }
-        else if (newVelocity.y <= _characterLocomotion.BaseVelocity.y)
+        else if (_characterLocomotion.Gravity.y <= 0f)
         {
             _characterLocomotion.ChangeState<FallingState>();
         }
-
-        _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
     }
 
     public void Fall()

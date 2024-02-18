@@ -19,23 +19,23 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
 
     }
 
-    public void Move()
+    public void Move(Vector2 input)
     {
         float maxSpeed = _maxSpeed;
 
-        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime, true);
+        // _characterLocomotion.Rotate(input, _rotationSpeed, true);
 
-        Vector3 newVelocity = pointB.transform.position - _characterLocomotion.Body.position;
-        Debug.Log(newVelocity);
-        if (newVelocity.x < 1 && newVelocity.y < 1 && newVelocity.z < 1)
-        {
-            Debug.Log("Entered fall state");
-            Fall();
-        }
-        newVelocity.Normalize();
-        newVelocity = newVelocity * maxSpeed;
+        // Vector3 newVelocity = pointB.transform.position - _characterLocomotion.Body.position;
+        // Debug.Log(newVelocity);
+        // if (newVelocity.x < 1 && newVelocity.y < 1 && newVelocity.z < 1)
+        // {
+        //     Debug.Log("Entered fall state");
+        //     Fall();
+        // }
+        // newVelocity.Normalize();
+        // newVelocity = newVelocity * maxSpeed;
 
-        _characterLocomotion.NewVelocity = newVelocity;
+        // _characterLocomotion.NewVelocity = newVelocity;
 
     }
 

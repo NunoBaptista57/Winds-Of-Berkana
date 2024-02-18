@@ -2,13 +2,16 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    private void Start()
+    public Rigidbody Rigidbody;
+    public Transform Transform;
+
+    private void Update()
     {
-        GetComponent<Rigidbody>().rotation = Quaternion.Euler(0, 10f * Time.deltaTime, 0);
+        Rigidbody.Move(Transform.position * Time.deltaTime, transform.rotation);
     }
 
-    private void OnCollisionStay(Collision collision)
+    private void Awake()
     {
-        // collision.collider.gameObject.transform.Translate(collision.impulse);
+        Rigidbody = GetComponent<Rigidbody>();
     }
 }

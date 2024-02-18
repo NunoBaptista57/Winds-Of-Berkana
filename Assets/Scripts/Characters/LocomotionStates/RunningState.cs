@@ -1,5 +1,3 @@
-using System;
-using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 
 public class RunningState : MonoBehaviour, ILocomotionState
@@ -21,29 +19,10 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     }
 
-    public void Move()
+    public void Move(Vector2 input)
     {
-        float acceleration = _acceleration;
-        float maxSpeed = _maxSpeed;
-        float deceleration = _deceleration;
-        float rotationSpeed = _rotationSpeed;
-
-        if (_walk)
-        {
-            acceleration /= 2;
-            maxSpeed /= 2;
-            deceleration /= 2;
-        }
-
-        Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(acceleration, maxSpeed, deceleration);
-        if (newVelocity.magnitude <= _maxSpeed / 2)
-        {
-            rotationSpeed = 180f;
-        }
-
-        _characterLocomotion.Rotate(rotationSpeed * Time.deltaTime, canDo180: true);
-        newVelocity.y -= 1f; // So that the CharaterController detects the ground
-        _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
+        _characterLocomotion.Rotate(input, _rotationSpeed, canDo180: true);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
     }
 
     public void Run()

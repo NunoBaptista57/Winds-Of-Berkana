@@ -26,24 +26,10 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     }
 
-    public void Move()
+    public void Move(Vector2 input)
     {
-        _characterLocomotion.Rotate(_rotationSpeed * Time.deltaTime, true);
-
-        float acceleration = _acceleration;
-        float maxSpeed = _maxSpeed;
-        float deceleration = _deceleration;
-
-        if (_walk)
-        {
-            acceleration /= 2;
-            maxSpeed /= 2;
-            deceleration /= 2;
-        }
-
-        Vector3 newVelocity = _characterLocomotion.GetNewHorizontalVelocity(_acceleration, _maxSpeed, _deceleration);
-        newVelocity.y = _characterLocomotion.GetNewVerticalSpeed(_gravity, _maxFallSpeed, _gravity);
-        _characterLocomotion.NewVelocity += newVelocity * Time.deltaTime;
+        _characterLocomotion.Rotate(input, _rotationSpeed, true);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
     }
 
     public void Run()
@@ -58,6 +44,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void Fall()
     {
+        _characterLocomotion.ChangeGravity(_gravity, _maxFallSpeed, _gravity);
     }
 
     public void Ground()
