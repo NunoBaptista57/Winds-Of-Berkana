@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     public bool CanMove = true;
-    public CharacterLocomotion CharacterLocomotion;
+    protected CharacterLocomotion CharacterLocomotion;
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
 
@@ -54,6 +54,11 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
+    public void Push(Vector3 force)
+    {
+        CharacterLocomotion.ChangePushVelocity(force);
+    }
+
     public void ChangeAnimation(CharacterAnimation.AnimationState animationState)
     {
         CharacterAnimation.ChangeAnimation(animationState);
@@ -61,7 +66,7 @@ public class CharacterManager : MonoBehaviour
 
     private void Update()
     {
-        Vector3 localVelocity = CharacterController.velocity - CharacterLocomotion.BaseVelocity;
+        Vector3 localVelocity = CharacterLocomotion.InputVelocity;
         Vector2 horizontalVelocity = new(localVelocity.x, localVelocity.z);
         CharacterAnimation.Animator.SetFloat("HorizontalSpeed", horizontalVelocity.magnitude);
     }

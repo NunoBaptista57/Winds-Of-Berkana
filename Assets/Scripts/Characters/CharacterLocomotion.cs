@@ -43,17 +43,21 @@ public class CharacterLocomotion : MonoBehaviour
         _locomotionState.StartState();
     }
 
-
     public void ChangeAnimationState(CharacterAnimation.AnimationState animationState)
     {
         _characterManager.ChangeAnimation(animationState);
     }
 
     public void ChangePushVelocity(Vector3 pushVelocity)
-    { }
+    {
+        PushVelocity = pushVelocity;
+        Debug.Log(PushVelocity);
+    }
 
     public void ChangeBaseVelocity(Vector3 baseVelocity)
-    { }
+    {
+        BaseVelocity = baseVelocity;
+    }
 
     public void ChangeInputVelocity(Vector2 input, float acceleration, float maxSpeed, float deceleration)
     {
@@ -114,14 +118,14 @@ public class CharacterLocomotion : MonoBehaviour
         {
             newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed * Time.deltaTime));
         }
-        transform.localRotation = Quaternion.Euler(transform.rotation.x, newAngle, transform.rotation.z);
+        transform.rotation = Quaternion.Euler(transform.rotation.x, newAngle, transform.rotation.z);
 
         // Rotate body
         if (Body.transform.eulerAngles.y != transform.eulerAngles.y)
         {
             float bodyAngle = Body.transform.eulerAngles.y;
             newAngle = Mathf.Round(Mathf.MoveTowardsAngle(bodyAngle, transform.eulerAngles.y, rotationSpeed * Time.deltaTime));
-            Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
+            Body.transform.rotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
         }
     }
 
@@ -174,19 +178,20 @@ public class CharacterLocomotion : MonoBehaviour
         if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, _controller.height / 4))
         {
             _locomotionState.Ground();
-            if (hit.collider.gameObject.TryGetComponent<MovingPlatform>(out MovingPlatform movingPlatform))
+            if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
             {
-                // BaseVelocity =
+                transform.parent.SetParent(movingPlatform.transform);
             }
         }
         else if (_locomotionState != null && _locomotionState is not WindTunnel)
         {
             _locomotionState.Fall();
+            transform.parent.SetParent(null);
+            ChangeBaseVelocity(Vector3.zero);
         }
 
-        _controller.Move((InputVelocity + Gravity) * Time.deltaTime);
+        _controller.Move(PushVelocity + BaseVelocity + (InputVelocity + Gravity) * Time.deltaTime);
     }
-
 
     private void Start()
     {
