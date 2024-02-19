@@ -2,31 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public class CutSceneManager : MonoBehaviour
 {
-    private enum CutSceneType
-    {
-        PreRecorded,
-        Ship,
-    }
-
     private PlayableDirector playableDirector;
     private bool isCutscenePlaying = false;
 
-    public BoatMovement player; //To be replaced by a proper manager sys
+    public BoatMovement player; //Might be replaced by a manager sys with the needed references
 
-    [Header("General Options")]
-    [SerializeField] CutSceneType type;
+    [Header("Optional reference to load scene after the cutscene")]
+    public string sceneToLoad;
 
     void Start()
     {
         playableDirector = GetComponent<PlayableDirector>();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void beginCutScene()
@@ -50,5 +40,10 @@ public class CutSceneManager : MonoBehaviour
         director.stopped -= OnCutsceneFinished;
 
         isCutscenePlaying = false;
+
+        if (!string.IsNullOrEmpty(sceneToLoad))
+        {
+            SceneManager.LoadScene(sceneToLoad);
+        }
     }
 }
