@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using AmplifyShaderEditor;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 _origin;
     private Vector3 _direction;
     private Vector3 _lastPosition;
+    private MeshCollider _collider;
 
     private void Update()
     {
@@ -31,19 +33,24 @@ public class MovingPlatform : MonoBehaviour
         _lastPosition = transform.position;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerStay(Collider other)
     {
-        // if (collision.gameObject.TryGetComponent(out CharacterManager characterManager))
-        // {
-        //     characterManager.transform.SetParent(transform);
-        // }
+        if (other.gameObject.TryGetComponent(out CharacterManager characterManager))
+        {
+            // characterManager.Push(Velocity.normalized * 0.00000001f);
+        }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        // if (collision.gameObject.TryGetComponent(out CharacterManager characterManager))
-        // {
-        //     characterManager.transform.SetParent(null);
-        // }
+        if (other.gameObject.TryGetComponent(out CharacterManager characterManager))
+        {
+            characterManager.Push(Vector3.zero);
+        }
+    }
+
+    private void Awake()
+    {
+        _collider = GetComponent<MeshCollider>();
     }
 }

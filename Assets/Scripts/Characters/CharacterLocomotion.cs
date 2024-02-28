@@ -10,7 +10,7 @@ public class CharacterLocomotion : MonoBehaviour
     public Vector3 InputVelocity { get; private set; } = Vector3.zero;
     public Vector3 Gravity { get; private set; } = Vector3.zero;
     private CharacterManager _characterManager;
-    private CharacterController _controller;
+    public CharacterController _controller;
     private ILocomotionState _locomotionState;
 
     public void StartJump()
@@ -50,8 +50,10 @@ public class CharacterLocomotion : MonoBehaviour
 
     public void ChangePushVelocity(Vector3 pushVelocity)
     {
-        PushVelocity = pushVelocity;
-        Debug.Log(PushVelocity);
+        if (InputVelocity == Vector3.zero)
+        {
+            PushVelocity = pushVelocity;
+        }
     }
 
     public void ChangeBaseVelocity(Vector3 baseVelocity)

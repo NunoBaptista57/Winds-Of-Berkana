@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     public bool CanMove = true;
-    protected CharacterLocomotion CharacterLocomotion;
+    public CharacterLocomotion CharacterLocomotion;
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
 
@@ -62,6 +62,29 @@ public class CharacterManager : MonoBehaviour
     public void ChangeAnimation(CharacterAnimation.AnimationState animationState)
     {
         CharacterAnimation.ChangeAnimation(animationState);
+    }
+
+    private void OnTriggerStay(Collider collider)
+    {
+        if (collider.gameObject.TryGetComponent(out MovingPlatform _))
+        {
+            if (CharacterController.velocity != Vector3.zero)
+            {
+                return;
+            }
+            Physics.ComputePenetration(collider, collider.transform.position, collider.transform.rotation, CharacterController, transform.position, transform.rotation, out Vector3 direction, out float distance);
+            Debug.Log(distance);
+            Debug.Log(direction);
+            CharacterLocomotion.ChangePushVelocity(distance * -direction);
+        }
+    }
+
+    private void OnTriggerExit(Collider collider)
+    {
+        if (collider.gameObject.TryGetComponent(out MovingPlatform _))
+        {
+            CharacterLocomotion.ChangePushVelocity(Vector3.zero);
+        }
     }
 
     private void Update()
