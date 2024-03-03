@@ -12,7 +12,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
         _serviceReferences = new Dictionary<Type, MonoBehaviour>();
     }
 
-    public T GetService<T>() where T : MonoBehaviour, new()
+    public T GetService<T>() where T : MonoBehaviour
     {
         UnityEngine.Assertions.Assert.IsNotNull(_serviceReferences, "Someone has requested a service prior to the locator's intialization.");
 

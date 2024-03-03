@@ -58,5 +58,4 @@ public struct SaveFile
     public int CollectedKeys;
     public bool VitralIsComplete;
     public Vector3 Checkpoint;
-    public LevelState LevelState;
 }

@@ -1,69 +1,103 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public event Action<GameState> OnGameStateChanged;
-    [SerializeField] private GameState _state;
+    private CheckpointManager _checkpointManager;
+    private PlayerManager _playerManager;
+    private BastionManager _bastionManager;
+    // TODO private BoatLevelManager _boatLevelManager;
+    private DeathZone _deathZone;
+    private GameState _gameState;
 
-    public void UpdateGameState(GameState newState)
+    public void Death()
     {
-        GameState PreviousState = _state;
-
-        if (PreviousState == GameState.Paused)
-        {
-            Time.timeScale = 1;
-        }
-
-        switch (newState)
-        {
-            case GameState.Paused:
-                if (PreviousState == GameState.Paused)
-                {
-                    newState = GameState.Play;
-                }
-                else
-                {
-                    Time.timeScale = 0;
-                }
-                break;
-
-            case GameState.Victory:
-                // Transition Between modes
-                break;
-
-            case GameState.Remake:
-                RestartCurrentScene();
-                break;
-
-            case GameState.Load:
-                ServiceLocator.Instance.GetService<SaveSystem>().Load();
-                break;
-
-            case GameState.Save:
-                ServiceLocator.Instance.GetService<SaveSystem>().Save();
-                break;
-
-            default:
-                break;
-
-        }
-
-        _state = newState;
-        OnGameStateChanged?.Invoke(_state);
+        // TODO
     }
 
-
-    public void RestartCurrentScene()
+    public void SpawnPlayer()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        _playerManager.Spawn(_checkpointManager.CurrentCheckpoint.transform);
     }
+
+    public void Pause(bool pause)
+    {
+        if (pause)
+        {
+            _gameState = GameState.Paused;
+            // TODO
+        }
+        else
+        {
+            _gameState = GameState.Play;
+            // TODO
+        }
+    }
+
+    public Level Save()
+    {
+        _gameState = GameState.Save;
+        Level level = new();
+
+        if (_checkpointManager != null)
+        {
+            Vector3 checkpoint = _checkpointManager.CurrentCheckpoint.transform.position;
+            level.Checkpoint = checkpoint;
+        }
+
+        if (_bastionManager != null)
+        {
+            level.Bastion = _bastionManager.SaveBastion();
+        }
+
+        // TODO boatLevel
+        return level;
+    }
+
+    public void Load()
+    {
+        _gameState = GameState.Load;
+        // TODO
+    }
+
+    public void Restart()
+    {
+        _gameState = GameState.Remake;
+        // TODO
+    }
+
+    public void Quit()
+    {
+        // TODO
+    }
+
+    private void Awake()
+    {
+        _checkpointManager = GetComponentInChildren<CheckpointManager>();
+        _bastionManager = GetComponentInChildren<BastionManager>();
+        _deathZone = GetComponentInChildren<DeathZone>();
+        // TODO _boatLevelManager = GetComponentInChildren<BoatLevelManager>();
+    }
+
+    private void Start()
+    {
+        _playerManager = ServiceLocator.Instance.GetService<PlayerManager>();
+
+        if (_checkpointManager != null && _checkpointManager.CurrentCheckpoint != null)
+        {
+            SpawnPlayer();
+        }
+    }
+
 }
 
-
+[Serializable]
+public struct Level
+{
+    public Bastion Bastion;
+    // TODO BoatLevel BoatLevel;
+    public Vector2 Checkpoint;
+}
 public enum GameState
 {
     Play,

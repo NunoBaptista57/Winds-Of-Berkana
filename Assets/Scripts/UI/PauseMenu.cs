@@ -4,8 +4,9 @@ using UnityEngine.InputSystem;
 
 public class PauseMenu : MonoBehaviour
 {
-    private GameObject _content;
-    private readonly LevelManager _levelManager;
+    [SerializeField] private GameObject _content;
+    private LevelManager _levelManager;
+    private PlayerActions _playerActions;
 
     public void Pause(InputAction.CallbackContext context)
     {
@@ -15,32 +16,51 @@ public class PauseMenu : MonoBehaviour
             return;
         }
         _content.SetActive(true);
-        _levelManager.UpdateGameState(GameState.Paused);
+        _levelManager.Pause(true);
     }
     public void Resume()
     {
-        _levelManager.UpdateGameState(GameState.Play);
+        _content.SetActive(false);
+        _levelManager.Pause(false);
     }
 
     public void Load()
     {
-        _levelManager.UpdateGameState(GameState.Load);
-        _levelManager.UpdateGameState(GameState.Play);
+        _levelManager.Load();
     }
 
     public void Save()
     {
-        _levelManager.UpdateGameState(GameState.Save);
-        _levelManager.UpdateGameState(GameState.Paused);
+        _levelManager.Save();
     }
 
     public void Restart()
     {
-        _levelManager.UpdateGameState(GameState.Remake);
+        _levelManager.Restart();
+    }
+
+    public void Quit()
+    {
+        _levelManager.Quit();
     }
 
     private void Start()
     {
-        _content = transform.GetChild(0).gameObject;
+        _levelManager = ServiceLocator.Instance.GetService<LevelManager>();
+    }
+
+    private void OnEnable()
+    {
+        _playerActions = new();
+
+        _playerActions.UI.Pause.performed += Pause;
+
+        _playerActions.Enable();
+    }
+
+    private void OnDestroy()
+    {
+        _playerActions.UI.Pause.performed -= Pause;
+        _playerActions.Disable();
     }
 }

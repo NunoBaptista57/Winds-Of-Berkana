@@ -1,22 +1,16 @@
-using System;
-using AmplifyShaderEditor;
-using tripolygon.UModelerLite;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Scripting.APIUpdating;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
 
 public class CharacterLocomotion : MonoBehaviour
 {
-    public float BaseRotation = 0;
-    public PlayerAnimation PlayerAnimation;
-    public Vector3 BaseVelocity = Vector3.zero;
     public Transform Body;
-    public Vector2 Input;
-    public Vector3 NewVelocity;
-    [HideInInspector] public CharacterController Controller;
+    public Vector2 Input = Vector2.zero;
+    public Transform BasePosition;
+    public Vector3 PushVelocity { get; private set; } = Vector3.zero;
+    public Vector3 BaseVelocity { get; private set; } = Vector3.zero;
+    public Vector3 InputVelocity { get; private set; } = Vector3.zero;
+    public Vector3 Gravity { get; private set; } = Vector3.zero;
+    private CharacterManager _characterManager;
+    public CharacterController _controller;
     private ILocomotionState _locomotionState;
 
     public void StartJump()
@@ -38,6 +32,10 @@ public class CharacterLocomotion : MonoBehaviour
     {
         _locomotionState.Walk(walk);
     }
+    public void Tunnel()
+    {
+        _locomotionState.Tunnel();
+    }
 
     public void ChangeState<T>() where T : MonoBehaviour, ILocomotionState
     {
@@ -45,46 +43,104 @@ public class CharacterLocomotion : MonoBehaviour
         _locomotionState.StartState();
     }
 
-    public Vector3 GetNewHorizontalVelocity(float acceleration, float maxSpeed, float deceleration)
+    public void ChangeAnimationState(CharacterAnimation.AnimationState animationState)
     {
-        Vector2 newVelocity = new(Controller.velocity.x, Controller.velocity.z);
-        newVelocity -= new Vector2(BaseVelocity.x, BaseVelocity.z);
-        Vector2 forward = new(Body.forward.x, Body.forward.z);
+        _characterManager.ChangeAnimation(animationState);
+    }
 
-        if (Input == Vector2.zero && newVelocity != Vector2.zero)
+    public void ChangePushVelocity(Vector3 pushVelocity)
+    {
+        if (InputVelocity == Vector3.zero)
         {
-            Vector2 friction = newVelocity - deceleration * Time.deltaTime * newVelocity.normalized;
+            PushVelocity = pushVelocity;
+        }
+    }
 
-            if (friction.normalized == newVelocity.normalized)
+    public void ChangeBaseVelocity(Vector3 baseVelocity)
+    {
+        BaseVelocity = baseVelocity;
+    }
+
+    public void ChangeInputVelocity(Vector2 input, float acceleration, float maxSpeed, float deceleration)
+    {
+        // Breaking
+        if (input == Vector2.zero && InputVelocity != Vector3.zero)
+        {
+            Vector3 afterFriction = InputVelocity - deceleration * Time.deltaTime * InputVelocity.normalized;
+
+            if (afterFriction.normalized == InputVelocity.normalized)
             {
-                newVelocity = friction;
+                InputVelocity = afterFriction;
             }
             else
             {
-                newVelocity = Vector2.zero;
+                InputVelocity = Vector3.zero;
             }
         }
 
-        if (newVelocity.magnitude > maxSpeed)
+        if (InputVelocity.magnitude > maxSpeed)
         {
-            newVelocity -= deceleration / 2 * Time.deltaTime * newVelocity.normalized;
+            InputVelocity -= deceleration / 2 * Time.deltaTime * InputVelocity.normalized;
         }
-        else if (Input != Vector2.zero)
+        else if (input != Vector2.zero)
         {
-            newVelocity += acceleration * Time.deltaTime * forward;
-            if (newVelocity.magnitude > maxSpeed)
+            InputVelocity += acceleration * Time.deltaTime * transform.forward;
+            if (InputVelocity.magnitude > maxSpeed)
             {
-                newVelocity = newVelocity.normalized * maxSpeed;
+                InputVelocity = InputVelocity.normalized * maxSpeed;
             }
         }
-
-        newVelocity += new Vector2(BaseVelocity.x, BaseVelocity.z);
-        return new Vector3(newVelocity.x, 0, newVelocity.y);
     }
 
-    public float GetNewVerticalSpeed(float acceleration, float maxSpeed, float deceleration)
+    public void Rotate(Vector2 input, float rotationSpeed, bool canDo180)
     {
-        float fallSpeed = Controller.velocity.y - BaseVelocity.y;
+        if (input == Vector2.zero)
+        {
+            return;
+        }
+        Vector3 newInput = BasePosition.forward * input.y
+                        + BasePosition.right * input.x;
+        newInput.y = 0;
+
+        Vector2 targetVector = new(newInput.x, newInput.z);
+        float targetAngle = Vector2.SignedAngle(targetVector, Vector2.up);
+
+        float newAngle = transform.eulerAngles.y;
+
+        if (InputVelocity == Vector3.zero && canDo180)
+        {
+            newAngle = targetAngle;
+        }
+        else if (Mathf.Abs(Vector2.SignedAngle(targetVector, new Vector2(InputVelocity.x, InputVelocity.z))) > 90f)
+        {
+            newAngle = targetAngle;
+            _locomotionState.Break();
+        }
+        else
+        {
+            newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed * Time.deltaTime));
+        }
+        transform.rotation = Quaternion.Euler(transform.rotation.x, newAngle, transform.rotation.z);
+
+        // Rotate body
+        if (Body.transform.eulerAngles.y != transform.eulerAngles.y)
+        {
+            float bodyAngle = Body.transform.eulerAngles.y;
+            newAngle = Mathf.Round(Mathf.MoveTowardsAngle(bodyAngle, transform.eulerAngles.y, rotationSpeed * Time.deltaTime));
+            Body.transform.rotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
+        }
+    }
+
+    public void ChangeGravity(float acceleration)
+    {
+        float fallSpeed = Gravity.y;
+        fallSpeed -= acceleration * Time.deltaTime;
+        Gravity = new(0f, fallSpeed, 0f);
+    }
+
+    public void ChangeGravity(float acceleration, float maxSpeed, float deceleration)
+    {
+        float fallSpeed = Gravity.y;
         fallSpeed -= acceleration * Time.deltaTime;
 
         if (-fallSpeed > maxSpeed)
@@ -95,52 +151,58 @@ public class CharacterLocomotion : MonoBehaviour
                 fallSpeed = -maxSpeed;
             }
         }
-        return fallSpeed + BaseVelocity.y;
+        Gravity = new(0f, fallSpeed, 0f);
     }
 
-    public void Rotate(float rotationSpeed)
+    public void AddJumpForce(float force)
     {
-        if (Input == Vector2.zero)
-        {
-            return;
-        }
+        Gravity = new(0f, force, 0f);
+    }
 
-        float newAngle = Body.transform.eulerAngles.y - BaseRotation;
-        transform.parent.rotation = Quaternion.Euler(transform.parent.rotation.x, BaseRotation, transform.parent.rotation.z);
-        float targetAngle = Vector2.SignedAngle(Input, Vector2.up);
-        newAngle = Mathf.Round(Mathf.MoveTowardsAngle(newAngle, targetAngle, rotationSpeed));
-        Body.transform.localRotation = Quaternion.Euler(Body.transform.rotation.x, newAngle, Body.transform.rotation.z);
+    public void StopJumpForce(float force)
+    {
+        if (Gravity.y >= 0f)
+        {
+            float stopForce = Gravity.y;
+            stopForce -= force;
+            if (stopForce < 0f)
+            {
+                stopForce = 0f;
+            }
+
+            Gravity = new Vector3(0f, stopForce, 0f);
+        }
     }
 
     private void Update()
     {
-        _locomotionState.Move();
-        if (Controller.isGrounded)
+        _locomotionState.Move(Input);
+        if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, _controller.height / 4))
         {
-            Vector3 spherePosition = transform.position + Controller.center + Vector3.up * (-Controller.height * 0.5F + Controller.radius + 0.02f);
-            if (Physics.SphereCast(spherePosition, Controller.radius, Vector3.down, out RaycastHit _, 3))
+            _locomotionState.Ground();
+            if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
             {
-                _locomotionState.Ground();
+                transform.parent.SetParent(movingPlatform.transform);
             }
         }
-        else
+        else if (_locomotionState != null && _locomotionState is not WindTunnel)
         {
-            BaseVelocity = Vector3.zero;
             _locomotionState.Fall();
+            transform.parent.SetParent(null);
+            ChangeBaseVelocity(Vector3.zero);
         }
 
-        Controller.Move(NewVelocity);
-        NewVelocity = Vector3.zero;
+        _controller.Move(PushVelocity + BaseVelocity + (InputVelocity + Gravity) * Time.deltaTime);
     }
 
     private void Start()
     {
-        NewVelocity = Vector3.zero;
         ChangeState<RunningState>();
     }
 
     private void Awake()
     {
-        Controller = GetComponentInParent<CharacterController>();
+        _characterManager = GetComponentInParent<CharacterManager>();
+        _controller = GetComponentInParent<CharacterController>();
     }
 }
