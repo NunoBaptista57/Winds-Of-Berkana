@@ -82,7 +82,7 @@ public class BoatMovement : MonoBehaviour
             rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, CurrentMaxVelocity, VelocityLimitingStrength * Time.fixedDeltaTime));
         }
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
-        rigidbody.AddTorque(TurningTorque * input.Pitch * Vector3.Cross(transform.forward, Vector3.up).normalized, ForceMode.Acceleration);
+        //rigidbody.AddTorque(TurningTorque * input.Pitch * Vector3.Cross(transform.forward, Vector3.up).normalized, ForceMode.Acceleration);
 
         float angle = Vector3.SignedAngle(transform.forward, transform.forward.HorizontalProjection(), transform.right);
         if (angle > MaxVerticalAngle)
