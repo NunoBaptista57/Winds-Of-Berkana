@@ -3,13 +3,14 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     public bool CanMove = true;
-    public CharacterLocomotion CharacterLocomotion;
+    protected CharacterLocomotion CharacterLocomotion;
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
 
-    public void Spawn(Transform transform)
+    public void Spawn(Transform spawnTransform)
     {
-        transform.SetPositionAndRotation(transform.position, transform.rotation);
+        Debug.Log("Spawning...");
+        transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
     }
 
     public void Move(Vector2 input)

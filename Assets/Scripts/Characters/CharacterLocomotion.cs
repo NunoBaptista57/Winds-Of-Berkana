@@ -1,4 +1,6 @@
+using AmplifyShaderEditor;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class CharacterLocomotion : MonoBehaviour
 {
@@ -179,7 +181,10 @@ public class CharacterLocomotion : MonoBehaviour
         _locomotionState.Move(Input);
         if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, _controller.height / 4))
         {
-            _locomotionState.Ground();
+            if (!hit.collider.isTrigger)
+            {
+                _locomotionState.Ground();
+            }
             if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
             {
                 transform.parent.SetParent(movingPlatform.transform);

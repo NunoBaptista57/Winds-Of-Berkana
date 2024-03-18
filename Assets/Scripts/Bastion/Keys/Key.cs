@@ -10,13 +10,13 @@ public abstract class Key : MonoBehaviour
     public void Collect()
     {
         Collected = true;
-        PlayCollectKeyAnimation();
         _keyManager.CollectKey(gameObject.name);
+        PlayCollectKeyAnimation();
     }
 
     private void Awake()
     {
-        if (TryGetComponent(out KeyManager keyManager))
+        if (transform.parent.TryGetComponent(out KeyManager keyManager))
         {
             _keyManager = keyManager;
         }

@@ -13,6 +13,8 @@ public class LevelManager : MonoBehaviour
     public void Death()
     {
         // TODO
+        Debug.Log("Death");
+        SpawnPlayer();
     }
 
     public void SpawnPlayer()

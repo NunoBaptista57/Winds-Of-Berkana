@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class MainKey : Key
 {
     [SerializeField] private float degreesPerSecond = 15.0f;
@@ -36,6 +37,6 @@ public class MainKey : Key
 
     public override void PlayCollectKeyAnimation()
     {
-        throw new System.NotImplementedException();
+        gameObject.SetActive(false);
     }
 }

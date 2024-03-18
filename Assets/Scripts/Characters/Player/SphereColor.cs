@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class SphereColor : MonoBehaviour
 {
+    private KeyManager _keyManager;
     private Key _closestKey;
-    private bool _collectedKeys;
-    private List<Key> _keys;
+    private bool _collectedAllKeys;
 
     private void Start()
     {
+        _keyManager = ServiceLocator.Instance.GetService<KeyManager>();
         InvokeRepeating(nameof(GetClosestKey), 0, 3);
         GetClosestKey();
     }
 
     public void UpdateKeys()
     {
-        foreach (Key key in _keys)
+        foreach (Key key in _keyManager.Keys)
         {
             if (!key.Collected)
             {
@@ -30,11 +31,9 @@ public class SphereColor : MonoBehaviour
     // Get Closest key from the List
     public void GetClosestKey()
     {
-        _keys = ServiceLocator.Instance.GetService<KeyManager>().Keys;
-
         float maxDistance = float.MaxValue;
 
-        foreach (var p in _keys)
+        foreach (var p in _keyManager.Keys)
         {
             if (p.Collected)
             {
@@ -54,7 +53,7 @@ public class SphereColor : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        if (!_collectedKeys)
+        if (!_collectedAllKeys)
         {
             ChangeColor();
         }
@@ -66,7 +65,6 @@ public class SphereColor : MonoBehaviour
         if (_closestKey != null)
         {
             var currentDistance = Vector3.Distance(_closestKey.transform.position, transform.position);
-
             // Change color of the sphere incrementally
             if (currentDistance > 30)
             {
@@ -85,7 +83,7 @@ public class SphereColor : MonoBehaviour
 
     private void KeysWereCollected()
     {
-        _collectedKeys = true;
+        _collectedAllKeys = true;
         gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", 1);
     }
 }
