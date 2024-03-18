@@ -13,19 +13,27 @@ public class TutorialSerpent : MonoBehaviour
     public float speed;
     public float maxDistance;
     public float angleThreshold;
+    private bool playerInShip = false;
+
+    void begin(){
+        playerInShip = true;
+    }
 
     void Update()
     {
-        Vector3 toPlayer = playerPos.position - transform.position;
-        float angleToPlayer = Vector3.Angle(transform.forward, toPlayer);
+        if (playerInShip)
+        {
+            Vector3 toPlayer = playerPos.position - transform.position;
+            float angleToPlayer = Vector3.Angle(transform.forward, toPlayer);
 
-        if (angleToPlayer > angleThreshold && toPlayer.magnitude <= maxDistance)
-        {
-            splineAnimate.Play();
-        }
-        else
-        {
-            splineAnimate.Pause();
+            if (angleToPlayer > angleThreshold && toPlayer.magnitude <= maxDistance)
+            {
+                splineAnimate.Play();
+            }
+            else
+            {
+                splineAnimate.Pause();
+            }
         }
     }
 }

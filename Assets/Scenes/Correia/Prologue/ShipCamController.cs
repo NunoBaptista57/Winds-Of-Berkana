@@ -26,7 +26,7 @@ public class ShipCamController : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        currentX += Input.GetAxis("Mouse X") * sensivity * Time.deltaTime;
+        currentX -= Input.GetAxis("Mouse X") * sensivity * Time.deltaTime;
         currentY += Input.GetAxis("Mouse Y") * sensivity * Time.deltaTime;
  
         currentY = Mathf.Clamp(currentY, YMin, YMax);
