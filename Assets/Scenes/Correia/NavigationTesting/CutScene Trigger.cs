@@ -31,8 +31,8 @@ public class PlayerTimelineController : MonoBehaviour
                 shipTransform.position = newPosition;
 
                 // Rotate the ship towards the target
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                shipTransform.rotation = Quaternion.RotateTowards(shipTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                //Quaternion targetRotation = Quaternion.LookRotation(direction);
+                //shipTransform.rotation = Quaternion.RotateTowards(shipTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
             else
             {

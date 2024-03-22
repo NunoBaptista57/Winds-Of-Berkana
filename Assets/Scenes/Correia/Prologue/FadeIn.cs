@@ -1,18 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class FadeIn : MonoBehaviour
 {
-    public float fadeDuration = 1f; 
+    public float fadeDuration = 1f;
 
-    private Image image;
+    private MaskableGraphic graphic;
     private float currentAlpha = 0f;
     private float fadeSpeed;
 
     void Start()
     {
-        image = GetComponent<Image>();
+        graphic = GetComponent<MaskableGraphic>();
         fadeSpeed = 1f / fadeDuration;
+        StartFadeIn();
     }
 
     void Update()
@@ -20,14 +22,19 @@ public class FadeIn : MonoBehaviour
         currentAlpha += fadeSpeed * Time.deltaTime;
         currentAlpha = Mathf.Clamp01(currentAlpha);
 
-        Color newColor = image.color;
+        Color newColor = graphic.color;
         newColor.a = currentAlpha;
-        image.color = newColor;
+        graphic.color = newColor;
 
         if (currentAlpha >= 1f)
         {
             enabled = false;
         }
     }
-}
 
+    public void StartFadeIn()
+    {
+        currentAlpha = 0f;
+        enabled = true;
+    }
+}

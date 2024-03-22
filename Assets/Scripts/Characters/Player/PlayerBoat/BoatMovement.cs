@@ -15,11 +15,12 @@ public class BoatMovement : MonoBehaviour
 
     [Header("Control Settings")]
     public bool canMove = true;
+    [Min(0)] public float MaxVelocity;
+    [ReadOnlyInspector] public float currentSpeed;
+    [Min(0), SerializeField] float acceleration = 0.1f;
 
     [Header("Wind")]
     [Min(0), SerializeField] float WindForce;
-    [Min(0)] public float MaxVelocity;
-    [ReadOnlyInspector] public float CurrentMaxVelocity;
     [Min(0), SerializeField] float VelocityLimitingStrength = 1;
     [Min(0), SerializeField] float TurningTorque;
 
@@ -49,7 +50,7 @@ public class BoatMovement : MonoBehaviour
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
-        CurrentMaxVelocity = MaxVelocity;
+        currentSpeed = 0;
     }
 
     public void AllowPlayerControl(bool setTo) { canMove = setTo; }
@@ -58,18 +59,18 @@ public class BoatMovement : MonoBehaviour
     {
         if (!canMove) { return; }
 
-        if (Input.GetKey(KeyCode.P))
+        if (Input.GetKey(KeyCode.Space))
         {
-            if (CurrentMaxVelocity < MaxVelocity * 2)
+            if (currentSpeed < MaxVelocity * 2)
             {
-                CurrentMaxVelocity += .1f;
+                currentSpeed += acceleration;
             }
         }
-        if (Input.GetKey(KeyCode.O))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            if (CurrentMaxVelocity > 0)//MaxVelocity/2)
+            if (currentSpeed > 0)
             {
-                CurrentMaxVelocity -= .1f;
+                currentSpeed -= acceleration;
             }
         }
 
@@ -77,9 +78,9 @@ public class BoatMovement : MonoBehaviour
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.Project(rigidbody.velocity, transform.forward), ForwardStabilization);
         rigidbody.AddForce(WindForce * transform.forward, ForceMode.Acceleration);
 
-        if (rigidbody.velocity.magnitude > CurrentMaxVelocity)
+        if (rigidbody.velocity.magnitude > currentSpeed)
         {
-            rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, CurrentMaxVelocity, VelocityLimitingStrength * Time.fixedDeltaTime));
+            rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSpeed, VelocityLimitingStrength * Time.fixedDeltaTime));
         }
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
         //rigidbody.AddTorque(TurningTorque * input.Pitch * Vector3.Cross(transform.forward, Vector3.up).normalized, ForceMode.Acceleration);
@@ -132,7 +133,7 @@ public class BoatMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ring"))
         {
-            CurrentMaxVelocity += MaxVelocity / 2;
+            currentSpeed += MaxVelocity / 2;
             Debug.Log("Entrou");
         }
     }

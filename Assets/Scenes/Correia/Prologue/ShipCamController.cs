@@ -14,14 +14,7 @@ public class ShipCamController : MonoBehaviour
     private float currentX = 0.0f;
     private float currentY = 0.0f;
     public float sensivity = 4.0f;
- 
- 
-    // Start is called before the first frame update
-    void Start()
-    {
-     
- 
-    }
+
  
     // Update is called once per frame
     void LateUpdate()

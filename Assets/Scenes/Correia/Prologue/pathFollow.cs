@@ -8,16 +8,22 @@ using UnityEngine.Splines;
 
 public class pathFollow : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField] private bool needsPlayerProximity = true;
     [SerializeField] private SplineContainer path;
+    public float speed = 3f;
+    public float offsetRotationX = 10f; // Visual only Rotation fix
+    public float maxDistance;
+    public float angleThreshold;
+
+    [Header("References")] // Might refactor to not be needed
+    public Transform playerPos;
+
 
     private Spline currentSpline;
 
     private Rigidbody rb;
 
-    public float offsetY = 10f;
-    public float offsetRotationX = 10f;
-
-    public float speed = 3f;
 
     public void HitJunction(Spline path)
     {
@@ -33,21 +39,28 @@ public class pathFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var native = new NativeSpline(currentSpline);
-        float distance = SplineUtility.GetNearestPoint(native, transform.localPosition, out float3 nearest,out float t);
+        Vector3 toPlayer = playerPos.position - transform.position;
+        float angleToPlayer = Vector3.Angle(transform.forward, toPlayer);
+        bool hasPlayer = angleToPlayer > angleThreshold && toPlayer.magnitude <= maxDistance;
+            
+        if (hasPlayer || !needsPlayerProximity)
+        {
+            var native = new NativeSpline(currentSpline);
+            float distance = SplineUtility.GetNearestPoint(native, transform.localPosition, out float3 nearest,out float t);
+            
+            Vector3 forward = Vector3.Normalize(native.EvaluateTangent(t));
+
+            if (Vector3.Angle(forward, -transform.up) > 30f){forward = -transform.up;} // Prevent problems with crossing splines
+
+            Vector3 up = native.EvaluateUpVector(t);
+            
+            var axisRemapRotation = Quaternion.Inverse(Quaternion.LookRotation(new Vector3(0,0,1), new Vector3(0,1,0)));
         
-        Vector3 forward = Vector3.Normalize(native.EvaluateTangent(t));
+            transform.rotation = Quaternion.LookRotation(forward, up) * axisRemapRotation;
 
-        if (Vector3.Angle(forward, -transform.up) > 30f){forward = -transform.up;} // Prevent problems with crossing splines
+            transform.rotation *= Quaternion.Euler(offsetRotationX, 0, 0);
 
-        Vector3 up = native.EvaluateUpVector(t);
-        
-        var axisRemapRotation = Quaternion.Inverse(Quaternion.LookRotation(new Vector3(0,0,1), new Vector3(0,1,0)));
-     
-        transform.rotation = Quaternion.LookRotation(forward, up) * axisRemapRotation;
-
-        transform.rotation *= Quaternion.Euler(offsetRotationX, 0, 0);
-
-        transform.position = transform.position + forward * speed * Time.deltaTime;
+            transform.position = transform.position + forward * speed * Time.deltaTime; // Might change to physics
+        }
     }
 }
