@@ -116,7 +116,7 @@ public class BoatMovement : MonoBehaviour
     void OnRelease()
     {
         Debug.Log("Interactin");
-        onInteraction.Invoke();
+        //onInteraction.Invoke();
     }
 
     void OnSlow(InputValue value)

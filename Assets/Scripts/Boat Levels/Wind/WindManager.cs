@@ -41,7 +41,7 @@ public class WindManager : MonoBehaviour
     public static void OnPlayerEnter(IWindEffector entered)
     {
         currentEffectors.Add(entered);
-        PlayerBoatEntity.instance.movement.CurrentMaxVelocity = instance.MaxVelocityInCurrent;
+        PlayerBoatEntity.instance.movement.currentSpeed = instance.MaxVelocityInCurrent;
     }
 
     public static void OnPlayerLeave(IWindEffector left)
@@ -49,7 +49,7 @@ public class WindManager : MonoBehaviour
         currentEffectors.Remove(left);
         if (currentEffectors.Count == 0)
         {
-            PlayerBoatEntity.instance.movement.CurrentMaxVelocity = PlayerBoatEntity.instance.movement.MaxVelocity;
+            PlayerBoatEntity.instance.movement.currentSpeed = PlayerBoatEntity.instance.movement.MaxVelocity;
         }
     }
 

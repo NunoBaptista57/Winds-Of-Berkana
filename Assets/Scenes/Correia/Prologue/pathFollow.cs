@@ -15,11 +15,14 @@ public class pathFollow : MonoBehaviour
     public float offsetRotationX = 10f; // Visual only Rotation fix
     public float maxDistance;
     public float angleThreshold;
+    [Tooltip("The duration of time the entity should move at the start regardless of the player's position")]
+    public float startDuration = 0f;
 
     [Header("References")] // Might refactor to not be needed
     public Transform playerPos;
 
-
+    private bool starting = true;
+    
     private Spline currentSpline;
 
     private Rigidbody rb;
@@ -30,11 +33,20 @@ public class pathFollow : MonoBehaviour
         currentSpline = path;
     }
 
+    IEnumerator ActivateForDuration()
+    {
+        starting = true;
+        yield return new WaitForSeconds(startDuration);
+        starting = false;
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
 
         currentSpline = path.Splines[0];
+
+        StartCoroutine(ActivateForDuration());
     }
 
     private void FixedUpdate()
@@ -43,7 +55,7 @@ public class pathFollow : MonoBehaviour
         float angleToPlayer = Vector3.Angle(transform.forward, toPlayer);
         bool hasPlayer = angleToPlayer > angleThreshold && toPlayer.magnitude <= maxDistance;
             
-        if (hasPlayer || !needsPlayerProximity)
+        if (hasPlayer || !needsPlayerProximity || starting)
         {
             var native = new NativeSpline(currentSpline);
             float distance = SplineUtility.GetNearestPoint(native, transform.localPosition, out float3 nearest,out float t);

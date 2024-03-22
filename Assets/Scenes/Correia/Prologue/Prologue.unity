@@ -1192,6 +1192,8 @@ GameObject:
   m_Component:
   - component: {fileID: 528182629}
   - component: {fileID: 528182631}
+  - component: {fileID: 528182633}
+  - component: {fileID: 528182632}
   - component: {fileID: 528182630}
   m_Layer: 5
   m_Name: ControlsShip
@@ -1325,6 +1327,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 528182628}
   m_CullTransparentMesh: 1
+--- !u!114 &528182632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528182628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d357ab76bc126eb448117693d31fe860, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeDuration: 3
+  delayBeforeFadeOut: 15
+--- !u!114 &528182633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528182628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 527a85f3d00a1ab4cb0735e3758ab9b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeDuration: 3
 --- !u!1 &563455037
 GameObject:
   m_ObjectHideFlags: 0
@@ -3009,12 +3038,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c6d05ee14cf1634aa64bed26905284c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  needsPlayerProximity: 0
+  needsPlayerProximity: 1
   path: {fileID: 1223079818}
   speed: 10
   offsetRotationX: -90
   maxDistance: 20
   angleThreshold: 30
+  startDuration: 5
   playerPos: {fileID: 433621548340344841}
 --- !u!135 &1203487541
 SphereCollider:
@@ -8291,9 +8321,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boat_mode: 1
   canMove: 1
-  WindForce: 5
   MaxVelocity: 8
-  CurrentMaxVelocity: 0
+  currentSpeed: 0
+  acceleration: 0.1
+  WindForce: 5
   VelocityLimitingStrength: 100
   TurningTorque: 1.5
   MinVerticalAngle: 70
