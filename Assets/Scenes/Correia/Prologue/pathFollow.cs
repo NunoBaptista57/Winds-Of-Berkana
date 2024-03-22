@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using AmplifyShaderEditor;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -17,15 +15,16 @@ public class pathFollow : MonoBehaviour
     public float angleThreshold;
     [Tooltip("The duration of time the entity should move at the start regardless of the player's position")]
     public float startDuration = 0f;
+    [Tooltip("The ideal distance to maintain from the player")]
+    public float distanceToMaintain = 10f;
 
-    [Header("References")] // Might refactor to not be needed
-    public Transform playerPos;
+    [Header("References")]
+    public BoatMovement playerBoatMovement;
 
     private bool starting = true;
-    
     private Spline currentSpline;
-
     private Rigidbody rb;
+    private Transform playerPos;
 
 
     public void HitJunction(Spline path)
@@ -42,6 +41,8 @@ public class pathFollow : MonoBehaviour
 
     private void Start()
     {
+        playerPos = playerBoatMovement.transform;
+
         rb = GetComponent<Rigidbody>();
 
         currentSpline = path.Splines[0];
@@ -51,28 +52,36 @@ public class pathFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
+        var native = new NativeSpline(currentSpline);
+        float distance = SplineUtility.GetNearestPoint(native, transform.localPosition, out float3 nearest, out float t);
+
+        Vector3 forward = Vector3.Normalize(native.EvaluateTangent(t));
+
         Vector3 toPlayer = playerPos.position - transform.position;
-        float angleToPlayer = Vector3.Angle(transform.forward, toPlayer);
+        float angleToPlayer = Vector3.Angle(forward, toPlayer);
         bool hasPlayer = angleToPlayer > angleThreshold && toPlayer.magnitude <= maxDistance;
-            
+
         if (hasPlayer || !needsPlayerProximity || starting)
         {
-            var native = new NativeSpline(currentSpline);
-            float distance = SplineUtility.GetNearestPoint(native, transform.localPosition, out float3 nearest,out float t);
-            
-            Vector3 forward = Vector3.Normalize(native.EvaluateTangent(t));
-
-            if (Vector3.Angle(forward, -transform.up) > 30f){forward = -transform.up;} // Prevent problems with crossing splines
+            if (Vector3.Angle(forward, -transform.up) > 30f) { forward = -transform.up; } // Prevent problems with crossing splines
 
             Vector3 up = native.EvaluateUpVector(t);
-            
-            var axisRemapRotation = Quaternion.Inverse(Quaternion.LookRotation(new Vector3(0,0,1), new Vector3(0,1,0)));
-        
+
+            var axisRemapRotation = Quaternion.Inverse(Quaternion.LookRotation(new Vector3(0, 0, 1), new Vector3(0, 1, 0)));
+
             transform.rotation = Quaternion.LookRotation(forward, up) * axisRemapRotation;
 
             transform.rotation *= Quaternion.Euler(offsetRotationX, 0, 0);
 
-            transform.position = transform.position + forward * speed * Time.deltaTime; // Might change to physics
+            float adaptiveSpeed = speed;
+            if (hasPlayer)
+            {
+                float distanceToPlayer = toPlayer.magnitude;
+                float desiredDistance = distanceToPlayer - distanceToMaintain;
+                adaptiveSpeed = Mathf.Clamp(playerBoatMovement.currentSpeed * (distanceToMaintain / distanceToPlayer), 0f, 2*speed);
+                print(adaptiveSpeed);
+            }
+            transform.position += forward * adaptiveSpeed * Time.deltaTime;
         }
     }
 }

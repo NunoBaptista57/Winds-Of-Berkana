@@ -51,6 +51,15 @@ public class BoatMovement : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         currentSpeed = 0;
+
+        if (boat_mode)
+        {
+            rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
+        }
+        else
+        {
+            rigidbody.constraints = RigidbodyConstraints.FreezeRotationZ;
+        }
     }
 
     public void AllowPlayerControl(bool setTo) { canMove = setTo; }
@@ -95,6 +104,16 @@ public class BoatMovement : MonoBehaviour
         rot.z = 0;
         rigidbody.rotation = Quaternion.Euler(rot);
 
+    }
+
+    public void setFlyingMode(){
+        boat_mode = false;
+        rigidbody.constraints = RigidbodyConstraints.FreezeRotationZ;
+    }
+
+    public void setSailingMode(){
+        boat_mode = true;
+        rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
     }
 
     void OnTurn(InputValue value)
