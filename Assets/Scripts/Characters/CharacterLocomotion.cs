@@ -143,12 +143,18 @@ public class CharacterLocomotion : MonoBehaviour
     public void ChangeGravity(float acceleration, float maxSpeed, float deceleration)
     {
         float fallSpeed = Gravity.y;
-        fallSpeed -= acceleration * Time.deltaTime;
-
-        if (-fallSpeed > maxSpeed)
+        if (fallSpeed > -maxSpeed)
+        {
+            fallSpeed -= acceleration * Time.deltaTime;
+            if (fallSpeed < -maxSpeed)
+            {
+                fallSpeed = -maxSpeed;
+            }
+        }
+        else if (fallSpeed < -maxSpeed)
         {
             fallSpeed += deceleration * Time.deltaTime;
-            if (-fallSpeed < maxSpeed)
+            if (fallSpeed > -maxSpeed)
             {
                 fallSpeed = -maxSpeed;
             }
@@ -163,7 +169,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     public void StopJumpForce(float force)
     {
-        if (Gravity.y >= 0f)
+        if (Gravity.y > 0f)
         {
             float stopForce = Gravity.y;
             stopForce -= force;
@@ -179,12 +185,9 @@ public class CharacterLocomotion : MonoBehaviour
     private void Update()
     {
         _locomotionState.Move(Input);
-        if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, _controller.height / 4))
+        if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, 1f) && !hit.collider.isTrigger)
         {
-            if (!hit.collider.isTrigger)
-            {
-                _locomotionState.Ground();
-            }
+            _locomotionState.Ground();
             if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
             {
                 transform.parent.SetParent(movingPlatform.transform);
@@ -196,7 +199,6 @@ public class CharacterLocomotion : MonoBehaviour
             transform.parent.SetParent(null);
             ChangeBaseVelocity(Vector3.zero);
         }
-
         _controller.Move(PushVelocity + BaseVelocity + (InputVelocity + Gravity) * Time.deltaTime);
     }
 

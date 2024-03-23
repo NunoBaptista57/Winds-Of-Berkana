@@ -18,6 +18,6 @@ public class BastionMechanicsTest : BastionManager
 
     public override void OpenSanctum()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Open Sanctum");
     }
 }

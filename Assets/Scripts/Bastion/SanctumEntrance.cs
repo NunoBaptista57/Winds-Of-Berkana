@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SanctumEntrance : MonoBehaviour
 {
     public int KeysToOpen = 0;
+    [SerializeField] private List<GameObject> _altars = new();
     [HideInInspector] public int PlacedKeys = 0;
     private BastionManager _bastionManager;
-    private List<GameObject> _altars = new();
     private bool _playerIsNear = false;
-
-    // TODO: interaction
+    private PlayerActions _playerActions;
 
     public void LoadAltars(int placedKeys)
     {
@@ -25,7 +26,7 @@ public class SanctumEntrance : MonoBehaviour
     public void PlaceKeys()
     {
         int collectedKeys = _bastionManager.GetCollectedKeys();
-        for (int i = 0; i < collectedKeys; i++)
+        for (int i = PlacedKeys; i < collectedKeys; i++)
         {
             PlaceKey(_altars[i]);
         }
@@ -35,17 +36,26 @@ public class SanctumEntrance : MonoBehaviour
         }
     }
 
+    private void Interact(InputAction.CallbackContext context)
+    {
+        if (context.started && _playerIsNear)
+        {
+            PlaceKeys();
+        }
+    }
+
     private void PlaceKey(GameObject altar)
     {
         PlacedKeys++;
-        Debug.Log("Placed key.");
+        Debug.Log("Key placed");
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        _playerIsNear = other.gameObject.CompareTag("Player");
+        if (_bastionManager.GetCollectedKeys() > PlacedKeys)
         {
-            _playerIsNear = true;
+            Debug.Log("Press E to place key");
         }
     }
 
@@ -59,14 +69,32 @@ public class SanctumEntrance : MonoBehaviour
 
     private void Awake()
     {
-        if (_bastionManager != null && transform.parent.TryGetComponent(out BastionManager bastionManager))
+        if (_bastionManager == null && transform.parent.TryGetComponent(out BastionManager bastionManager))
         {
             _bastionManager = bastionManager;
         }
-        else if (_bastionManager != null)
+        else if (_bastionManager == null)
         {
             Debug.Log("KeyManager: BastionManager not found. Using ServiceLocator...");
             _bastionManager = ServiceLocator.Instance.GetService<BastionManager>();
         }
+    }
+
+    private void Start()
+    {
+
+    }
+
+    private void OnEnable()
+    {
+        _playerActions = new();
+        _playerActions.Character.Interact.started += Interact;
+        _playerActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerActions.Character.Interact.started -= Interact;
+        _playerActions.Disable();
     }
 }
