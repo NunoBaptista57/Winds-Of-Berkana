@@ -66,7 +66,7 @@ public class BoatMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!canMove) { return; }
+        if (!canMove) { rigidbody.velocity = Vector3.zero; return; }
 
         if (Input.GetKey(KeyCode.Space))
         {

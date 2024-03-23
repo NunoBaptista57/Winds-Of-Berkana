@@ -50,7 +50,7 @@ public class pathFollow : MonoBehaviour
         StartCoroutine(ActivateForDuration());
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         var native = new NativeSpline(currentSpline);
         float distance = SplineUtility.GetNearestPoint(native, transform.localPosition, out float3 nearest, out float t);

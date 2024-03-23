@@ -20,6 +20,7 @@ public class PlayerTimelineController : MonoBehaviour
         if (isMovingToStartPosition)
         {
             // Move the ship
+            shipTransform.gameObject.GetComponent<BoatMovement>().canMove = false;
             Vector3 shipPosition = shipTransform.position;
             shipPosition.y = moveTarget.position.y;
             float distance = Vector3.Distance(shipPosition, moveTarget.position);
@@ -30,14 +31,15 @@ public class PlayerTimelineController : MonoBehaviour
                 Vector3 newPosition = shipTransform.position + direction * moveSpeed * Time.deltaTime;
                 shipTransform.position = newPosition;
 
-                // Rotate the ship towards the target
-                //Quaternion targetRotation = Quaternion.LookRotation(direction);
-                //shipTransform.rotation = Quaternion.RotateTowards(shipTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                //Rotate the ship towards the target
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                shipTransform.rotation = Quaternion.RotateTowards(shipTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
             else
             {
                 isMovingToStartPosition = false;
                 cutSceneManager.beginCutScene();
+                shipTransform.gameObject.GetComponent<BoatMovement>().canMove = true;
             }
         }
     }
