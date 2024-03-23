@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -27,12 +28,16 @@ public class LevelManager : MonoBehaviour
         if (pause)
         {
             _gameState = GameState.Paused;
-            // TODO
+            _playerManager.CanMove = false;
+            _playerManager.CanMoveCamera = false;
+            Time.timeScale = 0f;
         }
         else
         {
             _gameState = GameState.Play;
-            // TODO
+            _playerManager.CanMove = true;
+            _playerManager.CanMoveCamera = true;
+            Time.timeScale = 1f;
         }
     }
 
@@ -65,12 +70,13 @@ public class LevelManager : MonoBehaviour
     public void Restart()
     {
         _gameState = GameState.Remake;
-        // TODO
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
     }
 
     public void Quit()
     {
-        // TODO
+        Application.Quit();
     }
 
     private void Awake()

@@ -10,10 +10,6 @@ public class BastionMechanicsTest : BastionManager
     public override void CollectKey(string key)
     {
         Debug.Log("Collected " + key);
-        if (GetCollectedKeys() == KeyManager.Keys.Count)
-        {
-            OpenSanctum();
-        }
     }
 
     public override void OpenSanctum()

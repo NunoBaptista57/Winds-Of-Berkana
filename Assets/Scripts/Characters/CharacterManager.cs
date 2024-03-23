@@ -74,8 +74,6 @@ public class CharacterManager : MonoBehaviour
                 return;
             }
             Physics.ComputePenetration(collider, collider.transform.position, collider.transform.rotation, CharacterController, transform.position, transform.rotation, out Vector3 direction, out float distance);
-            Debug.Log(distance);
-            Debug.Log(direction);
             CharacterLocomotion.ChangePushVelocity(distance * -direction);
         }
     }

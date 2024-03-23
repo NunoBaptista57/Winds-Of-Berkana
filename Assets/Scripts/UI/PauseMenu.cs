@@ -20,6 +20,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void Resume()
     {
+        Debug.Log("Click");
         _content.SetActive(false);
         _levelManager.Pause(false);
     }
