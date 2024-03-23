@@ -12,7 +12,7 @@ public class PlayerTimelineController : MonoBehaviour
     [SerializeField] private Transform moveTarget;
     private Transform camTransform;
     [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float rotationSpeed = 90f;
+    [SerializeField] private float rotationSpeed = 900f;
     [SerializeField] private float stoppingDistance = 0.3f;
 
     void Update()

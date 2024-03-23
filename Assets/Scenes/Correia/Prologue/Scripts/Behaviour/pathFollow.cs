@@ -25,6 +25,7 @@ public class pathFollow : MonoBehaviour
     private Spline currentSpline;
     private Rigidbody rb;
     private Transform playerPos;
+    private int i = 0;
 
 
     public void HitJunction(Spline path)
@@ -32,11 +33,20 @@ public class pathFollow : MonoBehaviour
         currentSpline = path;
     }
 
+    public void restart(){
+        StartCoroutine(ActivateForDuration());
+    }
+
     IEnumerator ActivateForDuration()
     {
         starting = true;
+        i++;
         yield return new WaitForSeconds(startDuration);
-        starting = false;
+        i--;
+        if (i == 0)
+        {
+            starting = false;
+        }
     }
 
     private void Start()

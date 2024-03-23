@@ -19,6 +19,7 @@ public class BoatMovement : MonoBehaviour
     [ReadOnlyInspector] public float currentSpeed;
     [Min(0), SerializeField] float acceleration = 0.1f;
 
+
     [Header("Wind")]
     [Min(0), SerializeField] float WindForce;
     [Min(0), SerializeField] float VelocityLimitingStrength = 1;
@@ -155,5 +156,16 @@ public class BoatMovement : MonoBehaviour
             currentSpeed += MaxVelocity / 2;
             Debug.Log("Entrou");
         }
+    }
+
+    public void delayControls() {
+        StartCoroutine(DisableControlsforTime(2f));
+    }
+
+    IEnumerator DisableControlsforTime(float delayDuration)
+    {
+        canMove = false;
+        yield return new WaitForSeconds(delayDuration);
+        canMove = true;
     }
 }
