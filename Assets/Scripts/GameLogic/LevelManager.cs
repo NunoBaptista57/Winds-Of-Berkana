@@ -79,6 +79,23 @@ public class LevelManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void QuitToMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);
+    }
+
+    public void GoToNextLevel()
+    {
+        int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (activeSceneIndex >= SceneManager.sceneCount - 1)
+        {
+            QuitToMenu();
+            return;
+        }
+        SceneManager.LoadScene(activeSceneIndex + 1);
+    }
+
     private void Awake()
     {
         _checkpointManager = GetComponentInChildren<CheckpointManager>();

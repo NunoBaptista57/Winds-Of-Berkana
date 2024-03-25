@@ -15,5 +15,6 @@ public class BastionMechanicsTest : BastionManager
     public override void OpenSanctum()
     {
         Debug.Log("Open Sanctum");
+        ServiceLocator.Instance.GetService<LevelManager>().GoToNextLevel();
     }
 }

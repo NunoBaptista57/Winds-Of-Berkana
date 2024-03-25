@@ -15,12 +15,11 @@ public class MainMenuBackgroundManager : MonoBehaviour
 
     public ParallaxComponent[] parallaxComponents;
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
     {
         foreach(var p in parallaxComponents)
         {
-            float offSet = Time.time * p.speed;
+            float offSet = Time.deltaTime * p.speed;
 
             p.image.uvRect = new Rect(offSet, 0.0f, 1, 1);
         }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PauseMenu : MonoBehaviour
+public class PauseMenu : Menu
 {
     [SerializeField] private GameObject _content;
     private LevelManager _levelManager;
@@ -42,7 +42,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Quit()
     {
-        _levelManager.Quit();
+        _levelManager.QuitToMenu();
     }
 
     private void Start()
@@ -53,10 +53,14 @@ public class PauseMenu : MonoBehaviour
     private void OnEnable()
     {
         _playerActions = new();
-
         _playerActions.UI.Pause.performed += Pause;
-
         _playerActions.Enable();
+        UpdateFirstSelected();
+    }
+
+    private void OnDisable()
+    {
+        
     }
 
     private void OnDestroy()
