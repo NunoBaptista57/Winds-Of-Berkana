@@ -158,14 +158,17 @@ public class BoatMovement : MonoBehaviour
         }
     }
 
-    public void delayControls() {
-        StartCoroutine(DisableControlsforTime(2f));
+    public void respawn() {
+        StartCoroutine(DisableMovementforTime(2f));
     }
 
-    IEnumerator DisableControlsforTime(float delayDuration)
+    IEnumerator DisableMovementforTime(float delayDuration)
     {
         canMove = false;
+        RigidbodyConstraints constraints = rigidbody.constraints;
+        rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         yield return new WaitForSeconds(delayDuration);
+        rigidbody.constraints = constraints;
         canMove = true;
     }
 }

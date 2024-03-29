@@ -89,7 +89,6 @@ public class pathFollow : MonoBehaviour
                 float distanceToPlayer = toPlayer.magnitude;
                 float desiredDistance = distanceToPlayer - distanceToMaintain;
                 adaptiveSpeed = Mathf.Clamp(playerBoatMovement.currentSpeed * (distanceToMaintain / distanceToPlayer), 0f, 2*speed);
-                print(adaptiveSpeed);
             }
             transform.position += forward * adaptiveSpeed * Time.deltaTime;
         }

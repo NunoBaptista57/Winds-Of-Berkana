@@ -32,7 +32,7 @@ public class ShipHp : MonoBehaviour
                 return;
             }
             gameObject.GetComponent<BoatMovement>().currentSpeed = 0;
-            gameObject.GetComponent<BoatMovement>().delayControls();
+            gameObject.GetComponent<BoatMovement>().respawn();
             gameObject.transform.position = checkpointsScript.GetPlayerSpawnPoint().position;
             gameObject.transform.rotation = checkpointsScript.GetPlayerSpawnPoint().rotation;
             hp = initialHp;
