@@ -37,7 +37,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void Ground()
     {
-
+        _characterLocomotion.ChangeGravity(3f, 3f, 3f);
     }
 
     public void Tunnel() { }

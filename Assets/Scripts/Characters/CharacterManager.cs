@@ -3,13 +3,14 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
     public bool CanMove = true;
-    public CharacterLocomotion CharacterLocomotion;
+    protected CharacterLocomotion CharacterLocomotion;
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
 
-    public void Spawn(Transform transform)
+    public void Spawn(Transform spawnTransform)
     {
-        transform.SetPositionAndRotation(transform.position, transform.rotation);
+        Debug.Log("Spawning...");
+        transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
     }
 
     public void Move(Vector2 input)
@@ -73,8 +74,6 @@ public class CharacterManager : MonoBehaviour
                 return;
             }
             Physics.ComputePenetration(collider, collider.transform.position, collider.transform.rotation, CharacterController, transform.position, transform.rotation, out Vector3 direction, out float distance);
-            Debug.Log(distance);
-            Debug.Log(direction);
             CharacterLocomotion.ChangePushVelocity(distance * -direction);
         }
     }

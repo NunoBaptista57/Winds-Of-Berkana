@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class KeyManager : MonoBehaviour
 {
@@ -37,13 +37,13 @@ public class KeyManager : MonoBehaviour
         _bastionManager.CollectKey(key);
     }
 
-    private void Awake()
+    private void Start()
     {
-        if (_bastionManager != null && transform.parent.TryGetComponent(out BastionManager bastionManager))
+        if (_bastionManager == null && transform.parent.TryGetComponent(out BastionManager bastionManager))
         {
             _bastionManager = bastionManager;
         }
-        else if (_bastionManager != null)
+        else if (_bastionManager == null)
         {
             Debug.Log("KeyManager: BastionManager not found. Using ServiceLocator...");
             _bastionManager = ServiceLocator.Instance.GetService<BastionManager>();

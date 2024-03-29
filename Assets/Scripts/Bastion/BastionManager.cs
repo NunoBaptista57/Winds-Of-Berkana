@@ -87,14 +87,6 @@ public abstract class BastionManager : MonoBehaviour
         LeverManager = GetComponentInChildren<LeverManager>();
         DoorManager = GetComponentInChildren<DoorManager>();
     }
-
-    private void Start()
-    {
-        if (SanctumEntrance != null && SanctumEntrance.KeysToOpen != 0)
-        {
-            SanctumEntrance.KeysToOpen = KeyManager.Keys.Count;
-        }
-    }
 }
 
 [Serializable]

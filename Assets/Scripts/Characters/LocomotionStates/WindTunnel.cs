@@ -36,7 +36,6 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
         // newVelocity = newVelocity * maxSpeed;
 
         // _characterLocomotion.NewVelocity = newVelocity;
-
     }
 
     public void Run()

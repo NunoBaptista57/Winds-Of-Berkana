@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class LevelManager : MonoBehaviour
     public void Death()
     {
         // TODO
+        Debug.Log("Death");
+        SpawnPlayer();
     }
 
     public void SpawnPlayer()
@@ -25,12 +28,16 @@ public class LevelManager : MonoBehaviour
         if (pause)
         {
             _gameState = GameState.Paused;
-            // TODO
+            _playerManager.CanMove = false;
+            _playerManager.CanMoveCamera = false;
+            Time.timeScale = 0f;
         }
         else
         {
             _gameState = GameState.Play;
-            // TODO
+            _playerManager.CanMove = true;
+            _playerManager.CanMoveCamera = true;
+            Time.timeScale = 1f;
         }
     }
 
@@ -63,12 +70,30 @@ public class LevelManager : MonoBehaviour
     public void Restart()
     {
         _gameState = GameState.Remake;
-        // TODO
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
     }
 
     public void Quit()
     {
-        // TODO
+        Application.Quit();
+    }
+
+    public void QuitToMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);
+    }
+
+    public void GoToNextLevel()
+    {
+        int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (activeSceneIndex >= SceneManager.sceneCount - 1)
+        {
+            QuitToMenu();
+            return;
+        }
+        SceneManager.LoadScene(activeSceneIndex + 1);
     }
 
     private void Awake()

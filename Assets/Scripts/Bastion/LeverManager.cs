@@ -35,17 +35,18 @@ public class LeverManager : MonoBehaviour
         _bastionManager.ActivateLever(lever);
     }
 
-    private void Awake()
+    private void Start()
     {
-        if (_bastionManager != null && transform.parent.TryGetComponent(out BastionManager bastionManager))
+        if (_bastionManager == null && transform.parent.TryGetComponent(out BastionManager bastionManager))
         {
             _bastionManager = bastionManager;
         }
-        else if (_bastionManager != null)
+        else if (_bastionManager == null)
         {
-            Debug.Log("LeverManager: BastionManager not found. Using ServiceLocator...");
+            Debug.Log("KeyManager: BastionManager not found. Using ServiceLocator...");
             _bastionManager = ServiceLocator.Instance.GetService<BastionManager>();
         }
+
 
         foreach (Transform child in transform)
         {
