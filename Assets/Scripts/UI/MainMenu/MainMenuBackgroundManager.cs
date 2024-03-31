@@ -19,9 +19,15 @@ public class MainMenuBackgroundManager : MonoBehaviour
     {
         foreach(var p in parallaxComponents)
         {
-            float offSet = Time.deltaTime * p.speed;
+            float offset = p.image.uvRect.x + Time.deltaTime * p.speed;
 
-            p.image.uvRect = new Rect(offSet, 0.0f, 1, 1);
+            // Loop the offset back to 0 when it reaches 1 to create a looping effect
+            if (offset > 1f)
+            {
+                offset -= 1f;
+            }
+
+            p.image.uvRect = new Rect(offset, 0f, 1f, 1f);
         }
        
     }
