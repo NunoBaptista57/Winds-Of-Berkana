@@ -1,6 +1,4 @@
-using AmplifyShaderEditor;
 using UnityEngine;
-using UnityEngine.Analytics;
 
 public class CharacterLocomotion : MonoBehaviour
 {

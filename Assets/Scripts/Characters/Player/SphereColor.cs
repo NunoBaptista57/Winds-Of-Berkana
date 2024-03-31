@@ -11,6 +11,7 @@ public class SphereColor : MonoBehaviour
     private void Start()
     {
         _keyManager = ServiceLocator.Instance.GetService<KeyManager>();
+        _keyManager.UpdateKeysEvent.AddListener(UpdateKeys);
         InvokeRepeating(nameof(GetClosestKey), 0, 3);
         GetClosestKey();
     }

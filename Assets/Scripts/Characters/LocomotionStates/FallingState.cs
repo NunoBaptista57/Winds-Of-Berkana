@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class FallingState : MonoBehaviour, ILocomotionState
@@ -8,12 +9,28 @@ public class FallingState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
+    [SerializeField] private float _animationDelay = 0.1f;
     private bool _walk = false;
     private CharacterLocomotion _characterLocomotion;
+    private bool _startAnimation = true;
 
     public void StartState()
     {
-        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
+        _startAnimation = true;
+        StartCoroutine(StartFall());
+    }
+
+    private IEnumerator StartFall()
+    {
+        float startTime = Time.time;
+        while (Time.time - startTime < _animationDelay)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        if (_startAnimation)
+        {
+            _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
+        }
     }
 
     public void StartJump()
@@ -49,6 +66,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void Ground()
     {
+        _startAnimation = false;
         _characterLocomotion.ChangeState<RunningState>();
     }
 

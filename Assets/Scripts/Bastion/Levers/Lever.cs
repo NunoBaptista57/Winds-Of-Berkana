@@ -1,4 +1,3 @@
-using AmplifyShaderEditor;
 using UnityEngine;
 
 public abstract class Lever : MonoBehaviour
