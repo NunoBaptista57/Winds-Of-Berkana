@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -12,10 +13,10 @@ public class PlayerTimelineController : MonoBehaviour
     [SerializeField] private Transform moveTarget;
     private Transform camTransform;
     [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float rotationSpeed = 900f;
-    [SerializeField] private float stoppingDistance = 0.3f;
+    [SerializeField] private float rotationSpeed = 0.0002f;
+    [SerializeField] private float stoppingDistance = 0.1f;
 
-    void Update()
+void Update()
     {
         if (isMovingToStartPosition)
         {
@@ -31,9 +32,9 @@ public class PlayerTimelineController : MonoBehaviour
                 Vector3 newPosition = shipTransform.position + direction * moveSpeed * Time.deltaTime;
                 shipTransform.position = newPosition;
 
-                //Rotate the ship towards the target
+                // Rotate the ship towards the target
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
-                shipTransform.rotation = Quaternion.RotateTowards(shipTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                shipTransform.rotation = Quaternion.Lerp(shipTransform.rotation, targetRotation, rotationSpeed);
             }
             else
             {
@@ -50,7 +51,7 @@ public class PlayerTimelineController : MonoBehaviour
         if (boatMovement != null)
         {
             boatMovement.AllowPlayerControl(false);
-            moveSpeed = boatMovement.MaxVelocity;
+            moveSpeed = boatMovement.currentSpeed;
             shipTransform = other.gameObject.transform;
             isMovingToStartPosition = true;
         }
