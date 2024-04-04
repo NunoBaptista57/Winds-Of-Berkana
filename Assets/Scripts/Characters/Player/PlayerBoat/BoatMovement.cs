@@ -10,6 +10,12 @@ public class BoatMovement : MonoBehaviour
 {
     new Rigidbody rigidbody;
 
+    [Header("Flight Settings")]
+    [SerializeField] bool flightMode;
+    [SerializeField, Min(0)] float maxDownBoost = 1.5f; // Multiplier for maxSpeed when going down
+    [SerializeField, Min(0)] float maxUpSlow = 0.5f;    // Multiplier for maxSpeed when going up
+    float speedModifier = 1f; 
+
     [Header("Boat Mode")]
     [SerializeField] bool boat_mode;
 
@@ -67,7 +73,35 @@ public class BoatMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        print("speed");
+        print(currentSpeed);
+        print("mod");
+        print(speedModifier);
+        print("moded speed");
+        print(currentSpeed * speedModifier);
+
         if (!canMove) { rigidbody.velocity = Vector3.zero; return; }
+
+        if (!boat_mode)
+        {
+            // Calculate speed modifier based on ship's pitch
+            float pitchAngle = Vector3.Angle(transform.forward, Vector3.up);
+
+            print("angle");
+            print(pitchAngle);
+
+            //speedModifier = Mathf.Lerp(1f, pitchAngle >= 90 ? maxDownBoost : maxUpSlow, pitchAngle / 90f);
+
+            // Slowly revert speed modifier back to 1 when ship levels out
+            if (pitchAngle < 90)
+            {
+                speedModifier = Mathf.Lerp(speedModifier, maxUpSlow, Time.fixedDeltaTime);
+            }
+            else if (pitchAngle > 90)
+            {
+                speedModifier = Mathf.Lerp(speedModifier, maxDownBoost, Time.fixedDeltaTime);
+            }
+        }
 
         if (Input.GetKey(KeyCode.Space))
         {
@@ -88,9 +122,9 @@ public class BoatMovement : MonoBehaviour
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.Project(rigidbody.velocity, transform.forward), ForwardStabilization);
         rigidbody.AddForce(WindForce * transform.forward, ForceMode.Acceleration);
 
-        if (rigidbody.velocity.magnitude > currentSpeed)
+        if (rigidbody.velocity.magnitude > currentSpeed * speedModifier)
         {
-            rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSpeed, VelocityLimitingStrength * Time.fixedDeltaTime));
+            rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSpeed * speedModifier, VelocityLimitingStrength * Time.fixedDeltaTime));
         }
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
 
