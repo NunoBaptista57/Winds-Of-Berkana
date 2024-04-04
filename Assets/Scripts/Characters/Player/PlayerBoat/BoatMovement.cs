@@ -11,13 +11,10 @@ public class BoatMovement : MonoBehaviour
     new Rigidbody rigidbody;
 
     [Header("Flight Settings")]
-    [SerializeField] bool flightMode;
+    [SerializeField] bool flightMode = true;
     [SerializeField, Min(0)] float maxDownBoost = 1.5f; // Multiplier for maxSpeed when going down
     [SerializeField, Min(0)] float maxUpSlow = 0.5f;    // Multiplier for maxSpeed when going up
     float speedModifier = 1f; 
-
-    [Header("Boat Mode")]
-    [SerializeField] bool boat_mode;
 
     [Header("Control Settings")]
     public bool canMove = true;
@@ -59,7 +56,7 @@ public class BoatMovement : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         currentSpeed = 0;
 
-        if (boat_mode)
+        if (!flightMode)
         {
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
         }
@@ -73,35 +70,27 @@ public class BoatMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        print("speed");
-        print(currentSpeed);
-        print("mod");
-        print(speedModifier);
-        print("moded speed");
-        print(currentSpeed * speedModifier);
-
         if (!canMove) { rigidbody.velocity = Vector3.zero; return; }
 
-        if (!boat_mode)
+        if (flightMode) // Dynamic speed limit going up or down
         {
-            // Calculate speed modifier based on ship's pitch
             float pitchAngle = Vector3.Angle(transform.forward, Vector3.up);
 
-            print("angle");
-            print(pitchAngle);
-
-            //speedModifier = Mathf.Lerp(1f, pitchAngle >= 90 ? maxDownBoost : maxUpSlow, pitchAngle / 90f);
-
-            // Slowly revert speed modifier back to 1 when ship levels out
             if (pitchAngle < 90)
             {
-                speedModifier = Mathf.Lerp(speedModifier, maxUpSlow, Time.fixedDeltaTime);
+                float t = Mathf.InverseLerp(90f, MaxVerticalAngle, pitchAngle);
+                float mappedValue = Mathf.Lerp(1f, maxUpSlow, t);
+                speedModifier = Mathf.Lerp(speedModifier, mappedValue, Time.fixedDeltaTime*2.5f);
             }
             else if (pitchAngle > 90)
             {
-                speedModifier = Mathf.Lerp(speedModifier, maxDownBoost, Time.fixedDeltaTime);
+                float t = Mathf.InverseLerp(90f, MinVerticalAngle, pitchAngle);
+                float mappedValue = Mathf.Lerp(maxDownBoost, 1f, t);
+                speedModifier = Mathf.Lerp(speedModifier, mappedValue, Time.fixedDeltaTime*2.5f);
             }
         }
+
+        //print(currentSpeed * speedModifier);
 
         if (Input.GetKey(KeyCode.Space))
         {
@@ -128,7 +117,7 @@ public class BoatMovement : MonoBehaviour
         }
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
 
-        if (!boat_mode)
+        if (flightMode)
         {
             rigidbody.AddTorque(TurningTorque * input.Pitch * Vector3.Cross(transform.forward, Vector3.up).normalized, ForceMode.Acceleration);
         }
@@ -146,12 +135,12 @@ public class BoatMovement : MonoBehaviour
     }
 
     public void setFlyingMode(){
-        boat_mode = false;
+        flightMode = true;
         rigidbody.constraints = RigidbodyConstraints.FreezeRotationZ;
     }
 
     public void setSailingMode(){
-        boat_mode = true;
+        flightMode = false;
         rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
     }
 
@@ -163,7 +152,7 @@ public class BoatMovement : MonoBehaviour
 
     void OnPitch(InputValue value)
     {
-        if (boat_mode)
+        if (!flightMode)
         {
             return;
         }
