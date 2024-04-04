@@ -2,10 +2,19 @@ using UnityEngine;
 
 public class CharacterManager : MonoBehaviour
 {
-    public bool CanMove = true;
+    private bool _canMove = true;
     protected CharacterLocomotion CharacterLocomotion;
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
+    private Vector2 _lastInput = Vector3.zero;
+
+    public void SetCanMove(bool canMove)
+    {
+        CharacterController.enabled = canMove;
+        CharacterLocomotion.gameObject.SetActive(canMove);
+        _canMove = canMove;
+        Move(_lastInput);
+    }
 
     public void Spawn(Transform spawnTransform)
     {
@@ -15,15 +24,16 @@ public class CharacterManager : MonoBehaviour
 
     public void Move(Vector2 input)
     {
-        if (CanMove)
+        if (_canMove)
         {
             CharacterLocomotion.Input = input;
         }
+        _lastInput = input;
     }
 
     public void Run()
     {
-        if (CanMove)
+        if (_canMove)
         {
             CharacterLocomotion.Run();
         }
@@ -31,7 +41,7 @@ public class CharacterManager : MonoBehaviour
 
     public void Walk(bool walk)
     {
-        if (CanMove)
+        if (_canMove)
         {
             CharacterLocomotion.Walk(walk);
         }
@@ -40,7 +50,7 @@ public class CharacterManager : MonoBehaviour
     // The bool states wether the jump is starting or ending
     public void Jump(bool startedJump)
     {
-        if (!CanMove)
+        if (!_canMove)
         {
             return;
         }

@@ -1,9 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class KeyManager : MonoBehaviour
 {
     public List<Key> Keys = new();
+    public UnityEvent UpdateKeysEvent;
     private BastionManager _bastionManager;
 
     public bool[] SaveKeys()
@@ -35,6 +37,7 @@ public class KeyManager : MonoBehaviour
     public void CollectKey(string key)
     {
         _bastionManager.CollectKey(key);
+        UpdateKeysEvent.Invoke();
     }
 
     private void Start()

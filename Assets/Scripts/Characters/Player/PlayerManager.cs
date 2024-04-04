@@ -20,10 +20,8 @@ public class PlayerManager : CharacterManager
         if (_canDebug && context.started)
         {
             _debugMode.DebugMode = !_debugMode.DebugMode;
-            CanMove = !_debugMode.DebugMode;
-            CharacterController.enabled = !_debugMode.DebugMode;
             Move(Vector2.zero);
-            CharacterLocomotion.gameObject.SetActive(!_debugMode.DebugMode);
+            SetCanMove(!_debugMode.DebugMode);
         }
     }
 

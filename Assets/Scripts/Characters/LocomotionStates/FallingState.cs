@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class FallingState : MonoBehaviour, ILocomotionState
@@ -8,22 +9,50 @@ public class FallingState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
+    [SerializeField] private float _animationDelay = 0.1f;
+    [SerializeField] private float _glideDelay = 0.3f;
     private bool _walk = false;
     private CharacterLocomotion _characterLocomotion;
+    private bool _startAnimation = true;
+    private bool _isPressingJump = false;
 
     public void StartState()
     {
-        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
+        _startAnimation = true;
+        StartCoroutine(StartFall());
+    }
+
+    private IEnumerator StartFall()
+    {
+        float startTime = Time.time;
+        while (Time.time - startTime < _animationDelay)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        if (_startAnimation)
+        {
+            _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
+        }
     }
 
     public void StartJump()
     {
-        _characterLocomotion.ChangeState<GlidingState>();
+        _isPressingJump = true;
+        StartCoroutine(StartGlide());
+    }
+
+    private IEnumerator StartGlide()
+    {
+        yield return new WaitForSeconds(_glideDelay);
+        if (_isPressingJump)
+        {
+            _characterLocomotion.ChangeState<GlidingState>();
+        }
     }
 
     public void StopJump()
     {
-
+        _isPressingJump = false;
     }
 
     public void Move(Vector2 input)
@@ -49,6 +78,8 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void Ground()
     {
+        _startAnimation = false;
+        _isPressingJump = false;
         _characterLocomotion.ChangeState<RunningState>();
     }
 

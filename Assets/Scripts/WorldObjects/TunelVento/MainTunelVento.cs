@@ -8,43 +8,38 @@ using Vector3 = UnityEngine.Vector3;
 
 public class MainTunelVento : MonoBehaviour
 {
-    public GameObject _player;
-    private CharacterLocomotion _characterLocomotion;
-
+    [SerializeField] private float rate;
+    
+    [SerializeField] private CinemachineFreeLook playerCam;
+    [SerializeField] private CinemachineFreeLook vcam2;
+    [SerializeField] private Transform _pointB;
     private bool overworldCamera = true;
 
-    public float rate;
-    
-    [SerializeField]
-    private CinemachineFreeLook playerCam;
-    [SerializeField]
-    private CinemachineFreeLook vcam2;
-
-    void Start(){
-        _characterLocomotion = _player.GetComponentInChildren<CharacterLocomotion>();
-    }
-
     void OnTriggerEnter(Collider target){
-        if (target.gameObject.CompareTag("Player"))
+        if (target.gameObject.TryGetComponent(out CharacterManager characterManager))
         {
+            if (_pointB == null) 
+            {
+                Debug.Log("Point B not assigned");
+                return;
+            }
             SwitchPriority();
+            StartCoroutine(MoveToPointB(characterManager));
+
         }
-    }
-    void OnTriggerStay(Collider target)
-    {
-        if (target.gameObject.CompareTag("Player"))
-        {
-            _characterLocomotion.Tunnel();
-        }
-        
     }
 
-    private void OnTriggerExit(Collider other)
+    private IEnumerator MoveToPointB(CharacterManager characterManager)
     {
-        if (other.gameObject.CompareTag("Player"))
+        characterManager.SetCanMove(false);
+        Transform characterTransform = characterManager.gameObject.transform;
+        while (Vector3.Distance(characterTransform.position, _pointB.position) >= 1f)
         {
-            SwitchPriority();
+            characterTransform.position = Vector3.MoveTowards(characterTransform.position, _pointB.position, rate * Time.deltaTime);
+            yield return new WaitForEndOfFrame();
         }
+        SwitchPriority();
+        characterManager.SetCanMove(true);
     }
 
     void SwitchPriority()
