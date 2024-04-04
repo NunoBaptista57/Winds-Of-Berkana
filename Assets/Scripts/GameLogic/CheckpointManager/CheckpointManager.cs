@@ -7,6 +7,7 @@ public class CheckpointManager : MonoBehaviour
 
     public void ChangeCheckpoint(Checkpoint checkpoint)
     {
+        Debug.Log("Change Checkpoint");
         CurrentCheckpoint = checkpoint;
         // TODO AutoSave maybe...
     }
