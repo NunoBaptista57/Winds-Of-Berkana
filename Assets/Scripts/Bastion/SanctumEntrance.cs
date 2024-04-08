@@ -1,14 +1,16 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class SanctumEntrance : MonoBehaviour
 {
     public int KeysToOpen = 0;
+    public UnityEvent<Key> PlaceKeyEvent;
+    public UnityEvent OpenSanctumEvent;
+    public int PlacedKeys = 0;
+    [SerializeField] private GameObject _keyObject;
     [SerializeField] private List<GameObject> _altars = new();
-    [HideInInspector] public int PlacedKeys = 0;
     private BastionManager _bastionManager;
     private bool _playerIsNear = false;
     private PlayerActions _playerActions;
@@ -20,14 +22,15 @@ public class SanctumEntrance : MonoBehaviour
 
     public void OpenSanctum()
     {
-        _bastionManager.OpenSanctum();
+        OpenSanctumEvent.Invoke();
     }
 
     public void PlaceKeys()
     {
-        int collectedKeys = _bastionManager.GetCollectedKeys();
-        for (int i = PlacedKeys; i < collectedKeys; i++)
+        List<Key> collectedKeys = _bastionManager.GetCollectedKeys();
+        for (int i = PlacedKeys; i < collectedKeys.Count; i++)
         {
+            PlaceKeyEvent.Invoke(collectedKeys[i]);
             PlaceKey(_altars[i]);
         }
         if (PlacedKeys == KeysToOpen)
@@ -47,13 +50,14 @@ public class SanctumEntrance : MonoBehaviour
     private void PlaceKey(GameObject altar)
     {
         PlacedKeys++;
+        Instantiate(_keyObject, altar.transform.position + new Vector3(0f, 1f, 0f), Quaternion.identity, transform);
         Debug.Log("Key placed");
     }
 
     private void OnTriggerEnter(Collider other)
     {
         _playerIsNear = other.gameObject.CompareTag("Player");
-        if (_bastionManager.GetCollectedKeys() > PlacedKeys)
+        if (_bastionManager.GetCollectedKeys().Count > PlacedKeys)
         {
             Debug.Log("Press E to place key");
         }
@@ -78,11 +82,6 @@ public class SanctumEntrance : MonoBehaviour
             Debug.Log("KeyManager: BastionManager not found. Using ServiceLocator...");
             _bastionManager = ServiceLocator.Instance.GetService<BastionManager>();
         }
-    }
-
-    private void Start()
-    {
-
     }
 
     private void OnEnable()

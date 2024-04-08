@@ -20,7 +20,8 @@ public class LevelManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        _playerManager.Spawn(_checkpointManager.CurrentCheckpoint.transform);
+        Debug.Log("Spawning Player...");
+        _playerManager.Spawn(_checkpointManager.CurrentCheckpoint.RespawnPosition);
     }
 
     public void Pause(bool pause)

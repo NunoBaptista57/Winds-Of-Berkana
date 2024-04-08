@@ -47,7 +47,7 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
         {
             CameraAnimator.Play(harpoon.AnimationState);
             player.state = PlayerBoatState.Transition;
-            Cursor.lockState = CursorLockMode.Locked;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
             currentHarpoon = harpoon;
             if (currentHarpoon.Grappling)
             {
@@ -60,7 +60,7 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
     {
         if (player.state == PlayerBoatState.Harpoon && currentHarpoon && !toShoot)
         {
-            Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
             toShoot = true;
         }
     }
@@ -71,7 +71,7 @@ public class PlayerBoatHarpoonController : PlayerBoatBehaviour
         {
             CameraAnimator.Play("Idle");
             player.state = PlayerBoatState.Transition;
-            Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
             currentHarpoon = null;
             OnHarpoonCanceled.Invoke();
         }

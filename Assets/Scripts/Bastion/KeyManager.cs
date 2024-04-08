@@ -5,8 +5,7 @@ using UnityEngine.Events;
 public class KeyManager : MonoBehaviour
 {
     public List<Key> Keys = new();
-    public UnityEvent UpdateKeysEvent;
-    private BastionManager _bastionManager;
+    public UnityEvent<Key> CollectedKeyEvent;
 
     public bool[] SaveKeys()
     {
@@ -34,24 +33,13 @@ public class KeyManager : MonoBehaviour
         }
     }
 
-    public void CollectKey(string key)
+    public void CollectKey(Key key)
     {
-        _bastionManager.CollectKey(key);
-        UpdateKeysEvent.Invoke();
+        CollectedKeyEvent.Invoke(key);
     }
 
     private void Start()
     {
-        if (_bastionManager == null && transform.parent.TryGetComponent(out BastionManager bastionManager))
-        {
-            _bastionManager = bastionManager;
-        }
-        else if (_bastionManager == null)
-        {
-            Debug.Log("KeyManager: BastionManager not found. Using ServiceLocator...");
-            _bastionManager = ServiceLocator.Instance.GetService<BastionManager>();
-        }
-
         foreach (Transform child in transform)
         {
             if (child.TryGetComponent(out Key key))
