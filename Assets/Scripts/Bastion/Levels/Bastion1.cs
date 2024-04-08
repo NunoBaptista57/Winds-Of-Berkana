@@ -2,19 +2,38 @@ using UnityEngine;
 
 public class Bastion1 : BastionManager
 {
-    public override void ActivateLever(string lever)
+    [SerializeField] private Key _keyToOpenEntrance;
+    [SerializeField] private Door _doorToSubground;
+    [SerializeField] private Door _doorToTower;
+    [SerializeField] private Lever _leverToFirstKey;
+
+    public override void ActivateLever(Lever lever)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Lever Event");
+        if (lever == _leverToFirstKey)
+        {
+            _doorToTower.Open();
+        }
     }
 
-    public override void CollectKey(string key)
+    public override void CollectKey(Key key)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Key Event");
     }
 
     public override void OpenSanctum()
     {
+        Debug.Log("Sanctum Event");
         throw new System.NotImplementedException();
+    }
+
+    public override void PlaceKey(Key key)
+    {
+        Debug.Log("Place Key Event");
+        if (key == _keyToOpenEntrance)
+        {
+            _doorToSubground.Open();
+        }
     }
 
     public enum BastionState

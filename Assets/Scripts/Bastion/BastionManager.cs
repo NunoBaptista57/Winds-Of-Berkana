@@ -1,33 +1,29 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using UnityEngine;
 
 public abstract class BastionManager : MonoBehaviour
 {
-    protected SanctumEntrance SanctumEntrance;
     protected KeyManager KeyManager;
+    protected SanctumEntrance SanctumEntrance;
     protected LeverManager LeverManager;
     protected DoorManager DoorManager;
     protected VitralPuzzleManager VitralPuzzleManager;
-
-    public abstract void CollectKey(string key);
-    public abstract void ActivateLever(string lever);
+    public abstract void CollectKey(Key key);
+    public abstract void PlaceKey(Key key);
+    public abstract void ActivateLever(Lever lever);
     public abstract void OpenSanctum();
 
-    public int GetCollectedKeys()
+    public List<Key> GetCollectedKeys()
     {
         if (KeyManager == null)
         {
             throw new NullReferenceException("KeyManager doesn't exist");
         };
-        int collectedKeys = 0;
-        foreach (Key key in KeyManager.Keys)
-        {
-            if (key.Collected)
-            {
-                collectedKeys++;
-            }
-        }
-        return collectedKeys;
+
+        return KeyManager.Keys.Where(key => key.Collected).ToList();
     }
 
     public Bastion SaveBastion()
@@ -86,6 +82,23 @@ public abstract class BastionManager : MonoBehaviour
         KeyManager = GetComponentInChildren<KeyManager>();
         LeverManager = GetComponentInChildren<LeverManager>();
         DoorManager = GetComponentInChildren<DoorManager>();
+    }
+
+    private void Start()
+    {
+        if (KeyManager != null)
+        {
+            KeyManager.CollectedKeyEvent.AddListener(CollectKey);
+        }
+        if (SanctumEntrance != null)
+        {
+            SanctumEntrance.OpenSanctumEvent.AddListener(OpenSanctum);
+            SanctumEntrance.PlaceKeyEvent.AddListener(PlaceKey);
+        }
+        if (LeverManager != null)
+        {
+            LeverManager.LeverActivatedEvent.AddListener(ActivateLever);
+        }
     }
 }
 

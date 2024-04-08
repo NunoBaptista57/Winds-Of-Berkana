@@ -23,18 +23,7 @@ public class DoorManager : MonoBehaviour
             if (doors[i])
             {
                 Doors[i].IsOpen = true;
-                Doors[i].ChangeDoorLook();
-            }
-        }
-    }
-
-    public void OpenDoor(string doorName)
-    {
-        foreach (Door door in Doors)
-        {
-            if (door.gameObject.name == doorName)
-            {
-                door.Open();
+                Doors[i].ChangeDoorToOpen();
             }
         }
     }

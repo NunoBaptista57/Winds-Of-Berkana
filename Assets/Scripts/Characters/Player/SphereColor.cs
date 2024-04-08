@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SphereColor : MonoBehaviour
@@ -11,12 +9,12 @@ public class SphereColor : MonoBehaviour
     private void Start()
     {
         _keyManager = ServiceLocator.Instance.GetService<KeyManager>();
-        _keyManager.UpdateKeysEvent.AddListener(UpdateKeys);
+        _keyManager.CollectedKeyEvent.AddListener(UpdateKeys);
         InvokeRepeating(nameof(GetClosestKey), 0, 3);
         GetClosestKey();
     }
 
-    public void UpdateKeys()
+    public void UpdateKeys(Key _)
     {
         foreach (Key key in _keyManager.Keys)
         {
