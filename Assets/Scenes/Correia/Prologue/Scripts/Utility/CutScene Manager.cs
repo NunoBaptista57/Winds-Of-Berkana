@@ -10,6 +10,7 @@ public class CutSceneManager : MonoBehaviour
     private bool isCutscenePlaying = false;
 
     public BoatMovement player; //Might be replaced by a manager sys with the needed references
+    public bool playOnAwake = false;
 
     [Header("Optional reference to load scene after the cutscene")]
     public string sceneToLoad;
@@ -17,6 +18,7 @@ public class CutSceneManager : MonoBehaviour
     void Start()
     {
         playableDirector = GetComponent<PlayableDirector>();
+        if (playOnAwake) {beginCutScene();}
     }
 
     public void beginCutScene()

@@ -66,10 +66,6 @@ public class PlayerTimelineController : MonoBehaviour
 
                 Vector3 forward = Vector3.Normalize(native.EvaluateTangent(t));
 
-                print(forward);
-
-                //if (Vector3.Angle(forward, -shipTransform.up) > 30f) { forward = -shipTransform.up; } // Prevent problems with crossing splines
-
                 Vector3 up = native.EvaluateUpVector(t);
 
                 var axisRemapRotation = Quaternion.Inverse(Quaternion.LookRotation(new Vector3(0, 0, 1), new Vector3(0, 1, 0)));
