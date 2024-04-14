@@ -1,6 +1,10 @@
 using System.Collections;
+using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Splines;
+
 
 public class PlayerTimelineController : MonoBehaviour
 {
@@ -16,25 +20,67 @@ public class PlayerTimelineController : MonoBehaviour
     [SerializeField] private float rotationSpeed = 0.0002f;
     [SerializeField] private float stoppingDistance = 0.1f;
 
-void Update()
+
+
+    [SerializeField] private bool needsPlayerProximity = true;
+    [SerializeField] private SplineContainer path;
+    public float offsetRotationX = 10f; // Visual only Rotation fix
+
+    [Header("References")]
+    public BoatMovement playerBoatMovement;
+
+    private Spline currentSpline;
+    private Rigidbody rb;
+    private Transform playerPos;
+    private int i = 0;
+    private float t = 0f;
+
+
+    public void HitJunction(Spline path)
+    {
+        currentSpline = path;
+    }
+
+    private void Start()
+    {
+        playerPos = playerBoatMovement.transform;
+
+        rb = GetComponent<Rigidbody>();
+
+        currentSpline = path.Splines[0];
+    }
+
+    void Update()
     {
         if (isMovingToStartPosition)
         {
             // Move the ship
             shipTransform.gameObject.GetComponent<BoatMovement>().canMove = false;
             Vector3 shipPosition = shipTransform.position;
-            shipPosition.y = moveTarget.position.y;
-            float distance = Vector3.Distance(shipPosition, moveTarget.position);
+            shipPosition.y = currentSpline.Knots.Last().Position.y;
+            float distance = Vector3.Distance(shipPosition, currentSpline.Knots.Last().Position);
+            
             if (distance > stoppingDistance)
             {
-                Vector3 direction = (moveTarget.position - shipTransform.position).normalized;
-                direction.y = 0;
-                Vector3 newPosition = shipTransform.position + direction * moveSpeed * Time.deltaTime;
-                shipTransform.position = newPosition;
+                var native = new NativeSpline(currentSpline);
 
-                // Rotate the ship towards the target
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                shipTransform.rotation = Quaternion.Lerp(shipTransform.rotation, targetRotation, rotationSpeed);
+                Vector3 forward = Vector3.Normalize(native.EvaluateTangent(t));
+
+                print(forward);
+
+                //if (Vector3.Angle(forward, -shipTransform.up) > 30f) { forward = -shipTransform.up; } // Prevent problems with crossing splines
+
+                Vector3 up = native.EvaluateUpVector(t);
+
+                var axisRemapRotation = Quaternion.Inverse(Quaternion.LookRotation(new Vector3(0, 0, 1), new Vector3(0, 1, 0)));
+
+                shipTransform.rotation = Quaternion.LookRotation(forward, up) * axisRemapRotation;
+
+                shipTransform.rotation *= Quaternion.Euler(offsetRotationX, 0, 0);
+
+                shipTransform.position += forward * moveSpeed * Time.deltaTime;
+
+                t += moveSpeed * Time.deltaTime / currentSpline.GetLength();
             }
             else
             {
@@ -54,6 +100,11 @@ void Update()
             moveSpeed = boatMovement.currentSpeed;
             shipTransform = other.gameObject.transform;
             isMovingToStartPosition = true;
+            BezierKnot firstKnot = currentSpline.Knots.First();
+            print(firstKnot.Position);
+            firstKnot.Position = shipTransform.position;
+            firstKnot.Rotation = shipTransform.rotation;
+            currentSpline.SetKnot(0, firstKnot);
         }
     }
 }
