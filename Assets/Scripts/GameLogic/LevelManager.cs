@@ -31,12 +31,14 @@ public class LevelManager : MonoBehaviour
             _gameState = GameState.Paused;
             _playerManager.CanMoveCamera = false;
             Time.timeScale = 0f;
+            _playerManager.SetCanMove(false);
         }
         else
         {
             _gameState = GameState.Play;
             _playerManager.CanMoveCamera = true;
             Time.timeScale = 1f;
+            _playerManager.SetCanMove(true);
         }
     }
 
