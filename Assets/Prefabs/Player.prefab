@@ -626,8 +626,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2aab6df3d8d3c41b7700726617676c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gravity: 20
-  _maxFallSpeed: 25
+  _gravity: 30
+  _maxFallSpeed: 17
   _acceleration: 30
   _maxSpeed: 10
   _deceleration: 30
@@ -3576,7 +3576,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5199775605719080523}
   - component: {fileID: 2625970330969706551}
-  - component: {fileID: 7098534854915495690}
   - component: {fileID: 7654144696706659028}
   - component: {fileID: 2316173886662852393}
   m_Layer: 0
@@ -3609,27 +3608,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6641489599947643242}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &7098534854915495690
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6641489599947643242}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!137 &7654144696706659028
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
