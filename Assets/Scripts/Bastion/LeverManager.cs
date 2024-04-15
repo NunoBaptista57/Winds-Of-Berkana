@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LeverManager : MonoBehaviour
 {
     public List<Lever> Levers = new();
-    private BastionManager _bastionManager;
+    public UnityEvent<Lever> LeverActivatedEvent;
 
     public bool[] SaveLevers()
     {
@@ -30,24 +31,13 @@ public class LeverManager : MonoBehaviour
         }
     }
 
-    public void ActivateLever(string lever)
+    public void ActivateLever(Lever lever)
     {
-        _bastionManager.ActivateLever(lever);
+        LeverActivatedEvent.Invoke(lever);
     }
 
     private void Start()
     {
-        if (_bastionManager == null && transform.parent.TryGetComponent(out BastionManager bastionManager))
-        {
-            _bastionManager = bastionManager;
-        }
-        else if (_bastionManager == null)
-        {
-            Debug.Log("KeyManager: BastionManager not found. Using ServiceLocator...");
-            _bastionManager = ServiceLocator.Instance.GetService<BastionManager>();
-        }
-
-
         foreach (Transform child in transform)
         {
             if (child.TryGetComponent(out Lever lever))

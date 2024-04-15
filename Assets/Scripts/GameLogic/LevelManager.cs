@@ -20,7 +20,8 @@ public class LevelManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        _playerManager.Spawn(_checkpointManager.CurrentCheckpoint.transform);
+        Debug.Log("Spawning Player...");
+        _playerManager.Spawn(_checkpointManager.CurrentCheckpoint.RespawnPosition);
     }
 
     public void Pause(bool pause)
@@ -30,12 +31,14 @@ public class LevelManager : MonoBehaviour
             _gameState = GameState.Paused;
             _playerManager.CanMoveCamera = false;
             Time.timeScale = 0f;
+            _playerManager.SetCanMove(false);
         }
         else
         {
             _gameState = GameState.Play;
             _playerManager.CanMoveCamera = true;
             Time.timeScale = 1f;
+            _playerManager.SetCanMove(true);
         }
     }
 

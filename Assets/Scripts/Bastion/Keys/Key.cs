@@ -2,15 +2,15 @@ using UnityEngine;
 
 public abstract class Key : MonoBehaviour
 {
-    private KeyManager _keyManager;
     [HideInInspector] public bool Collected = false;
+    private KeyManager _keyManager;
 
     public abstract void PlayCollectKeyAnimation();
 
     public void Collect()
     {
         Collected = true;
-        _keyManager.CollectKey(gameObject.name);
+        _keyManager.CollectKey(this);
         PlayCollectKeyAnimation();
     }
 

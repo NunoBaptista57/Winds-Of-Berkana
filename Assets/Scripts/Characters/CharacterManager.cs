@@ -6,14 +6,12 @@ public class CharacterManager : MonoBehaviour
     protected CharacterLocomotion CharacterLocomotion;
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
-    private Vector2 _lastInput = Vector3.zero;
 
     public void SetCanMove(bool canMove)
     {
         CharacterController.enabled = canMove;
         CharacterLocomotion.gameObject.SetActive(canMove);
         _canMove = canMove;
-        Move(_lastInput);
     }
 
     public void Spawn(Transform spawnTransform)
@@ -24,11 +22,7 @@ public class CharacterManager : MonoBehaviour
 
     public void Move(Vector2 input)
     {
-        if (_canMove)
-        {
-            CharacterLocomotion.Input = input;
-        }
-        _lastInput = input;
+        CharacterLocomotion.Input = input;
     }
 
     public void Run()
