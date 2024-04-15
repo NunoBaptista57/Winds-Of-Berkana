@@ -89,7 +89,7 @@ public class LevelManager : MonoBehaviour
     public void GoToNextLevel()
     {
         int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        if (activeSceneIndex >= SceneManager.sceneCount - 1)
+        if (activeSceneIndex >= SceneManager.sceneCountInBuildSettings - 1)
         {
             QuitToMenu();
             return;
