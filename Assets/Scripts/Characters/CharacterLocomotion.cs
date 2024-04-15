@@ -138,6 +138,11 @@ public class CharacterLocomotion : MonoBehaviour
         Gravity = new(0f, fallSpeed, 0f);
     }
 
+    public void ChangeImediateGravity(float fallSpeed)
+    {
+        Gravity = new(0f, -fallSpeed, 0f);
+    }
+
     public void ChangeGravity(float acceleration, float maxSpeed, float deceleration)
     {
         float fallSpeed = Gravity.y;
@@ -197,6 +202,7 @@ public class CharacterLocomotion : MonoBehaviour
             transform.parent.SetParent(null);
             ChangeBaseVelocity(Vector3.zero);
         }
+        Debug.Log(Gravity);
         _controller.Move(PushVelocity + BaseVelocity + (InputVelocity + Gravity) * Time.deltaTime);
     }
 

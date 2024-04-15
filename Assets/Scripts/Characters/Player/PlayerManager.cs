@@ -81,6 +81,14 @@ public class PlayerManager : CharacterManager
         }
     }
 
+    public override void Spawn(Transform spawnTransform)
+    {
+        Debug.Log("Spawning Player...");
+        transform.SetPositionAndRotation(spawnTransform.position, transform.rotation);
+        CharacterLocomotion.Body.SetPositionAndRotation(CharacterLocomotion.Body.position, spawnTransform.rotation);
+        _cameraPosition.SetLocalPositionAndRotation(_cameraPosition.position, spawnTransform.rotation);
+    }
+
     private void OnEnable()
     {
         _playerActions = new();
