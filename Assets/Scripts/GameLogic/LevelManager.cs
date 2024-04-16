@@ -113,6 +113,7 @@ public class LevelManager : MonoBehaviour
         {
             SpawnPlayer();
         }
+        Cursor.visible = false;
     }
 
 }

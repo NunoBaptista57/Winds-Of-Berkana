@@ -48,6 +48,7 @@ public abstract class Menu : MonoBehaviour
             return;
         }
         Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         _mouseMode = true;
         EventSystem eventSystem = EventSystem.current;
         eventSystem.SetSelectedGameObject(null);
@@ -57,6 +58,7 @@ public abstract class Menu : MonoBehaviour
     {
         _mouseMode = false;
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         EventSystem eventSystem = EventSystem.current;
         eventSystem.SetSelectedGameObject(gameObject, new BaseEventData(eventSystem));    
         FirstSelected.GetComponent<Button>().Select();

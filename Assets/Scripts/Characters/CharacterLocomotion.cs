@@ -202,7 +202,6 @@ public class CharacterLocomotion : MonoBehaviour
             transform.parent.SetParent(null);
             ChangeBaseVelocity(Vector3.zero);
         }
-        Debug.Log(Gravity);
         _controller.Move(PushVelocity + BaseVelocity + (InputVelocity + Gravity) * Time.deltaTime);
     }
 
