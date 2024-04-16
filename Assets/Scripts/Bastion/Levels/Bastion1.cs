@@ -9,6 +9,9 @@ public class Bastion1 : BastionManager
     [SerializeField] private Key _keyNest;
     [SerializeField] private Door _lowerDoorRightTower;
     [SerializeField] private Lever _leverNest;
+    [SerializeField] private Door _doorWindTunnel;
+    [SerializeField] private Door _doorLeftTower;
+    [SerializeField] private GameObject _sanctumWindTunnel;
 
     public override void ActivateLever(Lever lever)
     {
@@ -19,7 +22,8 @@ public class Bastion1 : BastionManager
         }
         else if (lever == _leverNest)
         {
-            
+            _doorWindTunnel.Open();
+            _doorLeftTower.Open();
         }
     }
 
@@ -35,14 +39,16 @@ public class Bastion1 : BastionManager
     public override void OpenSanctum()
     {
         Debug.Log("Sanctum Event");
-        throw new System.NotImplementedException();
+        _sanctumWindTunnel.SetActive(true);
     }
 
     public override void PlaceKey(Key key)
     {
         Debug.Log("Place Key Event");
+        Debug.Log(key);
         if (key == _keyToOpenEntrance)
         {
+            Debug.Log("Open subground");
             _doorToSubground.Open();
         }
     }

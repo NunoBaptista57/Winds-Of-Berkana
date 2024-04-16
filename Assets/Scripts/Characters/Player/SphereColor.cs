@@ -65,7 +65,7 @@ public class SphereColor : MonoBehaviour
         {
             var currentDistance = Vector3.Distance(_closestKey.transform.position, transform.position);
             // Change color of the sphere incrementally
-            if (currentDistance > 30)
+            if (currentDistance > 60)
             {
                 gameObject.GetComponent<Renderer>().material.SetFloat("_EmissiveExposureWeight", .99f + ((currentDistance - 16) * 0.0005f)); //color = new Color(255 - distance * 5, 0, 98, 255);*/
             }
