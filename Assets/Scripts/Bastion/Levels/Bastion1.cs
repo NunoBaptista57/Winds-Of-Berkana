@@ -6,6 +6,9 @@ public class Bastion1 : BastionManager
     [SerializeField] private Door _doorToSubground;
     [SerializeField] private Door _doorToTower;
     [SerializeField] private Lever _leverToFirstKey;
+    [SerializeField] private Key _keyNest;
+    [SerializeField] private Door _lowerDoorRightTower;
+    [SerializeField] private Lever _leverNest;
 
     public override void ActivateLever(Lever lever)
     {
@@ -14,11 +17,19 @@ public class Bastion1 : BastionManager
         {
             _doorToTower.Open();
         }
+        else if (lever == _leverNest)
+        {
+            
+        }
     }
 
     public override void CollectKey(Key key)
     {
         Debug.Log("Key Event");
+        if (key == _keyNest)
+        {
+            _lowerDoorRightTower.Open();
+        }
     }
 
     public override void OpenSanctum()
