@@ -69,7 +69,7 @@ public class MainMenuController : MonoBehaviour
         resolutionDropDown.value = currentResolutionIndex;
         resolutionDropDown.RefreshShownValue();
 
-        AudioManager.Instance.PlayAudioClip(mainMenuSoundtrack, true);
+        AudioManager.Instance.PlayMusic("MainMenuTheme", true);
 
     }
 
