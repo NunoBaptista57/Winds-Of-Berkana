@@ -14,7 +14,7 @@ public class CharacterManager : MonoBehaviour
         _canMove = canMove;
     }
 
-    public void Spawn(Transform spawnTransform)
+    virtual public void Spawn(Transform spawnTransform)
     {
         Debug.Log("Spawning...");
         transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);

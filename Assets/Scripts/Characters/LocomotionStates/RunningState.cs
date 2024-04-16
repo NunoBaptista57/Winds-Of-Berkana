@@ -33,11 +33,13 @@ public class RunningState : MonoBehaviour, ILocomotionState
     public void Fall()
     {
         _characterLocomotion.ChangeState<FallingState>();
+        _characterLocomotion.ChangeImediateGravity(5f);
     }
 
     public void Ground()
     {
-        _characterLocomotion.ChangeGravity(3f, 3f, 3f);
+        // So it sticks to the ground
+        _characterLocomotion.ChangeImediateGravity(15f);
     }
 
     public void Tunnel() { }

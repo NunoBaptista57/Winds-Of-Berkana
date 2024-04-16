@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Tracing;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,11 +13,16 @@ public class PauseMenu : Menu
     {
         if (_content.activeSelf)
         {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;  
             Resume();
             return;
         }
         _content.SetActive(true);
         _levelManager.Pause(true);
+        UpdateFirstSelected();
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
     public void Resume()
     {
@@ -55,12 +61,10 @@ public class PauseMenu : Menu
         _playerActions = new();
         _playerActions.UI.Pause.performed += Pause;
         _playerActions.Enable();
-        UpdateFirstSelected();
     }
 
     private void OnDisable()
     {
-        
     }
 
     private void OnDestroy()

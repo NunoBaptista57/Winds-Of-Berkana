@@ -138,6 +138,11 @@ public class CharacterLocomotion : MonoBehaviour
         Gravity = new(0f, fallSpeed, 0f);
     }
 
+    public void ChangeImediateGravity(float fallSpeed)
+    {
+        Gravity = new(0f, -fallSpeed, 0f);
+    }
+
     public void ChangeGravity(float acceleration, float maxSpeed, float deceleration)
     {
         float fallSpeed = Gravity.y;
