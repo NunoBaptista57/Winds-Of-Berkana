@@ -5,11 +5,14 @@ using System.Numerics;
 using UnityEngine;
 using Cinemachine;
 using Vector3 = UnityEngine.Vector3;
+using UnityEngine.Events;
 
 public class MainTunelVento : MonoBehaviour
 {
+    public UnityEvent EnterWindTunnelEvent;
+    public UnityEvent ExitWindTunnelEvent;
     [SerializeField] private float rate;
-    
+
     [SerializeField] private CinemachineFreeLook playerCam;
     [SerializeField] private CinemachineFreeLook vcam2;
     [SerializeField] private Transform _pointB;
@@ -24,8 +27,8 @@ public class MainTunelVento : MonoBehaviour
                 return;
             }
             SwitchPriority();
+            EnterWindTunnelEvent.Invoke();
             StartCoroutine(MoveToPointB(characterManager));
-
         }
     }
 
@@ -40,6 +43,7 @@ public class MainTunelVento : MonoBehaviour
         }
         SwitchPriority();
         characterManager.SetCanMove(true);
+        ExitWindTunnelEvent.Invoke();
     }
 
     void SwitchPriority()
