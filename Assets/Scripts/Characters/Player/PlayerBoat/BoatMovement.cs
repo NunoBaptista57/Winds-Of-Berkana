@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using AmplifyShaderEditor;
 
 public class BoatMovement : MonoBehaviour
 {
