@@ -18,7 +18,7 @@ public class PlayerTimelineController : MonoBehaviour
     private Transform camTransform;
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float rotationSpeed = 0.0002f;
-    [SerializeField] private float stoppingDistance = 0.1f;
+    [SerializeField] private float stoppingDistance = 0.12f;
 
 
 

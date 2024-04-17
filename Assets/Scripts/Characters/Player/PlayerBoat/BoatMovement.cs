@@ -45,6 +45,10 @@ public class BoatMovement : MonoBehaviour
     [Header("Stabilization")]
     [SerializeField, Range(0, 1)] float ForwardStabilization;
 
+    [Header("Tilting")]
+    [SerializeField] Transform visualModelTransform;
+    [SerializeField, Range(0, 90)] float maxTiltingAngle = 10;
+
 
     PlayerInput input;
     public Action onInteraction;
@@ -70,6 +74,16 @@ public class BoatMovement : MonoBehaviour
     void FixedUpdate()
     {
         if (!canMove) { rigidbody.velocity = Vector3.zero; return; }
+
+        if (visualModelTransform != null)
+        {
+            Vector3 currentEulerAngles = visualModelTransform.rotation.eulerAngles;
+            print(input.Turn);
+            float tiltAngle = maxTiltingAngle * -input.Turn;
+            currentEulerAngles.z = tiltAngle;
+            Quaternion targetRotation = Quaternion.Euler(currentEulerAngles);
+            visualModelTransform.rotation = Quaternion.Lerp(visualModelTransform.rotation, targetRotation, Time.fixedDeltaTime * 2.5f);
+        }
 
         if (flightMode) // Dynamic speed limit going up or down
         {
@@ -114,6 +128,7 @@ public class BoatMovement : MonoBehaviour
         {
             rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSpeed * speedModifier, VelocityLimitingStrength * Time.fixedDeltaTime));
         }
+
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
 
         if (flightMode)
