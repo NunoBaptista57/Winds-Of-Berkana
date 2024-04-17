@@ -7,6 +7,12 @@ public class Start : MonoBehaviour
     [SerializeField] private GameObject _mainMenu;
     [SerializeField] private float _fade = 1.5f;
     private PlayerActions _playerActions;
+    //private AudioManager _audioManager;
+
+
+    private void Awake(){
+        AudioManager.Instance.PlayMusic("MainMenuTheme");
+    }
 
     public void StartGame(InputAction.CallbackContext context)
     {
@@ -18,7 +24,7 @@ public class Start : MonoBehaviour
 
         yield return new WaitForSeconds(_fade);
         _mainMenu.SetActive(true);
-        gameObject.SetActive(false);
+        gameObject.SetActive(false); 
     }
 
     private void OnEnable()
