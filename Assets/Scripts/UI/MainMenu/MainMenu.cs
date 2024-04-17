@@ -5,6 +5,8 @@ public class MainMenu : Menu
 {
     public void Play()
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
