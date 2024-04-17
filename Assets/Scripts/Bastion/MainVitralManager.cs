@@ -5,7 +5,7 @@
 // using Cinemachine;
 // using TMPro;
 
-// public class MainVitralManager : MonoBehaviour, ISavable
+// public class MainVitralManager : MonoBehaviour
 // {
 
 //     [SerializeField] GameObject[] puzzlePieces;
@@ -35,39 +35,16 @@
 //     private float delaySelectingTime;
 //     public float timeHolder;
 
-
-//     public SaveFile Save(SaveFile saveFile)
-//     {
-//         saveFile.VitralIsComplete = panelIsComplete;
-//         return saveFile;
-//     }
-
-//     public void Load(SaveFile saveFile)
-//     {
-//         if (!saveFile.VitralIsComplete)
-//         {
-//             return;
-//         }
-//         completedPanel.SetActive(true);
-//         puzzlePieces[0].SetActive(false);
-//         puzzlePieces[1].SetActive(false);
-//         puzzlePieces[2].SetActive(false);
-//         panelIsComplete = true;
-//     }
-
 //     private void Start()
 //     {
-//         player = GameObject.FindGameObjectWithTag("Player").GetComponent<MainPlayerInputHandler>();
-//         player.Interact += HandlePlayerInteraction;
 //     }
-
 
 //     // Rotating the Vitral using movement controls
 //     private void RotatePiece(float rotation)
 //     {
 //         if (isInteracting)
 //         {
-//             puzzlePieces[_pieceSelected].gameObject.transform.Rotate(0, 0, rotation);
+//             puzzlePieces[_pieceSelected].transform.Rotate(0, 0, rotation);
 //             CheckPosition();
 //         }
 //     }
@@ -103,8 +80,6 @@
 //                 SelectPiece();
 //             }
 //         }
-
-
 //     }
 
 

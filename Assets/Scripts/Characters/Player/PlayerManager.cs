@@ -1,4 +1,5 @@
 using System;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
@@ -8,6 +9,7 @@ using UnityEngine.TextCore.Text;
 public class PlayerManager : CharacterManager
 {
     public bool CanMoveCamera = true;
+    public CinemachineFreeLook freeLook;
     [SerializeField] private bool _canDebug = false;
     [SerializeField] private float _deadzone = 0.2f;
     [SerializeField] private float _walkDeadzone = 0.5f;
@@ -79,6 +81,13 @@ public class PlayerManager : CharacterManager
         {
             Walk(false);
         }
+    }
+
+    public override void Spawn(Transform spawnTransform)
+    {
+        Debug.Log("Spawning Player...");
+        transform.SetPositionAndRotation(spawnTransform.position, transform.rotation);
+        CharacterLocomotion.Body.SetPositionAndRotation(CharacterLocomotion.Body.position, spawnTransform.rotation);
     }
 
     private void OnEnable()
