@@ -8,6 +8,7 @@ public class MainMenu : Menu
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        AudioManager.Instance.StopMusic();
     }
 
     public void Exit()

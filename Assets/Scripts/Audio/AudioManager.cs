@@ -5,7 +5,7 @@ using System;
 
 public class AudioManager : MonoBehaviour
 {
-    private static AudioManager _instance;
+    public static AudioManager Instance;
     
     public Sound[] musicSounds,sfxSounds;
 
@@ -16,18 +16,16 @@ public class AudioManager : MonoBehaviour
         //_audioSource = this.GetComponentInChildren<AudioSource>();
     }
 
-    public static AudioManager Instance {
-        get { if(_instance == null)
-            {
-                Debug.LogError("Audio Manager is null");
-            }
-            return _instance;
+    private void Awake() {
+        if(Instance == null)
+        {
+            Instance = this;
+            //Debug.LogError("Audio Manager is null");
+            DontDestroyOnLoad(gameObject);
         }
-    }
-
-    private void Awake()
-    {
-        _instance = this;
+        else{
+            Destroy(gameObject);
+        }        
     }
 
     public void PlayMusic(string name, bool loop=false)
@@ -42,6 +40,10 @@ public class AudioManager : MonoBehaviour
             _musicSource.loop = loop;
             _musicSource.Play();
        }
+    }
+
+    public void StopMusic(){
+        _musicSource.Stop();
     }
 
     public void PlaySFX(string name)
