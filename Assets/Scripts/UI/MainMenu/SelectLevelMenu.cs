@@ -30,7 +30,8 @@ public class SelectLevelMenu : Menu
                 buttonText.text = sceneName;
             }
 
-            button.onClick.AddListener(() => SceneManager.LoadScene(sceneName));
+            button.onClick.AddListener(() => {SceneManager.LoadScene(sceneName);
+                                             AudioManager.Instance.StopMusic();});
         }
     }
 }

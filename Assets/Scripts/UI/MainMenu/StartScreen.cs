@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Start : MonoBehaviour
+public class StartScreen : MonoBehaviour
 {
     [SerializeField] private GameObject _mainMenu;
     [SerializeField] private float _fade = 1.5f;
@@ -10,7 +10,12 @@ public class Start : MonoBehaviour
     //private AudioManager _audioManager;
 
 
-    private void Awake(){
+    private void Start(){
+
+        if(AudioManager.Instance == null){
+            Debug.LogError("Audio Manager Null at start");
+        }
+
         AudioManager.Instance.PlayMusic("MainMenuTheme");
     }
 
