@@ -8,18 +8,17 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: grass_LOD1
-  m_Shader: {fileID: -6465566751694194690, guid: b3611f3f343bad544b1da59658cceeda,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: b3611f3f343bad544b1da59658cceeda, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
+  m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
   - _DOUBLESIDED_ON
-  m_LightmapFlags: 0
+  m_InvalidKeywords: []
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: 2225
   stringTagMap:
     MotionVector: User
   disabledShaderPasses:
@@ -77,15 +76,15 @@ Material:
     - _RequireSplitLighting: 0
     - _SrcBlend: 1
     - _StencilRef: 0
-    - _StencilRefDepth: 1
+    - _StencilRefDepth: 8
     - _StencilRefDistortionVec: 4
-    - _StencilRefGBuffer: 2
-    - _StencilRefMV: 33
+    - _StencilRefGBuffer: 10
+    - _StencilRefMV: 40
     - _StencilWriteMask: 6
     - _StencilWriteMaskDepth: 9
     - _StencilWriteMaskDistortionVec: 4
-    - _StencilWriteMaskGBuffer: 14
-    - _StencilWriteMaskMV: 43
+    - _StencilWriteMaskGBuffer: 15
+    - _StencilWriteMaskMV: 41
     - _SupportDecals: 1
     - _SurfaceType: 0
     - _TransparentBackfaceEnable: 0
@@ -105,8 +104,8 @@ Material:
     - _windspeed: 0.83
     m_Colors:
     - _Color: {r: 0.17104116, g: 0.6792453, b: 0.080099665, a: 0}
-    - _Colorbot: {r: 0.14691848, g: 0.44339618, b: 0.115031965, a: 0}
-    - _Colortop: {r: 0.55510217, g: 0.6981132, b: 0.24038798, a: 0}
+    - _Colorbot: {r: 0.40784314, g: 0.6784314, b: 0.26666668, a: 0}
+    - _Colortop: {r: 0.6313726, g: 0.78431374, b: 0.35686275, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _windir: {r: 1, g: 0, b: 0, a: 0}
