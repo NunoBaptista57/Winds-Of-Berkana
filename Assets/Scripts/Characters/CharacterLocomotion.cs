@@ -188,8 +188,20 @@ public class CharacterLocomotion : MonoBehaviour
     private void Update()
     {
         _locomotionState.Move(Input);
-        if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, 0.1f) && !hit.collider.isTrigger)
+        if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1,
+         out RaycastHit hit, 0.1f, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore))
         {
+            float angle = Vector3.Angle(hit.normal, Vector3.up);
+            Debug.Log(angle);
+
+            if (angle > _controller.slopeLimit)
+            {
+                Vector3 normal = hit.normal;
+                float yInverse = 1f - normal.y;
+                Vector3 slideVelocity;
+                slideVelocity.x = yInverse * normal.x;
+                slideVelocity.z = yInverse * normal.z;
+            }
             _locomotionState.Ground();
             if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
             {
