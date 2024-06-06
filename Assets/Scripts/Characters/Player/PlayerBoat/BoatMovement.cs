@@ -23,6 +23,9 @@ public class BoatMovement : MonoBehaviour
 
 
     [Header("Wind")]
+    [ReadOnlyInspector] public Vector3 windVector;
+    [ReadOnlyInspector] public Vector3 dodgeVector;
+    [ReadOnlyInspector] public bool canLeftDodge;
     [Min(0), SerializeField] float WindForce;
     [Min(0), SerializeField] float VelocityLimitingStrength = 1;
     [Min(0), SerializeField] float TurningTorque;
@@ -34,6 +37,7 @@ public class BoatMovement : MonoBehaviour
         public float Reel;
         public float Slow;
         public float SpeedUp;
+
     }
 
     [Header("Angle Limiting")]
@@ -58,6 +62,9 @@ public class BoatMovement : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         currentSpeed = 0;
+        windVector = new Vector3(0f,0f,0f);
+        dodgeVector = new Vector3(0f,0f,10f);
+        canLeftDodge = true;
 
         if (!flightMode)
         {
@@ -73,6 +80,7 @@ public class BoatMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        Debug.Log(currentSpeed);   
         if (!canMove) { rigidbody.velocity = Vector3.zero; return; }
 
         if (visualModelTransform != null)
@@ -115,12 +123,13 @@ public class BoatMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             if (currentSpeed > 0)
-            {
+            {   
                 currentSpeed -= acceleration;
             }
         }
+    
 
-
+        rigidbody.AddForce(windVector* 3, ForceMode.Impulse);
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.Project(rigidbody.velocity, transform.forward), ForwardStabilization);
         rigidbody.AddForce(WindForce * transform.forward, ForceMode.Acceleration);
 
@@ -176,7 +185,7 @@ public class BoatMovement : MonoBehaviour
 
     void OnRelease()
     {
-        Debug.Log("Interactin");
+        //Debug.Log("Interactin");
         //onInteraction.Invoke();
     }
 
@@ -197,6 +206,25 @@ public class BoatMovement : MonoBehaviour
             currentSpeed += MaxVelocity / 2;
             Debug.Log("Entrou");
         }
+
+        if (collision.gameObject.CompareTag("WindTunnel"))
+        {
+            //apply wind vector
+            windVector = collision.gameObject.GetComponent<windTunnelBoat>().windVector.normalized * collision.gameObject.GetComponent<windTunnelBoat>().windForce;
+            Debug.Log("is in wind");
+        }
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("WindTunnel"))
+        {
+            //remove wind vector
+            windVector = new Vector3(0f,0f,0f);
+            Debug.Log("is out of wind");
+            
+            //Debug.Log(collision.gameObject.GetComponent<windVector>());
+        }
     }
 
     public void respawn() {
@@ -212,4 +240,42 @@ public class BoatMovement : MonoBehaviour
         rigidbody.constraints = constraints;
         canMove = true;
     }
+
+    //Collision with item is detected
+    private void OnEnable()
+    {
+        Item.OnItemCollected += ItemSpeedBoost;
+    }
+
+    private void OnDisable()
+    {
+        Item.OnItemCollected -= ItemSpeedBoost;
+    }
+
+    private void ItemSpeedBoost()
+    {   
+        //Debug.Log("speed up");
+        StartCoroutine (SpeedBoost());
+        acceleration = acceleration * 2;
+        MaxVelocity = MaxVelocity * 4;
+    }
+
+    private IEnumerator SpeedBoost()
+    {
+        yield return new WaitForSeconds(5);
+        acceleration = acceleration / 2;
+        MaxVelocity = MaxVelocity / 4;
+        if (currentSpeed > MaxVelocity)
+        {
+            currentSpeed = MaxVelocity;
+        }
+        //Debug.Log("speed down");
+    }
+
+    private IEnumerator LeftDodge()
+        {
+            yield return new WaitForSeconds(5);
+            canLeftDodge = true;
+            //Debug.Log("speed down");
+        }
 }

@@ -13,6 +13,6 @@ public class BoatSailHandler : PlayerBoatBehaviour
         int i = modeList.FindIndex(m => m == player.sailMode);
         i = Mathf.Clamp(i - (int)value.Get<float>(), 0, modeList.Count - 1);
         player.sailMode = modeList[i];
-        Debug.Log(player.sailMode);
+        //Debug.Log(player.sailMode);
     }
 }
