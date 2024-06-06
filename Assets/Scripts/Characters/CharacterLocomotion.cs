@@ -172,6 +172,11 @@ public class CharacterLocomotion : MonoBehaviour
         }
     }
 
+    public AudioManager accessAudioManager()
+    {
+        return _characterManager.audioManager;
+    }
+
     private void Update()
     {
         _locomotionState.Move(Input);
