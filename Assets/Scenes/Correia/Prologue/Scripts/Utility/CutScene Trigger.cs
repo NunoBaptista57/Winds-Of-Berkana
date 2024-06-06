@@ -6,7 +6,7 @@ using UnityEngine.Playables;
 using UnityEngine.Splines;
 
 
-public class PlayerTimelineController : MonoBehaviour
+public class CutSceneTrigger : MonoBehaviour
 {
     [Header("Optional Reference")]
     [SerializeField] CutSceneManager cutSceneManager;
