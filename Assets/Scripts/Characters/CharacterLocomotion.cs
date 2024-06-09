@@ -46,6 +46,7 @@ public class CharacterLocomotion : MonoBehaviour
     public void ChangeState<T>() where T : MonoBehaviour, ILocomotionState
     {
         _locomotionState = GetComponent<T>();
+        accessAudioManager().StopSFX();
         _locomotionState.StartState();
     }
 

@@ -14,7 +14,6 @@ public class AudioManager : MonoBehaviour
     public AudioEnvironment _environment;
 
     public BastionEnvironment _bastionEnvironment;
-
     public void Start()
     {
         _environment = _bastionEnvironment;
@@ -52,7 +51,13 @@ public class AudioManager : MonoBehaviour
     }
     public void StopSFX()
     {
-        _sfxSource.Stop();
+        float maxSuddenStopDuration = 1.0f;
+
+        if (_sfxSource.clip != null)
+            if (_sfxSource.clip.length > maxSuddenStopDuration)
+            {
+                _sfxSource.Stop();
+            }
     }
     public void WalkSound()
     {
@@ -67,6 +72,11 @@ public class AudioManager : MonoBehaviour
     {
         _environment.GlidingSound(_sfxSource);
 
+    }
+
+    public void RunningSound()
+    {
+        _environment.RunningSound(_sfxSource);
     }
 
     /*public void PlaySFX(string name)

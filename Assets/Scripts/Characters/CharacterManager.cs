@@ -8,14 +8,21 @@ public class CharacterManager : MonoBehaviour
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
 
-    [HideInInspector]
     public AudioManager audioManager;
 
 
     public void Start()
     {
-        audioManager = GameObject.Find("AudioManager")?.GetComponent<AudioManager>();
+        /* AudioManager audioManager = FindObjectOfType<AudioManager>();
 
+         if (audioManager == null)
+         {
+             Debug.LogWarning("AudioManager not found in the scene.");
+         }
+         else
+         {
+             Debug.Log("AudioManager found.");
+         }*/
     }
     public void SetCanMove(bool canMove)
     {
@@ -48,7 +55,6 @@ public class CharacterManager : MonoBehaviour
         if (_canMove)
         {
             CharacterLocomotion.Walk(walk);
-            audioManager.WalkSound();
         }
     }
 
