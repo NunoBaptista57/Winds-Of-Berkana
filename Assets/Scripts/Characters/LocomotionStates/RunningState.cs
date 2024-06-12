@@ -32,14 +32,12 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void Fall()
     {
+        _characterLocomotion.ChangeImediateFallVelocity(0f);
         _characterLocomotion.ChangeState<FallingState>();
-        _characterLocomotion.ChangeImediateGravity(5f);
     }
 
     public void Ground()
     {
-        // So it sticks to the ground
-        _characterLocomotion.ChangeImediateGravity(15f);
     }
 
     public void Tunnel() { }
@@ -52,6 +50,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
     public void StartState()
     {
         _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.running);
+        _characterLocomotion.ChangeImediateFallVelocity(10f);
     }
 
     private void Awake()

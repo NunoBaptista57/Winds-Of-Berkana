@@ -28,7 +28,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion.Rotate(input, _rotationSpeed, true);
         _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
-        _characterLocomotion.ChangeGravity(_gravity);
+        _characterLocomotion.ChangeFallVelocity(_gravity);
 
         if (_jump)
         {
@@ -41,7 +41,7 @@ public class JumpingState : MonoBehaviour, ILocomotionState
             _stopJump = false;
             _characterLocomotion.ChangeState<FallingState>();
         }
-        else if (_characterLocomotion.Gravity.y <= 0f)
+        else if (_characterLocomotion.FallVelocity.y <= 0f)
         {
             _characterLocomotion.ChangeState<FallingState>();
         }

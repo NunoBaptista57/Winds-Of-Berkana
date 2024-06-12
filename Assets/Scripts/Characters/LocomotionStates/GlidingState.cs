@@ -45,7 +45,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Fall()
     {
-        _characterLocomotion.ChangeGravity(_gravity, _maxFallSpeed, _gravity);
+        _characterLocomotion.ChangeFallVelocity(_gravity, _maxFallSpeed, _gravity);
     }
 
     public void Ground()
