@@ -81,7 +81,6 @@ public class FallingState : MonoBehaviour, ILocomotionState
     {
         _startAnimation = false;
         _isPressingJump = false;
-        Debug.Log("Entering ground state");
         _characterLocomotion.accessAudioManager().LandingSound();
         _characterLocomotion.ChangeState<RunningState>();
     }

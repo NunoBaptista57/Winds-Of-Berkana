@@ -2571,11 +2571,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7883877927637969096, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.61977273
+      value: 0.6197727
       objectReference: {fileID: 0}
     - target: {fileID: 7883877927637969096, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.116545476
+      value: 0.11654545
       objectReference: {fileID: 0}
     - target: {fileID: 7883877927637969096, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2583,7 +2583,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7883877927637969096, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.14342439
+      value: -0.14342442
       objectReference: {fileID: 0}
     - target: {fileID: 8891865395779025972, guid: 589f84b0b4ed2264196b0ac01db24d5c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2664,6 +2664,7 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 5156b6cf10e8ff34daec305505d89c4f, type: 3}
   - name: Running
     clip: {fileID: 8300000, guid: 32078a182fb783e448ca998e3346b0be, type: 3}
+  time_until_play: 0.25
 --- !u!4 &1810902611
 Transform:
   m_ObjectHideFlags: 0
@@ -3529,6 +3530,30 @@ PrefabInstance:
     - target: {fileID: 8397468121431303090, guid: 0706c49eefd82754caba399cad3c4d17, type: 3}
       propertyPath: sfxSounds.Array.data[2].name
       value: Gliding
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397468121431303090, guid: 0706c49eefd82754caba399cad3c4d17, type: 3}
+      propertyPath: sfxSounds.Array.data[0].rate_of_play
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397468121431303090, guid: 0706c49eefd82754caba399cad3c4d17, type: 3}
+      propertyPath: sfxSounds.Array.data[1].rate_of_play
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397468121431303090, guid: 0706c49eefd82754caba399cad3c4d17, type: 3}
+      propertyPath: sfxSounds.Array.data[2].rate_of_play
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397468121431303090, guid: 0706c49eefd82754caba399cad3c4d17, type: 3}
+      propertyPath: musicSounds.Array.data[0].rate_of_play
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397468121431303090, guid: 0706c49eefd82754caba399cad3c4d17, type: 3}
+      propertyPath: musicSounds.Array.data[1].rate_of_play
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397468121431303090, guid: 0706c49eefd82754caba399cad3c4d17, type: 3}
+      propertyPath: musicSounds.Array.data[2].rate_of_play
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

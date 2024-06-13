@@ -52,6 +52,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Ground()
     {
+        _characterLocomotion.accessAudioManager().LandingSound();
         _characterLocomotion.ChangeState<RunningState>();
         _glider.SetActive(false);
     }

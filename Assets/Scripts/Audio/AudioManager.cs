@@ -58,6 +58,7 @@ public class AudioManager : MonoBehaviour
             {
                 _sfxSource.Stop();
             }
+        _sfxSource.loop = false;
     }
     public void WalkSound()
     {
