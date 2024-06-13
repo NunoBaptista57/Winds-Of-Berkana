@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,10 +8,8 @@ public class BoatMovement : MonoBehaviour
     new Rigidbody rigidbody;
 
     [Header("Flight Settings")]
-    [SerializeField] bool flightMode = true;
-    [SerializeField, Min(0)] float maxDownBoost = 1.5f; // Multiplier for maxSpeed when going down
-    [SerializeField, Min(0)] float maxUpSlow = 0.5f;    // Multiplier for maxSpeed when going up
-    float speedModifier = 1f; 
+    [SerializeField] public bool flightMode = true;
+    [ReadOnlyInspector] public float speedModifier = 1f; 
 
     [Header("Control Settings")]
     public bool canMove = true;
@@ -30,19 +26,9 @@ public class BoatMovement : MonoBehaviour
     [Min(0), SerializeField] float VelocityLimitingStrength = 1;
     [Min(0), SerializeField] float TurningTorque;
 
-    struct PlayerInput
-    {
-        public float Turn;
-        public float Pitch;
-        public float Reel;
-        public float Slow;
-        public float SpeedUp;
-
-    }
-
     [Header("Angle Limiting")]
-    [SerializeField, Range(0, 90)] float MinVerticalAngle;
-    [SerializeField, Range(0, 90)] float MaxVerticalAngle;
+    [SerializeField, Range(0, 90)] public float MinVerticalAngle;
+    [SerializeField, Range(0, 90)] public float MaxVerticalAngle;
     [SerializeField, Min(0)] float LimitingTorqueMultiplier = 1;
     [SerializeField, Min(0)] float LimitingOffsetExponent = 1;
 
@@ -53,6 +39,15 @@ public class BoatMovement : MonoBehaviour
     [SerializeField] Transform visualModelTransform;
     [SerializeField, Range(0, 90)] float maxTiltingAngle = 10;
 
+    struct PlayerInput
+    {
+        public float Turn;
+        public float Pitch;
+        public float Reel;
+        public float Slow;
+        public float SpeedUp;
+
+    }
 
     PlayerInput input;
     public Action onInteraction;
@@ -86,32 +81,11 @@ public class BoatMovement : MonoBehaviour
         if (visualModelTransform != null)
         {
             Vector3 currentEulerAngles = visualModelTransform.rotation.eulerAngles;
-            print(input.Turn);
             float tiltAngle = maxTiltingAngle * -input.Turn;
             currentEulerAngles.z = tiltAngle;
             Quaternion targetRotation = Quaternion.Euler(currentEulerAngles);
             visualModelTransform.rotation = Quaternion.Lerp(visualModelTransform.rotation, targetRotation, Time.fixedDeltaTime * 2.5f);
         }
-
-        if (flightMode) // Dynamic speed limit going up or down
-        {
-            float pitchAngle = Vector3.Angle(transform.forward, Vector3.up);
-
-            if (pitchAngle < 90)
-            {
-                float t = Mathf.InverseLerp(90f, MaxVerticalAngle, pitchAngle);
-                float mappedValue = Mathf.Lerp(1f, maxUpSlow, t);
-                speedModifier = Mathf.Lerp(speedModifier, mappedValue, Time.fixedDeltaTime*2.5f);
-            }
-            else if (pitchAngle > 90)
-            {
-                float t = Mathf.InverseLerp(90f, MinVerticalAngle, pitchAngle);
-                float mappedValue = Mathf.Lerp(maxDownBoost, 1f, t);
-                speedModifier = Mathf.Lerp(speedModifier, mappedValue, Time.fixedDeltaTime*2.5f);
-            }
-        }
-
-        //print(currentSpeed * speedModifier);
 
         if (Input.GetKey(KeyCode.Space))
         {
@@ -133,9 +107,10 @@ public class BoatMovement : MonoBehaviour
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.Project(rigidbody.velocity, transform.forward), ForwardStabilization);
         rigidbody.AddForce(WindForce * transform.forward, ForceMode.Acceleration);
 
-        if (rigidbody.velocity.magnitude > currentSpeed * speedModifier)
+        //if (rigidbody.velocity.magnitude > currentSpeed * speedModifier)
         {
             rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSpeed * speedModifier, VelocityLimitingStrength * Time.fixedDeltaTime));
+            print(speedModifier.ToString() + rigidbody.velocity.ToString());
         }
 
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
@@ -154,7 +129,20 @@ public class BoatMovement : MonoBehaviour
         var rot = rigidbody.rotation.eulerAngles;
         rot.z = 0;
         rigidbody.rotation = Quaternion.Euler(rot);
+    }
 
+    public void respawn() {
+        StartCoroutine(DisableMovementforTime(2f));
+    }
+
+    IEnumerator DisableMovementforTime(float delayDuration)
+    {
+        canMove = false;
+        RigidbodyConstraints constraints = rigidbody.constraints;
+        rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        yield return new WaitForSeconds(delayDuration);
+        rigidbody.constraints = constraints;
+        canMove = true;
     }
 
     public void setFlyingMode(){
@@ -166,6 +154,10 @@ public class BoatMovement : MonoBehaviour
         flightMode = false;
         rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
     }
+
+
+    ///// Input Functions /////
+
 
     void OnTurn(InputValue value)
     {
@@ -183,12 +175,6 @@ public class BoatMovement : MonoBehaviour
         input.Pitch = value.Get<float>();
     }
 
-    void OnRelease()
-    {
-        //Debug.Log("Interactin");
-        //onInteraction.Invoke();
-    }
-
     void OnSlow(InputValue value)
     {
         input.Slow = value.Get<float>();
@@ -198,6 +184,10 @@ public class BoatMovement : MonoBehaviour
     {
         input.SpeedUp = value.Get<float>();
     }
+
+
+    ///// Mechanic Functions /////
+
 
     private void OnTriggerEnter(Collider collision)
     {
@@ -225,20 +215,6 @@ public class BoatMovement : MonoBehaviour
             
             //Debug.Log(collision.gameObject.GetComponent<windVector>());
         }
-    }
-
-    public void respawn() {
-        StartCoroutine(DisableMovementforTime(2f));
-    }
-
-    IEnumerator DisableMovementforTime(float delayDuration)
-    {
-        canMove = false;
-        RigidbodyConstraints constraints = rigidbody.constraints;
-        rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-        yield return new WaitForSeconds(delayDuration);
-        rigidbody.constraints = constraints;
-        canMove = true;
     }
 
     //Collision with item is detected
@@ -273,9 +249,9 @@ public class BoatMovement : MonoBehaviour
     }
 
     private IEnumerator LeftDodge()
-        {
-            yield return new WaitForSeconds(5);
-            canLeftDodge = true;
-            //Debug.Log("speed down");
-        }
+    {
+        yield return new WaitForSeconds(5);
+        canLeftDodge = true;
+        //Debug.Log("speed down");
+    }
 }
