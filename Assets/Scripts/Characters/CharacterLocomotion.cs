@@ -1,5 +1,6 @@
 using System;
 using System.Data.Common;
+using System.Linq;
 using Cinemachine.Utility;
 using TMPro;
 using UnityEngine;
@@ -83,6 +84,11 @@ public class CharacterLocomotion : MonoBehaviour
         {
             InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * transform.forward, maxSpeed);
         }
+    }
+
+    public void ChangeImediateInputVelocity(Vector3 input)
+    {
+        InputVelocity = input;
     }
 
     public void Rotate(Vector2 input, float rotationSpeed, bool canDo180)
@@ -173,29 +179,56 @@ public class CharacterLocomotion : MonoBehaviour
         Vector3 horizontalVelocity = InputVelocity;
         float angle = 0;
 
-        if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1,
-         out RaycastHit hit, 0.1f, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore))
+        RaycastHit[] results = new RaycastHit[10];
+
+        if (Physics.SphereCastNonAlloc(transform.position + _controller.height / 2 * Vector3.up, _controller.radius, transform.up * -1,
+         results, _controller.height / 2, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore) > 0)
         {
-            angle = Vector3.Angle(hit.normal, Vector3.up);
+            RaycastHit lessSteepHit = results[0];
+
+            foreach (RaycastHit hit in results)
+            {
+                if (!hit.transform)
+                {
+                    continue;
+                }
+
+                if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
+                {
+                    transform.parent.SetParent(movingPlatform.transform);
+                }
+
+                float newAngle = Vector3.Angle(hit.normal, Vector3.up);
+
+                if (newAngle < Vector3.Angle(lessSteepHit.normal, Vector3.up))
+                {
+                    lessSteepHit = hit;
+                }
+            }       
+
+            angle = Vector3.Angle(lessSteepHit.normal, Vector3.up);
             // Slide
             if (angle > _controller.slopeLimit)
-            {
-                horizontalVelocity += angle / _controller.slopeLimit * FallVelocity.magnitude * hit.normal.ProjectOntoPlane(Vector3.up);
-                _locomotionState.Fall();
+            {           
+                if (Vector3.SignedAngle(InputVelocity.ProjectOntoPlane(Vector3.up), lessSteepHit.normal.ProjectOntoPlane(Vector3.up), lessSteepHit.normal.ProjectOntoPlane(Vector3.up)) > 90f)
+                {
+                    Vector2 horizontalVelocity2D = new(horizontalVelocity.x, horizontalVelocity.z);
+                    Vector2 normal2D = new(lessSteepHit.normal.x, lessSteepHit.normal.z);
+                    horizontalVelocity2D = Vector2.Dot(horizontalVelocity2D, normal2D) * normal2D;
+                    horizontalVelocity = new Vector3(horizontalVelocity2D.x, horizontalVelocity.y, horizontalVelocity2D.y);
+                }
+                // horizontalVelocity += angle / _controller.slopeLimit * FallVelocity.magnitude * lessSteepHit.normal.HorizontalProjection();
+                _locomotionState.Slide();
             }
             else
             {
                 // Uphill
-                if (Vector3.SignedAngle(InputVelocity.ProjectOntoPlane(Vector3.up), hit.normal.ProjectOntoPlane(Vector3.up), hit.normal.ProjectOntoPlane(Vector3.up)) > 90f)
+                if (Vector3.SignedAngle(InputVelocity.HorizontalProjection(), lessSteepHit.normal.HorizontalProjection(), lessSteepHit.normal.HorizontalProjection()) > 90f)
                 {
                     horizontalVelocity = Vector3.ClampMagnitude(InputVelocity, InputVelocity.magnitude * (_controller.slopeLimit * 1.5f - angle) / _controller.slopeLimit);
 
                 }
                 _locomotionState.Ground();
-            }
-            if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
-            {
-                transform.parent.SetParent(movingPlatform.transform);
             }
         }
         else if (_locomotionState != null && _locomotionState is not WindTunnel)
@@ -214,7 +247,7 @@ public class CharacterLocomotion : MonoBehaviour
 
     private void LocomotionDebug(float slope, Vector3 horizontalVelocity)
     {
-        string text = "Global Velocity: " + (BaseVelocity + InputVelocity + FallVelocity);
+        string text = "Global Velocity: " + (BaseVelocity + horizontalVelocity + FallVelocity);
         text += "\nVelocity: " + (InputVelocity + FallVelocity);
         text += "\nInput Velocity: " + InputVelocity;
         text += "\nHorizontal Velocity: " + horizontalVelocity;

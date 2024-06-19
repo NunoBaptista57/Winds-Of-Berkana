@@ -74,4 +74,6 @@ public class WindTunnel : MonoBehaviour, ILocomotionState
     public void Break()
     {
     }
+
+    public void Slide() {}
 }

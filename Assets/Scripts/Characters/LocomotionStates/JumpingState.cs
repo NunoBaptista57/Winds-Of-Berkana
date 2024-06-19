@@ -56,7 +56,6 @@ public class JumpingState : MonoBehaviour, ILocomotionState
 
     public void Ground()
     {
-
     }
 
     public void Run()
@@ -83,4 +82,6 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     public void Break()
     {
     }
+
+    public void Slide() {}
 }

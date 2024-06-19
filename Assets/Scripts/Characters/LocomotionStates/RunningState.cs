@@ -61,4 +61,9 @@ public class RunningState : MonoBehaviour, ILocomotionState
     public void Break()
     {
     }
+    
+    public void Slide() 
+    {
+        _characterLocomotion.ChangeState<SlidingState>();
+    }
 }
