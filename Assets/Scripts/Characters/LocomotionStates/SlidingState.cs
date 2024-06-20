@@ -4,18 +4,16 @@ using UnityEngine;
 public class SlidingState : MonoBehaviour, ILocomotionState
 {
     [SerializeField] private float _gravity = 3f;
+    [SerializeField] private float _maxFallSpeed = 10f;
     [SerializeField] private float _acceleration = 5f;
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
-    [SerializeField] private float _animationDelay = 0.1f;
     private CharacterLocomotion _characterLocomotion;
 
     public void StartState()
     {
-        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
-        _characterLocomotion.ChangeImediateFallVelocity(_gravity);
-        _characterLocomotion.ChangeImediateInputVelocity(Vector3.zero);
+        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.running);
     }
 
     public void StartJump()
@@ -43,6 +41,7 @@ public class SlidingState : MonoBehaviour, ILocomotionState
 
     public void Fall()
     {
+        _characterLocomotion.ChangeState<FallingState>();
     }
 
     public void Ground()
@@ -59,5 +58,8 @@ public class SlidingState : MonoBehaviour, ILocomotionState
 
     public void Break() {}
 
-    public void Slide() {}
+    public void Slide()
+    {
+        _characterLocomotion.ChangeFallVelocity(_gravity, _maxFallSpeed, _gravity);
+    }
 }

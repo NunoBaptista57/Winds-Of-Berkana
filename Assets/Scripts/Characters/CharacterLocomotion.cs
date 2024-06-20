@@ -210,14 +210,7 @@ public class CharacterLocomotion : MonoBehaviour
             // Slide
             if (angle > _controller.slopeLimit)
             {           
-                if (Vector3.SignedAngle(InputVelocity.ProjectOntoPlane(Vector3.up), lessSteepHit.normal.ProjectOntoPlane(Vector3.up), lessSteepHit.normal.ProjectOntoPlane(Vector3.up)) > 90f)
-                {
-                    Vector2 horizontalVelocity2D = new(horizontalVelocity.x, horizontalVelocity.z);
-                    Vector2 normal2D = new(lessSteepHit.normal.x, lessSteepHit.normal.z);
-                    horizontalVelocity2D = Vector2.Dot(horizontalVelocity2D, normal2D) * normal2D;
-                    horizontalVelocity = new Vector3(horizontalVelocity2D.x, horizontalVelocity.y, horizontalVelocity2D.y);
-                }
-                // horizontalVelocity += angle / _controller.slopeLimit * FallVelocity.magnitude * lessSteepHit.normal.HorizontalProjection();
+                horizontalVelocity += (90f - angle) / (90f - _controller.slopeLimit) * FallVelocity.magnitude * lessSteepHit.normal.HorizontalProjection();
                 _locomotionState.Slide();
             }
             else

@@ -46,6 +46,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
         yield return new WaitForSeconds(_glideDelay);
         if (_isPressingJump)
         {
+            _startAnimation = false;
             _characterLocomotion.ChangeState<GlidingState>();
         }
     }
@@ -94,6 +95,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void Slide()
     {
+        _startAnimation = false;
         _characterLocomotion.ChangeState<SlidingState>();
     }
 }

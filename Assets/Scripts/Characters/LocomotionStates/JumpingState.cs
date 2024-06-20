@@ -83,5 +83,8 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     {
     }
 
-    public void Slide() {}
+    public void Slide()
+    {
+        _characterLocomotion.ChangeState<SlidingState>();
+    }
 }

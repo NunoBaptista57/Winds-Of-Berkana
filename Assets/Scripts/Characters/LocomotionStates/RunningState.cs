@@ -65,5 +65,6 @@ public class RunningState : MonoBehaviour, ILocomotionState
     public void Slide() 
     {
         _characterLocomotion.ChangeState<SlidingState>();
+        _characterLocomotion.ChangeImediateFallVelocity(0f);
     }
 }
