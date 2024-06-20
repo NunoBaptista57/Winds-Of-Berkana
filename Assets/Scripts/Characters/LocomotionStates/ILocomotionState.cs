@@ -8,6 +8,7 @@ public interface ILocomotionState
     public void Run();
     public void Walk(bool walk);
     public void Fall();
+    public void Slide();
     public void Ground();
     public void StartState();
     public void Tunnel();

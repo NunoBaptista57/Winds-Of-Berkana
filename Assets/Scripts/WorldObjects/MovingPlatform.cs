@@ -41,10 +41,6 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out CharacterManager characterManager))
-        {
-            characterManager.Push(Vector3.zero);
-        }
     }
 
     private void Awake()
