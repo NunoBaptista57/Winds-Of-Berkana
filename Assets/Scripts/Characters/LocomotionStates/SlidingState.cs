@@ -1,21 +1,19 @@
+using System.Collections;
 using UnityEngine;
 
-public class GlidingState : MonoBehaviour, ILocomotionState
+public class SlidingState : MonoBehaviour, ILocomotionState
 {
     [SerializeField] private float _gravity = 3f;
-    [SerializeField] private float _maxFallSpeed = 3f;
+    [SerializeField] private float _maxFallSpeed = 10f;
     [SerializeField] private float _acceleration = 5f;
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
-    [SerializeField] private GameObject _glider;
-    private bool _walk = false;
     private CharacterLocomotion _characterLocomotion;
 
     public void StartState()
     {
-        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
-        _glider.SetActive(true);
+        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.running);
     }
 
     public void StartJump()
@@ -24,8 +22,6 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void StopJump()
     {
-        _glider.SetActive(false);
-        _characterLocomotion.ChangeState<FallingState>();
     }
 
     public void Move(Vector2 input)
@@ -41,37 +37,29 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Walk(bool walk)
     {
-        _walk = walk;
     }
 
     public void Fall()
     {
-        _characterLocomotion.ChangeFallVelocity(_gravity, _maxFallSpeed, _gravity);
+        _characterLocomotion.ChangeState<FallingState>();
     }
 
     public void Ground()
     {
         _characterLocomotion.ChangeState<RunningState>();
-        _glider.SetActive(false);
     }
 
-    public void Tunnel()
-    {
-        _characterLocomotion.ChangeState<WindTunnel>();
-    }
+    public void Tunnel() { }
 
     private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
     }
 
-    public void Break()
+    public void Break() {}
+
+    public void Slide()
     {
-    }
-    
-    public void Slide() 
-    {
-        _characterLocomotion.ChangeState<SlidingState>();
-        _glider.SetActive(false);
+        _characterLocomotion.ChangeFallVelocity(_gravity, _maxFallSpeed, _gravity);
     }
 }

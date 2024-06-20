@@ -9,7 +9,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _maxSpeed = 10f;
     [SerializeField] private float _deceleration = 5f;
     [SerializeField] private float _rotationSpeed = 10f;
-    [SerializeField] private float _animationDelay = 0.1f;
+    [SerializeField] private float _animationDelay = 0.2f;
     [SerializeField] private float _glideDelay = 0.3f;
     private bool _walk = false;
     private CharacterLocomotion _characterLocomotion;
@@ -46,6 +46,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
         yield return new WaitForSeconds(_glideDelay);
         if (_isPressingJump)
         {
+            _startAnimation = false;
             _characterLocomotion.ChangeState<GlidingState>();
         }
     }
@@ -73,7 +74,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
 
     public void Fall()
     {
-        _characterLocomotion.ChangeGravity(_gravity, _maxFallSpeed, _gravity);
+        _characterLocomotion.ChangeFallVelocity(_gravity, _maxFallSpeed, _gravity);
     }
 
     public void Ground()
@@ -90,7 +91,11 @@ public class FallingState : MonoBehaviour, ILocomotionState
         _characterLocomotion = GetComponent<CharacterLocomotion>();
     }
 
-    public void Break()
+    public void Break() {}
+
+    public void Slide()
     {
+        _startAnimation = false;
+        _characterLocomotion.ChangeState<SlidingState>();
     }
 }
