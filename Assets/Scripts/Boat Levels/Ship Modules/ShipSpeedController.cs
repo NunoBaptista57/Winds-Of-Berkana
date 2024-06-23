@@ -17,13 +17,10 @@ public class ShipSpeedController : MonoBehaviour
     [SerializeField, Min(0)] float accelerationRate = 2.5f;
     [SerializeField, Min(0)] float decelerationRate = 2.5f;
 
-    private Rigidbody rb;
-
     void Awake()
     {
         // Get Required Values for calculations
         _BoatMovement = gameObject.GetComponent<BoatMovement>();
-        rb = gameObject.GetComponent<Rigidbody>();
 
         flightMode = _BoatMovement.flightMode;
         MaxVerticalAngle = _BoatMovement.MaxVerticalAngle;

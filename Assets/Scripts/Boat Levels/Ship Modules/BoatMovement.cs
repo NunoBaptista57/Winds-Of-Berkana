@@ -35,21 +35,16 @@ public class BoatMovement : MonoBehaviour
     [Header("Stabilization")]
     [SerializeField, Range(0, 1)] float ForwardStabilization;
 
-    [Header("Tilting")]
-    [SerializeField] Transform visualModelTransform;
-    [SerializeField, Range(0, 90)] float maxTiltingAngle = 10;
-
-    struct PlayerInput
+    public struct PlayerInput
     {
         public float Turn;
         public float Pitch;
         public float Reel;
         public float Slow;
         public float SpeedUp;
-
     }
 
-    PlayerInput input;
+    public PlayerInput input;
     public Action onInteraction;
 
     // Start is called before the first frame update
@@ -78,15 +73,6 @@ public class BoatMovement : MonoBehaviour
         Debug.Log(currentSpeed);   
         if (!canMove) { rigidbody.velocity = Vector3.zero; return; }
 
-        if (visualModelTransform != null)
-        {
-            Vector3 currentEulerAngles = visualModelTransform.rotation.eulerAngles;
-            float tiltAngle = maxTiltingAngle * -input.Turn;
-            currentEulerAngles.z = tiltAngle;
-            Quaternion targetRotation = Quaternion.Euler(currentEulerAngles);
-            visualModelTransform.rotation = Quaternion.Lerp(visualModelTransform.rotation, targetRotation, Time.fixedDeltaTime * 2.5f);
-        }
-
         if (Input.GetKey(KeyCode.Space))
         {
             if (currentSpeed < MaxVelocity * 2)
@@ -107,12 +93,9 @@ public class BoatMovement : MonoBehaviour
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.Project(rigidbody.velocity, transform.forward), ForwardStabilization);
         rigidbody.AddForce(WindForce * transform.forward, ForceMode.Acceleration);
 
-        //if (rigidbody.velocity.magnitude > currentSpeed * speedModifier)
-        {
-            rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSpeed * speedModifier, VelocityLimitingStrength * Time.fixedDeltaTime));
-            print(speedModifier.ToString() + rigidbody.velocity.ToString());
-        }
 
+        rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSpeed * speedModifier, VelocityLimitingStrength * Time.fixedDeltaTime));
+        
         rigidbody.AddTorque(TurningTorque * input.Turn * Vector3.up, ForceMode.Acceleration);
 
         if (flightMode)
@@ -199,9 +182,7 @@ public class BoatMovement : MonoBehaviour
 
         if (collision.gameObject.CompareTag("WindTunnel"))
         {
-            //apply wind vector
-            windVector = collision.gameObject.GetComponent<windTunnelBoat>().windVector.normalized * collision.gameObject.GetComponent<windTunnelBoat>().windForce;
-            Debug.Log("is in wind");
+            windVector = collision.gameObject.transform.forward.normalized * collision.gameObject.GetComponent<windTunnelBoat>().windForce;
         }
     }
 
