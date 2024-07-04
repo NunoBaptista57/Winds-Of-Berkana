@@ -46,6 +46,7 @@ public class CharacterLocomotion : MonoBehaviour
     public void ChangeState<T>() where T : MonoBehaviour, ILocomotionState
     {
         _locomotionState = GetComponent<T>();
+        accessAudioManager().StopSFX();
         _locomotionState.StartState();
     }
 
@@ -170,6 +171,11 @@ public class CharacterLocomotion : MonoBehaviour
             stopForce = Math.Clamp(stopForce - force, 0f, float.MaxValue);
             FallVelocity = new Vector3(0f, stopForce, 0f);
         }
+    }
+
+    public AudioManager accessAudioManager()
+    {
+        return _characterManager.audioManager;
     }
 
     private void Update()

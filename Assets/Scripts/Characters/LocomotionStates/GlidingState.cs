@@ -16,6 +16,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
         _glider.SetActive(true);
+        _characterLocomotion.accessAudioManager().GlidingSound();
     }
 
     public void StartJump()
@@ -51,6 +52,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Ground()
     {
+        _characterLocomotion.accessAudioManager().LandingSound();
         _characterLocomotion.ChangeState<RunningState>();
         _glider.SetActive(false);
     }
