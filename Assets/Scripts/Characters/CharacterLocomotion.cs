@@ -4,6 +4,7 @@ using System.Linq;
 using Cinemachine.Utility;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class CharacterLocomotion : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class CharacterLocomotion : MonoBehaviour
     private ILocomotionState _locomotionState;
     [SerializeField] private TMP_Text _debugText;
     [SerializeField] private float _slideSpeed;
+    private Vector3 _obstacle = new(0, 0, 0);
 
     public void StartJump()
     {
@@ -83,6 +85,24 @@ public class CharacterLocomotion : MonoBehaviour
         }
         else if (input != Vector2.zero)
         {
+            // Slide through walls
+            if (_obstacle != Vector3.zero)
+            {
+                Debug.Log(_obstacle);
+                Vector3 velocityProjection = Vector3.Project(InputVelocity, _obstacle);
+
+                if (Math.Abs(Vector3.SignedAngle(InputVelocity.HorizontalProjection(), _obstacle, Vector3.up)) > 90f)
+                {
+                    float angleBetween = Vector3.Angle(InputVelocity, _obstacle);
+                    float angleFactor = Mathf.InverseLerp(180f, 0f, angleBetween);
+                    float dynamicMaxSpeed = maxSpeed * angleFactor;
+                    InputVelocity -= velocityProjection;
+                    InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * transform.forward, dynamicMaxSpeed);
+                    _obstacle = Vector3.zero;
+                    return;
+                }
+                _obstacle = Vector3.zero;
+            }
             InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * transform.forward, maxSpeed);
         }
     }
@@ -177,18 +197,46 @@ public class CharacterLocomotion : MonoBehaviour
     {
         return _characterManager.audioManager;
     }
+    // Todo: review angle
+    public void OnCollision(ControllerColliderHit hit)
+    {
+        float height = hit.point.y - transform.position.y;
+        float angle = Vector3.Angle(hit.normal, Vector3.up);
+
+        if (height > _controller.stepOffset)
+        {
+            Debug.Log("Height obstacle " + height);
+            _obstacle = hit.normal.HorizontalProjection().normalized;
+        }
+        else if (angle > _controller.slopeLimit)
+        {
+            if (Physics.Raycast(transform.position + Vector3.up * _controller.stepOffset - hit.normal.HorizontalProjection().normalized * _controller.stepOffset,
+             -Vector3.up, out RaycastHit groundHit, _controller.stepOffset, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore))
+            {
+                float groundAngle = Vector3.Angle(groundHit.normal, Vector3.up);
+
+                if (groundAngle > _controller.stepOffset)
+                {
+                    Debug.Log("Step obstacle");
+                    _obstacle = hit.normal.HorizontalProjection().normalized;
+                }
+            }
+        }
+    }
+
 
     private void Update()
     {
         _locomotionState.Move(Input);
 
         Vector3 horizontalVelocity = InputVelocity;
+
         float angle = 0;
 
         RaycastHit[] results = new RaycastHit[10];
 
         if (Physics.SphereCastNonAlloc(transform.position + _controller.height / 2 * Vector3.up, _controller.radius, transform.up * -1,
-         results, _controller.height / 2, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore) > 0)
+         results, _controller.height / 2 - _controller.radius, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore) > 0)
         {
             RaycastHit lessSteepHit = results[0];
 
@@ -210,7 +258,7 @@ public class CharacterLocomotion : MonoBehaviour
                 {
                     lessSteepHit = hit;
                 }
-            }       
+            }
 
             angle = Vector3.Angle(lessSteepHit.normal, Vector3.up);
             // Slide
@@ -242,6 +290,7 @@ public class CharacterLocomotion : MonoBehaviour
         _controller.Move(velocity);
 
         LocomotionDebug(angle, horizontalVelocity);
+
     }
 
     private void LocomotionDebug(float slope, Vector3 horizontalVelocity)

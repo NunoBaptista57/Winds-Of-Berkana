@@ -81,20 +81,9 @@ public class CharacterManager : MonoBehaviour
         CharacterAnimation.ChangeAnimation(animationState);
     }
 
-    private void OnTriggerStay(Collider collider)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (collider.gameObject.TryGetComponent(out MovingPlatform _))
-        {
-            if (CharacterController.velocity != Vector3.zero)
-            {
-                return;
-            }
-            Physics.ComputePenetration(collider, collider.transform.position, collider.transform.rotation, CharacterController, transform.position, transform.rotation, out Vector3 direction, out float distance);
-        }
-    }
-
-    private void OnTriggerExit(Collider collider)
-    {
+        CharacterLocomotion.OnCollision(hit);
     }
 
     private void Update()
