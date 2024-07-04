@@ -197,6 +197,33 @@ public class CharacterLocomotion : MonoBehaviour
     {
         return _characterManager.audioManager;
     }
+    // Todo: review angle
+    public void OnCollision(ControllerColliderHit hit)
+    {
+        float height = hit.point.y - transform.position.y;
+        float angle = Vector3.Angle(hit.normal, Vector3.up);
+
+        if (height > _controller.stepOffset)
+        {
+            Debug.Log("Height obstacle " + height);
+            _obstacle = hit.normal.HorizontalProjection().normalized;
+        }
+        else if (angle > _controller.slopeLimit)
+        {
+            if (Physics.Raycast(transform.position + Vector3.up * _controller.stepOffset - hit.normal.HorizontalProjection().normalized * _controller.stepOffset,
+             -Vector3.up, out RaycastHit groundHit, _controller.stepOffset, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore))
+            {
+                float groundAngle = Vector3.Angle(groundHit.normal, Vector3.up);
+
+                if (groundAngle > _controller.stepOffset)
+                {
+                    Debug.Log("Step obstacle");
+                    _obstacle = hit.normal.HorizontalProjection().normalized;
+                }
+            }
+        }
+    }
+
 
     private void Update()
     {
