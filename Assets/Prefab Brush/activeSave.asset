@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: activeSave
   m_EditorClassIdentifier: 
   prefabList: []
-  prefabData: []
+  prefabData:
+  - prefab: {fileID: 5634643415089456907, guid: 93d69c248707d1a469a1db61572a24f9, type: 3}
+    selected: 1
   paintType: 0
-  brushSize: 1
+  brushSize: 4.85
   minBrushSize: 0.1
   maxBrushSize: 20
   paintDeltaDistance: 0.4
@@ -43,29 +45,29 @@ MonoBehaviour:
   draggingAction: 0
   rotationAxis: 0
   rotationSensitivity: 10
-  parentingStyle: 0
+  parentingStyle: 2
   parent: {fileID: 0}
   rotateToMatchSurface: 0
   rotateSurfaceDirection: 0
-  randomizeRotation: 0
+  randomizeRotation: 1
   minXRotation: 0
   maxXRotation: 0
   minYRotation: 0
-  maxYRotation: 0
+  maxYRotation: 360
   minZRotation: 0
   maxZRotation: 0
-  scaleType: 0
+  scaleType: 2
   scaleApplicationType: 0
   minScale: 1
   maxScale: 1
-  minXScale: 1
-  maxXScale: 1
-  minYScale: 1
-  maxYScale: 1
-  minZScale: 1
-  maxZScale: 1
+  minXScale: 0.1
+  maxXScale: 1.2
+  minYScale: 0.1
+  maxYScale: 1.2
+  minZScale: 0.1
+  maxZScale: 1.2
   parentList: []
-  eraseBrushSize: 1
+  eraseBrushSize: 4.94
   minEraseBrushSize: 0.1
   maxEraseBrushSize: 20
   eraseType: 0
