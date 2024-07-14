@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59b6606ef2548734bb6d11b9d160bc7e, type: 3}
   m_Name: HDRISky
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   rotation:
     m_OverrideState: 1
     m_Value: 116
@@ -342,7 +342,7 @@ MonoBehaviour:
     m_Value: 0
   earthCurvature:
     m_OverrideState: 1
-    m_Value: 0.599
+    m_Value: 0.502
   cloudTiling:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1}
@@ -351,7 +351,7 @@ MonoBehaviour:
     m_Value: {x: 0, y: 0}
   bottomAltitude:
     m_OverrideState: 1
-    m_Value: 400
+    m_Value: 1200
   altitudeRange:
     m_OverrideState: 1
     m_Value: 2000
@@ -436,8 +436,26 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
+        time: 0.7414726
+        value: 0.7604482
+        inSlope: -0.032425318
+        outSlope: -0.032425318
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
         time: 1
         value: 0.1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1.0125
+        value: 0.5849057
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -534,7 +552,7 @@ MonoBehaviour:
     m_Value: 0.9
   shapeScale:
     m_OverrideState: 1
-    m_Value: 5
+    m_Value: 5.31
   shapeOffset:
     m_OverrideState: 1
     m_Value: {x: -0.25, y: 0.15, z: 0.25}
@@ -549,7 +567,7 @@ MonoBehaviour:
     m_Value: 1
   ambientLightProbeDimmer:
     m_OverrideState: 1
-    m_Value: 0.923
+    m_Value: 0.811
   sunLightDimmer:
     m_OverrideState: 1
     m_Value: 1
@@ -559,8 +577,8 @@ MonoBehaviour:
   globalWindSpeed:
     m_OverrideState: 1
     m_Value:
-      mode: 0
-      customValue: 0
+      mode: 1
+      customValue: 10
       additiveValue: 0
       multiplyValue: 1
   orientation:
@@ -571,17 +589,17 @@ MonoBehaviour:
       additiveValue: 0
       multiplyValue: 1
   altitudeDistortion:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.25
   cloudMapSpeedMultiplier:
     m_OverrideState: 0
     m_Value: 0.5
   shapeSpeedMultiplier:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   erosionSpeedMultiplier:
-    m_OverrideState: 0
-    m_Value: 0.25
+    m_OverrideState: 1
+    m_Value: 1
   verticalShapeWindSpeed:
     m_OverrideState: 1
     m_Value: 0
@@ -602,15 +620,15 @@ MonoBehaviour:
     m_Value: 0
   shadowResolution:
     m_OverrideState: 1
-    m_Value: 256
+    m_Value: 512
   shadowPlaneHeightOffset:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: -2.65
   shadowDistance:
     m_OverrideState: 0
     m_Value: 8000
   shadowOpacity:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   shadowOpacityFallback:
     m_OverrideState: 0
@@ -764,7 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d877ec3e844f2ca46830012e8e79319b, type: 3}
   m_Name: PhysicallyBasedSky
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   rotation:
     m_OverrideState: 0
     m_Value: 0
@@ -1175,7 +1193,7 @@ MonoBehaviour:
   active: 1
   skyType:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 4
   cloudType:
     m_OverrideState: 1
     m_Value: 0
