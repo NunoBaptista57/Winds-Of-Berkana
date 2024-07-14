@@ -7,14 +7,13 @@ using UnityEngine;
 
 public class ButtonsCombPuzzle : MonoBehaviour
 {
-    [HideInInspector] public bool IsActivated = false;
 
     private PlayerActions _playerActions;
 
     [SerializeField]
     private bool isNear;
     [Header("Canvas Objects")]
-    public TextMeshProUGUI infoText;
+    //public TextMeshProUGUI infoText;
     public bool activePart = false;
     public event Action<ButtonsCombPuzzle> OnActivated;
 
@@ -36,7 +35,7 @@ public class ButtonsCombPuzzle : MonoBehaviour
     private void OnTriggerEnter(Collider other){
         if (other.gameObject.CompareTag("Player"))
         {
-            infoText.gameObject.SetActive(true);
+            //infoText.gameObject.SetActive(true);
             isNear = true;
         }
     }
@@ -44,7 +43,7 @@ public class ButtonsCombPuzzle : MonoBehaviour
      {
         if (other.gameObject.CompareTag("Player"))
         {
-            infoText.gameObject.SetActive(false);
+            //infoText.gameObject.SetActive(false);
             isNear = false;
         }
      }

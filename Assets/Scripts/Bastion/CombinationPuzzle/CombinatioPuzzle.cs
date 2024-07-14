@@ -5,14 +5,15 @@ using UnityEngine;
 public class CombinatioPuzzle : MonoBehaviour
 {
     public ButtonsCombPuzzle[] buttons;
+    public GameObject[] lights;  
     // Start is called before the first frame update
 
     public void Awake(){
         
         buttons = GetComponentsInChildren<ButtonsCombPuzzle>();        
-        if(buttons.Length != 4)
+        if(buttons.Length <= 0)
         {
-            Debug.LogWarning("Expected exactly 4 ButtonCombPuzzles, but found " + buttons.Length);
+            Debug.LogWarning("No buttons found: " + buttons.Length);
         }
         for (int i = 0; i < buttons.Length; i++)
         {
@@ -25,9 +26,10 @@ public class CombinatioPuzzle : MonoBehaviour
             buttons[0].activePart = !buttons[0].activePart;
             buttons[index+1].activePart = !buttons[index+1].activePart;
             buttons[buttons.Length-1].activePart = !buttons[buttons.Length-1].activePart;
+            Debug.Log(buttons[0].activePart);
         }
         else if(index == buttons.Length-1){
-            buttons[0].activePart = !buttons[index+1].activePart;
+            buttons[0].activePart = !buttons[0].activePart;
             buttons[index-1].activePart = !buttons[index-1].activePart;
             buttons[index].activePart = !buttons[index].activePart;
         }
@@ -35,6 +37,18 @@ public class CombinatioPuzzle : MonoBehaviour
             buttons[index].activePart = !buttons[index].activePart;
             buttons[index-1].activePart = !buttons[index-1].activePart;
             buttons[index+1].activePart = !buttons[index+1].activePart;
+        }
+        LightsOnOff();
+    }
+
+    private void LightsOnOff(){
+        for (int i = 0; i < buttons.Length; i++){
+            if(buttons[i].activePart){
+                lights[i].SetActive(true);
+            }
+            else{
+                lights[i].SetActive(false);
+            }
         }
     }
 
