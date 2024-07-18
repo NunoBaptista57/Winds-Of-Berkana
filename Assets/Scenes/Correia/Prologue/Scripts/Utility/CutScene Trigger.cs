@@ -34,6 +34,7 @@ public class CutSceneTrigger : MonoBehaviour
     private Transform playerPos;
     private int i = 0;
     private float t = 0f;
+    private float lastDistance = 100000000f;
 
 
     public void HitJunction(Spline path)
@@ -50,7 +51,7 @@ public class CutSceneTrigger : MonoBehaviour
         currentSpline = path.Splines[0];
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (isMovingToStartPosition)
         {
@@ -60,7 +61,7 @@ public class CutSceneTrigger : MonoBehaviour
             shipPosition.y = currentSpline.Knots.Last().Position.y;
             float distance = Vector3.Distance(shipPosition, currentSpline.Knots.Last().Position);
             
-            if (distance > stoppingDistance)
+            if (distance > stoppingDistance || lastDistance < distance)
             {
                 var native = new NativeSpline(currentSpline);
 
@@ -84,6 +85,8 @@ public class CutSceneTrigger : MonoBehaviour
                 cutSceneManager.beginCutScene();
                 shipTransform.gameObject.GetComponent<BoatMovement>().canMove = true;
             }
+
+            lastDistance = distance;
         }
     }
 

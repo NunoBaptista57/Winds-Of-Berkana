@@ -88,11 +88,9 @@ public class BoatMovement : MonoBehaviour
             }
         }
     
-
         rigidbody.AddForce(windVector* 3, ForceMode.Impulse);
         rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.Project(rigidbody.velocity, transform.forward), ForwardStabilization);
         rigidbody.AddForce(WindForce * transform.forward, ForceMode.Acceleration);
-
 
         rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, Mathf.Lerp(rigidbody.velocity.magnitude, currentSpeed * speedModifier, VelocityLimitingStrength * Time.fixedDeltaTime));
         

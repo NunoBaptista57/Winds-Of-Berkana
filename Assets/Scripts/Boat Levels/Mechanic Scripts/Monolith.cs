@@ -6,11 +6,13 @@ public class Monolith : MonoBehaviour
 {
     [SerializeField] private GameObject gameobjectToDeactivate;
     [SerializeField] private GameObject gameobjectToActivate;
+    bool done = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !done)
         {
+            done = true;
             ShipLevelManager.Instance.ActivateMonolith();
             if (gameobjectToDeactivate != null)
             {
