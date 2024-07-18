@@ -70,7 +70,6 @@ public class BoatMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log(currentSpeed);   
         if (!canMove) { rigidbody.velocity = Vector3.zero; return; }
 
         if (Input.GetKey(KeyCode.Space))
@@ -110,6 +109,7 @@ public class BoatMovement : MonoBehaviour
         var rot = rigidbody.rotation.eulerAngles;
         rot.z = 0;
         rigidbody.rotation = Quaternion.Euler(rot);
+        //Debug.Log("speedModifier:" + speedModifier + "   speed:" + Math.Round(rigidbody.velocity.magnitude, 3) + "   Max speed:" + Math.Round(MaxVelocity*speedModifier, 3));
     }
 
     public void respawn() {

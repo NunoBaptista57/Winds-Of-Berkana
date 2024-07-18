@@ -48,13 +48,13 @@ public class ShipSpeedController : MonoBehaviour
             {
                 float t = Mathf.InverseLerp(90f, MaxVerticalAngle, pitchAngle);
                 float targetModifier = Mathf.Lerp(speedModifier, maxUpSlow, t);
-                speedModifier = Mathf.Lerp(speedModifier, targetModifier, Time.fixedDeltaTime * decelerationRate);
+                speedModifier = Mathf.Lerp(speedModifier, Mathf.Lerp(1f, targetModifier, t), Time.fixedDeltaTime * decelerationRate);
             }
             else if (pitchAngle > 90)
             {
                 float t = Mathf.InverseLerp(90f, MinVerticalAngle, pitchAngle);
                 float targetModifier = Mathf.Lerp(maxDownBoost, speedModifier, t);
-                speedModifier = Mathf.Lerp(speedModifier, targetModifier, Time.fixedDeltaTime * accelerationRate);
+                speedModifier = Mathf.Lerp(speedModifier, Mathf.Lerp(targetModifier, 1f, t), Time.fixedDeltaTime * accelerationRate);
             }
         }
     }
