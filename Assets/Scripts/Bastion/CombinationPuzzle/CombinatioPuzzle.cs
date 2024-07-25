@@ -17,11 +17,12 @@ public class CombinatioPuzzle : MonoBehaviour
         }
         for (int i = 0; i < buttons.Length; i++)
         {
-            int index = i; 
+            int index = i;
             buttons[i].OnActivated += (buttonPuzzle) => SolvingTurn(buttonPuzzle, index);
         }
     }
     public void SolvingTurn(ButtonsCombPuzzle buttonPuzzle, int index){
+        if(buttons.Length > 3){
         if(index == 0){
             buttons[0].activePart = !buttons[0].activePart;
             buttons[index+1].activePart = !buttons[index+1].activePart;
@@ -37,6 +38,19 @@ public class CombinatioPuzzle : MonoBehaviour
             buttons[index].activePart = !buttons[index].activePart;
             buttons[index-1].activePart = !buttons[index-1].activePart;
             buttons[index+1].activePart = !buttons[index+1].activePart;
+        }}
+        else{
+            if(index == 0){
+                buttons[0].activePart = !buttons[0].activePart;
+                buttons[1].activePart = !buttons[1].activePart;
+            }
+            else if(index == 1){
+                buttons[1].activePart = !buttons[1].activePart;
+            }
+            else{
+                buttons[0].activePart = !buttons[0].activePart;
+                buttons[2].activePart = !buttons[2].activePart;                   
+            }
         }
         LightsOnOff();
     }
