@@ -57,5 +57,6 @@ public class ShipSpeedController : MonoBehaviour
                 speedModifier = Mathf.Lerp(speedModifier, Mathf.Lerp(targetModifier, 1f, t), Time.fixedDeltaTime * accelerationRate);
             }
         }
+        print("mod" + speedModifier);
     }
 }
