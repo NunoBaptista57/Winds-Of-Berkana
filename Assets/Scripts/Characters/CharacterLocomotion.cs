@@ -17,7 +17,7 @@ public class CharacterLocomotion : MonoBehaviour
     public CharacterController _controller;
     private CharacterManager _characterManager;
     private ILocomotionState _locomotionState;
-    [SerializeField] private TMP_Text _debugText;
+   // [SerializeField] private TMP_Text _debugText;
     [SerializeField] private float _slideSpeed;
     private Vector3 _obstacle = new(0, 0, 0);
 
@@ -307,7 +307,7 @@ public class CharacterLocomotion : MonoBehaviour
         text += "\nSlope: " + slope;
         text += "\n" + _locomotionState;
 
-        _debugText.SetText(text);
+       // _debugText.SetText(text);
     }
 
     private void Start()
