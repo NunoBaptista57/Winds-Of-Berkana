@@ -56,8 +56,6 @@ public class RunningState : MonoBehaviour, ILocomotionState
     {
     }
 
-    public void Tunnel() { }
-
     public void Walk(bool walk)
     {
         _walk = walk;

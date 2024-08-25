@@ -40,10 +40,6 @@ public class CharacterLocomotion : MonoBehaviour
     {
         _locomotionState.Walk(walk);
     }
-    public void Tunnel()
-    {
-        _locomotionState.Tunnel();
-    }
 
     public void ChangeState<T>() where T : MonoBehaviour, ILocomotionState
     {
@@ -281,7 +277,7 @@ public class CharacterLocomotion : MonoBehaviour
                 _locomotionState.Ground();
             }
         }
-        else if (_locomotionState != null && _locomotionState is not WindTunnel)
+        else if (_locomotionState != null)
         {
             _locomotionState.Fall();
             transform.parent.SetParent(null);

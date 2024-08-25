@@ -112,7 +112,7 @@ public class PlayerManager : CharacterManager
         _playerActions.Disable();
     }
 
-    private void Start()
+    private new void Start()
     {
         _debugMode = GetComponent<PlayerDebugMode>();
     }

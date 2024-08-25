@@ -11,6 +11,5 @@ public interface ILocomotionState
     public void Slide();
     public void Ground();
     public void StartState();
-    public void Tunnel();
     public void Break();
 }

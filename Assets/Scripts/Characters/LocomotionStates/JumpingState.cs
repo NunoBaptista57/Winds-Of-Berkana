@@ -52,8 +52,6 @@ public class JumpingState : MonoBehaviour, ILocomotionState
 
     }
 
-    public void Tunnel() { }
-
     public void Ground()
     {
     }

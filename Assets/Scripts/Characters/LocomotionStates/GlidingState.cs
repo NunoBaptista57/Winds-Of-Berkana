@@ -65,11 +65,6 @@ public class GlidingState : MonoBehaviour, ILocomotionState
         _glider.SetActive(false);
     }
 
-    public void Tunnel()
-    {
-        _characterLocomotion.ChangeState<WindTunnel>();
-    }
-
     private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();

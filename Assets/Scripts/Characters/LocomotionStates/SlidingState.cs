@@ -49,8 +49,6 @@ public class SlidingState : MonoBehaviour, ILocomotionState
         _characterLocomotion.ChangeState<RunningState>();
     }
 
-    public void Tunnel() { }
-
     private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
