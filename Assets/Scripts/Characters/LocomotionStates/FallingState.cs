@@ -104,4 +104,9 @@ public class FallingState : MonoBehaviour, ILocomotionState
     }
 
     public void Push(GameObject obstacle) {}
+
+    public void StartState(GameObject obstacle)
+    {
+        throw new System.NotImplementedException();
+    }
 }

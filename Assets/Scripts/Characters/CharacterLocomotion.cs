@@ -53,6 +53,16 @@ public class CharacterLocomotion : MonoBehaviour
         _locomotionState.StartState();
     }
 
+    public void ChangeState<T>(GameObject obstacle) where T : MonoBehaviour, ILocomotionState
+    {
+        _locomotionState = GetComponent<T>();
+        if (accessAudioManager() != null)
+        {
+            accessAudioManager().StopSFX();
+        }
+        _locomotionState.StartState(obstacle);
+    }
+
     public void ChangeAnimationState(CharacterAnimation.AnimationState animationState)
     {
         _characterManager.ChangeAnimation(animationState);
@@ -90,14 +100,15 @@ public class CharacterLocomotion : MonoBehaviour
             if (_hitPosition != Vector3.zero)
             {
 
-                if (_obstacle.CompareTag("Pushable"))
-                {
-                    Debug.Log("Entrou");
-                    _locomotionState.Push(_obstacle);
-                }
                 Vector3 velocityProjection = Vector3.Project(InputVelocity, _hitPosition);
 
-                if (Math.Abs(Vector3.SignedAngle(InputVelocity.HorizontalProjection(), _hitPosition, Vector3.up)) > 90f)
+                if (Math.Abs(Vector3.SignedAngle(InputVelocity.HorizontalProjection(), _hitPosition, Vector3.up)) > 45f && _obstacle.CompareTag("Pushable"))
+                {
+                    Debug.Log("Entrou");
+                    Body.rotation = Quaternion.LookRotation(-_hitPosition);
+                    _locomotionState.Push(_obstacle);
+                }
+                else if (Math.Abs(Vector3.SignedAngle(InputVelocity.HorizontalProjection(), _hitPosition, Vector3.up)) > 90f)
                 {
                     float angleBetween = Vector3.Angle(InputVelocity, _hitPosition);
                     float angleFactor = Mathf.InverseLerp(180f, 0f, angleBetween);

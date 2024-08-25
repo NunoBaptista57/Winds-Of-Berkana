@@ -84,6 +84,11 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void Push(GameObject obstacle)
     {
-        _characterLocomotion.ChangeState<PushingState>();
+        _characterLocomotion.ChangeState<PushingState>(obstacle);
+    }
+
+    public void StartState(GameObject obstacle)
+    {
+        throw new System.NotImplementedException();
     }
 }
