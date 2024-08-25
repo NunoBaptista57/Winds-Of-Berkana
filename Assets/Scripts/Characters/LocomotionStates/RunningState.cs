@@ -21,13 +21,21 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void Move(Vector2 input)
     {
+        AudioManager audioManager = _characterLocomotion.accessAudioManager();
+        
         if (input != Vector2.zero)
         {
-            _characterLocomotion.accessAudioManager().RunningSound();
+            if (audioManager != null)
+            {
+                audioManager.RunningSound();
+            }
         }
         else
         {
-            _characterLocomotion.accessAudioManager().StopSFX();
+            if (audioManager != null)
+            {
+                audioManager.StopSFX();
+            }
         }
         _characterLocomotion.Rotate(input, _rotationSpeed, canDo180: true);
         _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);

@@ -81,7 +81,12 @@ public class FallingState : MonoBehaviour, ILocomotionState
     {
         _startAnimation = false;
         _isPressingJump = false;
-        _characterLocomotion.accessAudioManager().LandingSound();
+
+        AudioManager audioManager = _characterLocomotion.accessAudioManager();
+        if (audioManager != null)
+        {
+            audioManager.LandingSound();
+        }
         _characterLocomotion.ChangeState<RunningState>();
     }
 
