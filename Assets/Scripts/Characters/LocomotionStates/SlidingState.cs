@@ -60,4 +60,6 @@ public class SlidingState : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion.ChangeFallVelocity(_gravity, _maxFallSpeed, _gravity);
     }
+
+    public void Push(GameObject obstacle) {}
 }

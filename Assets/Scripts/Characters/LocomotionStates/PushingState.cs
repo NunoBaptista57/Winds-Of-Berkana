@@ -20,6 +20,8 @@ public class PushingState : MonoBehaviour, ILocomotionState
         
     }
 
+    public void Push(GameObject obstacle) {}
+
     public void Run() {}
 
     public void Slide()

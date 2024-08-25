@@ -102,4 +102,6 @@ public class FallingState : MonoBehaviour, ILocomotionState
         _startAnimation = false;
         _characterLocomotion.ChangeState<SlidingState>();
     }
+
+    public void Push(GameObject obstacle) {}
 }

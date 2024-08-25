@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Linq;
 using Cinemachine.Utility;
 using TMPro;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,7 +20,8 @@ public class CharacterLocomotion : MonoBehaviour
     private ILocomotionState _locomotionState;
     [SerializeField] private TMP_Text _debugText;
     [SerializeField] private float _slideSpeed;
-    private Vector3 _obstacle = new(0, 0, 0);
+    private Vector3 _hitPosition = new(0, 0, 0);
+    private GameObject _obstacle;
 
     public void StartJump()
     {
@@ -85,22 +87,27 @@ public class CharacterLocomotion : MonoBehaviour
         else if (input != Vector2.zero)
         {
             // Slide through walls
-            if (_obstacle != Vector3.zero)
+            if (_hitPosition != Vector3.zero)
             {
-                Debug.Log(_obstacle);
-                Vector3 velocityProjection = Vector3.Project(InputVelocity, _obstacle);
 
-                if (Math.Abs(Vector3.SignedAngle(InputVelocity.HorizontalProjection(), _obstacle, Vector3.up)) > 90f)
+                if (_obstacle.CompareTag("Pushable"))
                 {
-                    float angleBetween = Vector3.Angle(InputVelocity, _obstacle);
+                    Debug.Log("Entrou");
+                    _locomotionState.Push(_obstacle);
+                }
+                Vector3 velocityProjection = Vector3.Project(InputVelocity, _hitPosition);
+
+                if (Math.Abs(Vector3.SignedAngle(InputVelocity.HorizontalProjection(), _hitPosition, Vector3.up)) > 90f)
+                {
+                    float angleBetween = Vector3.Angle(InputVelocity, _hitPosition);
                     float angleFactor = Mathf.InverseLerp(180f, 0f, angleBetween);
                     float dynamicMaxSpeed = maxSpeed * angleFactor;
                     InputVelocity -= velocityProjection;
                     InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * transform.forward, dynamicMaxSpeed);
-                    _obstacle = Vector3.zero;
+                    _hitPosition = Vector3.zero;
                     return;
                 }
-                _obstacle = Vector3.zero;
+                _hitPosition = Vector3.zero;
             }
             InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * transform.forward, maxSpeed);
         }
@@ -202,10 +209,11 @@ public class CharacterLocomotion : MonoBehaviour
         float height = hit.point.y - transform.position.y;
         float angle = Vector3.Angle(hit.normal, Vector3.up);
 
+
         if (height > _controller.stepOffset)
         {
-            Debug.Log("Height obstacle " + height);
-            _obstacle = hit.normal.HorizontalProjection().normalized;
+            _obstacle = hit.gameObject;
+            _hitPosition = hit.normal.HorizontalProjection().normalized;
         }
         else if (angle > _controller.slopeLimit)
         {
@@ -216,8 +224,7 @@ public class CharacterLocomotion : MonoBehaviour
 
                 if (groundAngle > _controller.stepOffset)
                 {
-                    Debug.Log("Step obstacle");
-                    _obstacle = hit.normal.HorizontalProjection().normalized;
+                    _hitPosition = hit.normal.HorizontalProjection().normalized;
                 }
             }
         }

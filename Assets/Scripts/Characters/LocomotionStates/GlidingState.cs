@@ -79,4 +79,6 @@ public class GlidingState : MonoBehaviour, ILocomotionState
         _characterLocomotion.ChangeState<SlidingState>();
         _glider.SetActive(false);
     }
+
+    public void Push(GameObject obstacle) {}
 }

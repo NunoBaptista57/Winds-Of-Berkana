@@ -81,4 +81,9 @@ public class RunningState : MonoBehaviour, ILocomotionState
         _characterLocomotion.ChangeState<SlidingState>();
         _characterLocomotion.ChangeImediateFallVelocity(0f);
     }
+
+    public void Push(GameObject obstacle)
+    {
+        _characterLocomotion.ChangeState<PushingState>();
+    }
 }

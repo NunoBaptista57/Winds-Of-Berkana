@@ -85,4 +85,6 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion.ChangeState<SlidingState>();
     }
+
+    public void Push(GameObject obstacle) {}
 }
