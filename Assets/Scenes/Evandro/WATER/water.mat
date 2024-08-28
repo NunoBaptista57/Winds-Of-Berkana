@@ -50,7 +50,7 @@ Material:
     m_TexEnvs:
     - _Foam_Texture:
         m_Texture: {fileID: 2800000, guid: ba76de713798c2a4aa07d8f0f76515aa, type: 3}
-        m_Scale: {x: 5, y: 5}
+        m_Scale: {x: 50, y: 50}
         m_Offset: {x: 0, y: 0}
     - _Normal_01:
         m_Texture: {fileID: 2800000, guid: b6e2fadfc63b4f740aab347b676a6b3a, type: 3}
@@ -80,7 +80,7 @@ Material:
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
-    - _Amplitude: 0.1
+    - _Amplitude: 0.06
     - _BlendMode: 0
     - _ConservativeDepthOffsetEnable: 0
     - _Crest_Falloff: 0
@@ -89,7 +89,7 @@ Material:
     - _CullMode: 0
     - _CullModeForward: 0
     - _DepthOffsetEnable: 0
-    - _Depth_Strength: 0.02
+    - _Depth_Strength: 0.11
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
@@ -99,29 +99,29 @@ Material:
     - _EnableFogOnTransparent: 1
     - _Extra_Dispersion: -1.16
     - _Extra_Expersion: 0
-    - _Foam_Bands: 0.92
-    - _Foam_Fall_Off: 2.87
+    - _Foam_Bands: 1.73
+    - _Foam_Fall_Off: 1.78
     - _Foam_Removal: 0.03
-    - _Foam_Width: -6.74
-    - _Frequency: 0.19
+    - _Foam_Width: -1.5
+    - _Frequency: 0.22
     - _OpaqueCullMode: 2
     - _RayTracing: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 1
     - _RefractionModel: 0
-    - _Refraction_Strength: 0.68
+    - _Refraction_Strength: 1.74
     - _RenderQueueType: 4
     - _RequireSplitLighting: 0
     - _Ripple_Speed: 0.005
     - _Ripple_Spepd: 0.02
-    - _Ripple_Strength: 0.1
+    - _Ripple_Strength: -0.07
     - _Ripple_Tilling: -0.03
-    - _SecFrequenc: 0.16
-    - _SecSpeed: 0.5
-    - _Smoothness: 1
-    - _Speed: 0.9
+    - _SecFrequenc: 0.05
+    - _SecSpeed: 1
+    - _Smoothness: 1.03
+    - _Speed: 1
     - _SrcBlend: 1
-    - _Steepness: -0.55
+    - _Steepness: 72.37
     - _StencilRef: 0
     - _StencilRefDepth: 8
     - _StencilRefDistortionVec: 4
@@ -149,18 +149,18 @@ Material:
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 1
     - _UseShadowThreshold: 0
-    - _Water_Edge_Opacity: 0.486
-    - _Water_Opacity: 1
+    - _Water_Edge_Opacity: 0.527
+    - _Water_Opacity: 0.981
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - _Color_1: {r: 0.20372018, g: 0.33354992, b: 0.3962264, a: 0}
-    - _Color_2: {r: 0.56287825, g: 0.8584906, b: 0.8584906, a: 0}
-    - _Direction: {r: -17.8, g: -4.2, b: 0, a: 0}
+    - _Color_1: {r: 0.20392157, g: 0.3361928, b: 0.39607844, a: 0}
+    - _Color_2: {r: 0.7882353, g: 0.95793754, b: 1, a: 0}
+    - _Direction: {r: -26.22, g: -4.2, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _Foam_COlor: {r: 1, g: 1, b: 1, a: 0}
-    - _SecDirection: {r: 1, g: 1.56, b: 0, a: 0}
+    - _SecDirection: {r: -2.67, g: -0.24, b: 0, a: 0}
   m_BuildTextureStacks: []

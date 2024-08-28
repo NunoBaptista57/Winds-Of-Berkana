@@ -14,6 +14,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void StartState()
     {
+        _characterLocomotion.ChangeAnimationState(CharacterAnimation.AnimationState.falling);
         _glider.SetActive(true);
     }
 
@@ -45,7 +46,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Fall()
     {
-        _characterLocomotion.ChangeGravity(_gravity, _maxFallSpeed, _gravity);
+        _characterLocomotion.ChangeFallVelocity(_gravity, _maxFallSpeed, _gravity);
     }
 
     public void Ground()
@@ -66,5 +67,11 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Break()
     {
+    }
+    
+    public void Slide() 
+    {
+        _characterLocomotion.ChangeState<SlidingState>();
+        _glider.SetActive(false);
     }
 }

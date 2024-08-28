@@ -1,3 +1,8 @@
+using System;
+using System.Data.Common;
+using System.Linq;
+using Cinemachine.Utility;
+using TMPro;
 using UnityEngine;
 
 public class CharacterLocomotion : MonoBehaviour
@@ -5,13 +10,14 @@ public class CharacterLocomotion : MonoBehaviour
     public Transform Body;
     public Vector2 Input = Vector2.zero;
     public Transform BasePosition;
-    public Vector3 PushVelocity { get; private set; } = Vector3.zero;
     public Vector3 BaseVelocity { get; private set; } = Vector3.zero;
     public Vector3 InputVelocity { get; private set; } = Vector3.zero;
-    public Vector3 Gravity { get; private set; } = Vector3.zero;
-    private CharacterManager _characterManager;
+    public Vector3 FallVelocity { get; private set; } = Vector3.zero;
     public CharacterController _controller;
+    private CharacterManager _characterManager;
     private ILocomotionState _locomotionState;
+    [SerializeField] private TMP_Text _debugText;
+    [SerializeField] private float _slideSpeed;
 
     public void StartJump()
     {
@@ -48,14 +54,6 @@ public class CharacterLocomotion : MonoBehaviour
         _characterManager.ChangeAnimation(animationState);
     }
 
-    public void ChangePushVelocity(Vector3 pushVelocity)
-    {
-        if (InputVelocity == Vector3.zero)
-        {
-            PushVelocity = pushVelocity;
-        }
-    }
-
     public void ChangeBaseVelocity(Vector3 baseVelocity)
     {
         BaseVelocity = baseVelocity;
@@ -84,12 +82,13 @@ public class CharacterLocomotion : MonoBehaviour
         }
         else if (input != Vector2.zero)
         {
-            InputVelocity += acceleration * Time.deltaTime * transform.forward;
-            if (InputVelocity.magnitude > maxSpeed)
-            {
-                InputVelocity = InputVelocity.normalized * maxSpeed;
-            }
+            InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * transform.forward, maxSpeed);
         }
+    }
+
+    public void ChangeImediateInputVelocity(Vector3 input)
+    {
+        InputVelocity = input;
     }
 
     public void Rotate(Vector2 input, float rotationSpeed, bool canDo180)
@@ -131,69 +130,98 @@ public class CharacterLocomotion : MonoBehaviour
         }
     }
 
-    public void ChangeGravity(float acceleration)
+
+    public void ChangeImediateFallVelocity(float fallSpeed)
     {
-        float fallSpeed = Gravity.y;
+        FallVelocity = new(0f, -fallSpeed, 0f);
+    }
+
+    public void ChangeFallVelocity(float acceleration)
+    {
+        float fallSpeed = FallVelocity.y;
         fallSpeed -= acceleration * Time.deltaTime;
-        Gravity = new(0f, fallSpeed, 0f);
+        FallVelocity = new(0f, fallSpeed, 0f);
     }
 
-    public void ChangeImediateGravity(float fallSpeed)
+    public void ChangeFallVelocity(float acceleration, float maxSpeed, float deceleration)
     {
-        Gravity = new(0f, -fallSpeed, 0f);
-    }
-
-    public void ChangeGravity(float acceleration, float maxSpeed, float deceleration)
-    {
-        float fallSpeed = Gravity.y;
+        float fallSpeed = FallVelocity.y;
         if (fallSpeed > -maxSpeed)
         {
-            fallSpeed -= acceleration * Time.deltaTime;
-            if (fallSpeed < -maxSpeed)
-            {
-                fallSpeed = -maxSpeed;
-            }
+            fallSpeed = Math.Clamp(fallSpeed - acceleration * Time.deltaTime, -maxSpeed, float.MaxValue);
         }
         else if (fallSpeed < -maxSpeed)
         {
-            fallSpeed += deceleration * Time.deltaTime;
-            if (fallSpeed > -maxSpeed)
-            {
-                fallSpeed = -maxSpeed;
-            }
+            fallSpeed = Math.Clamp(fallSpeed + deceleration * Time.deltaTime, float.MinValue, -maxSpeed);
         }
-        Gravity = new(0f, fallSpeed, 0f);
+        FallVelocity = new(0f, fallSpeed, 0f);
     }
 
     public void AddJumpForce(float force)
     {
-        Gravity = new(0f, force, 0f);
+        FallVelocity = new(0f, force, 0f);
     }
 
     public void StopJumpForce(float force)
     {
-        if (Gravity.y > 0f)
+        if (FallVelocity.y > 0f)
         {
-            float stopForce = Gravity.y;
-            stopForce -= force;
-            if (stopForce < 0f)
-            {
-                stopForce = 0f;
-            }
-
-            Gravity = new Vector3(0f, stopForce, 0f);
+            float stopForce = FallVelocity.y;
+            stopForce = Math.Clamp(stopForce - force, 0f, float.MaxValue);
+            FallVelocity = new Vector3(0f, stopForce, 0f);
         }
     }
 
     private void Update()
     {
         _locomotionState.Move(Input);
-        if (Physics.SphereCast(transform.position + transform.up * _controller.radius, _controller.radius, transform.up * -1, out RaycastHit hit, 0.1f) && !hit.collider.isTrigger)
+
+        Vector3 horizontalVelocity = InputVelocity;
+        float angle = 0;
+
+        RaycastHit[] results = new RaycastHit[10];
+
+        if (Physics.SphereCastNonAlloc(transform.position + _controller.height / 2 * Vector3.up, _controller.radius, transform.up * -1,
+         results, _controller.height / 2, ~LayerMask.GetMask("Player"), QueryTriggerInteraction.Ignore) > 0)
         {
-            _locomotionState.Ground();
-            if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
+            RaycastHit lessSteepHit = results[0];
+
+            foreach (RaycastHit hit in results)
             {
-                transform.parent.SetParent(movingPlatform.transform);
+                if (!hit.transform)
+                {
+                    continue;
+                }
+
+                if (hit.collider.gameObject.TryGetComponent(out MovingPlatform movingPlatform))
+                {
+                    transform.parent.SetParent(movingPlatform.transform);
+                }
+
+                float newAngle = Vector3.Angle(hit.normal, Vector3.up);
+
+                if (newAngle < Vector3.Angle(lessSteepHit.normal, Vector3.up))
+                {
+                    lessSteepHit = hit;
+                }
+            }       
+
+            angle = Vector3.Angle(lessSteepHit.normal, Vector3.up);
+            // Slide
+            if (angle > _controller.slopeLimit)
+            {           
+                horizontalVelocity += (90f - angle) / (90f - _controller.slopeLimit) * FallVelocity.magnitude * lessSteepHit.normal.HorizontalProjection();
+                _locomotionState.Slide();
+            }
+            else
+            {
+                // Uphill
+                if (Vector3.SignedAngle(InputVelocity.HorizontalProjection(), lessSteepHit.normal.HorizontalProjection(), lessSteepHit.normal.HorizontalProjection()) > 90f)
+                {
+                    horizontalVelocity = Vector3.ClampMagnitude(InputVelocity, InputVelocity.magnitude * (_controller.slopeLimit * 1.5f - angle) / _controller.slopeLimit);
+
+                }
+                _locomotionState.Ground();
             }
         }
         else if (_locomotionState != null && _locomotionState is not WindTunnel)
@@ -202,7 +230,26 @@ public class CharacterLocomotion : MonoBehaviour
             transform.parent.SetParent(null);
             ChangeBaseVelocity(Vector3.zero);
         }
-        _controller.Move(PushVelocity + BaseVelocity + (InputVelocity + Gravity) * Time.deltaTime);
+
+        Vector3 velocity = (BaseVelocity + horizontalVelocity + FallVelocity) * Time.deltaTime;
+
+        _controller.Move(velocity);
+
+        LocomotionDebug(angle, horizontalVelocity);
+    }
+
+    private void LocomotionDebug(float slope, Vector3 horizontalVelocity)
+    {
+        string text = "Global Velocity: " + (BaseVelocity + horizontalVelocity + FallVelocity);
+        text += "\nVelocity: " + (InputVelocity + FallVelocity);
+        text += "\nInput Velocity: " + InputVelocity;
+        text += "\nHorizontal Velocity: " + horizontalVelocity;
+        text += "\nFall Velocity: " + FallVelocity;
+        text += "\nBase Velocity: " + BaseVelocity;
+        text += "\nSlope: " + slope;
+        text += "\n" + _locomotionState;
+
+        _debugText.SetText(text);
     }
 
     private void Start()
