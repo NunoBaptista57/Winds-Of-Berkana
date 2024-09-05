@@ -73,7 +73,9 @@ public class CharacterLocomotion : MonoBehaviour
         BaseVelocity = baseVelocity;
     }
 
-    public void ChangeInputVelocity(Vector2 input, float acceleration, float maxSpeed, float deceleration)
+
+
+    public void ChangeInputVelocity(Vector2 input, float acceleration, float maxSpeed, float deceleration, bool absolute)
     {
         // Breaking
         if (input == Vector2.zero && InputVelocity != Vector3.zero)
@@ -119,7 +121,16 @@ public class CharacterLocomotion : MonoBehaviour
                 }
                 _hitPosition = Vector3.zero;
             }
-            InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * transform.forward, maxSpeed);
+
+            if (absolute)
+            {
+                Vector3 direction3D = new(input.x, 0, input.y);
+                InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * direction3D, maxSpeed);
+            }
+            else
+            {
+                InputVelocity = Vector3.ClampMagnitude(InputVelocity + acceleration * Time.deltaTime * transform.forward, maxSpeed);
+            }
         }
     }
 

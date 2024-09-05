@@ -38,7 +38,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
             }
         }
         _characterLocomotion.RotateBody(input, _rotationSpeed, canDo180: true);
-        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration, false);
     }
 
     public void Run()

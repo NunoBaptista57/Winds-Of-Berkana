@@ -7,6 +7,7 @@ public class PushingState : MonoBehaviour, ILocomotionState
 {
     [SerializeField] private float _acceleration;
     [SerializeField] private float _maxSpeed;
+    [SerializeField] private float _angleToExit = 60f;
     private CharacterLocomotion _characterLocomotion;
     private GameObject _object;
 
@@ -23,18 +24,17 @@ public class PushingState : MonoBehaviour, ILocomotionState
     // TODO: change input method
     public void Move(Vector2 input)
     {
-        Vector3 bodyProjection = _characterLocomotion.Body.transform.position.HorizontalProjection();
+        Vector3 bodyProjection = _characterLocomotion.Body.transform.forward.HorizontalProjection();
         Vector2 bodyDirection = new (bodyProjection.x, bodyProjection.z);
         Vector2 targetInput = _characterLocomotion.CalculateVector(input);
-        Debug.Log(targetInput);
 
-        if (targetInput != Vector2.zero && System.Math.Abs(Vector2.SignedAngle(targetInput, bodyDirection)) < 45f)
+        if (targetInput != Vector2.zero && System.Math.Abs(Vector2.SignedAngle(targetInput, bodyDirection)) < _angleToExit)
         {
-            _characterLocomotion.ChangeInputVelocity(bodyDirection, _acceleration, _maxSpeed, _acceleration);
+            _characterLocomotion.ChangeInputVelocity(bodyDirection, _acceleration, _maxSpeed, _acceleration, true);
         }
         else if (targetInput == Vector2.zero)
         {
-            _characterLocomotion.ChangeInputVelocity(Vector2.zero, _acceleration, _maxSpeed, _acceleration);
+            _characterLocomotion.ChangeInputVelocity(Vector2.zero, _acceleration, _maxSpeed, _acceleration, true);
         }
         else
         {
@@ -64,8 +64,11 @@ public class PushingState : MonoBehaviour, ILocomotionState
     public void StartState(GameObject obstacle)
     {
         _object = obstacle;
+        Vector3 bodyProjection = _characterLocomotion.Body.transform.forward.HorizontalProjection();
+        Vector2 bodyDirection = new (bodyProjection.x, bodyProjection.z);
+        _characterLocomotion.ChangeImediateInputVelocity(bodyDirection);
         obstacle.transform.SetParent(_characterLocomotion.Body);
-        _characterLocomotion.ChangeImediateInputVelocity(Vector3.zero);
+        Debug.Log(bodyDirection);
     }
 
     public void StopJump() {}

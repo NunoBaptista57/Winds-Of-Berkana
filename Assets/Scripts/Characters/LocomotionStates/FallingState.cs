@@ -59,7 +59,7 @@ public class FallingState : MonoBehaviour, ILocomotionState
     public void Move(Vector2 input)
     {
         _characterLocomotion.RotateBody(input, _rotationSpeed, true);
-        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration, false);
     }
 
     public void Run()
