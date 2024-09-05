@@ -37,7 +37,7 @@ public class RunningState : MonoBehaviour, ILocomotionState
                 audioManager.StopSFX();
             }
         }
-        _characterLocomotion.Rotate(input, _rotationSpeed, canDo180: true);
+        _characterLocomotion.RotateBody(input, _rotationSpeed, canDo180: true);
         _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
     }
 

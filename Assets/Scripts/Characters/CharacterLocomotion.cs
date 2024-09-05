@@ -99,7 +99,6 @@ public class CharacterLocomotion : MonoBehaviour
             // Slide through walls
             if (_hitPosition != Vector3.zero)
             {
-
                 Vector3 velocityProjection = Vector3.Project(InputVelocity, _hitPosition);
 
                 if (Math.Abs(Vector3.SignedAngle(InputVelocity.HorizontalProjection(), _hitPosition, Vector3.up)) > 45f && _obstacle.CompareTag("Pushable"))
@@ -129,17 +128,25 @@ public class CharacterLocomotion : MonoBehaviour
         InputVelocity = input;
     }
 
-    public void Rotate(Vector2 input, float rotationSpeed, bool canDo180)
+
+    public Vector2 CalculateVector(Vector2 input)
+    {
+        Vector3 newInput = BasePosition.forward * input.y
+                        + BasePosition.right * input.x;
+        newInput.y = 0;
+
+        return new(newInput.x, newInput.z);   
+    }
+
+    public void RotateBody(Vector2 input, float rotationSpeed, bool canDo180)
     {
         if (input == Vector2.zero)
         {
             return;
         }
-        Vector3 newInput = BasePosition.forward * input.y
-                        + BasePosition.right * input.x;
-        newInput.y = 0;
 
-        Vector2 targetVector = new(newInput.x, newInput.z);
+        Vector2 targetVector = CalculateVector(input);
+
         float targetAngle = Vector2.SignedAngle(targetVector, Vector2.up);
 
         float newAngle = transform.eulerAngles.y;

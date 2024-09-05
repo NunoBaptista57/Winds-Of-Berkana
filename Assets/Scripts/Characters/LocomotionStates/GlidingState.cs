@@ -35,7 +35,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Move(Vector2 input)
     {
-        _characterLocomotion.Rotate(input, _rotationSpeed, true);
+        _characterLocomotion.RotateBody(input, _rotationSpeed, true);
         _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
     }
 
