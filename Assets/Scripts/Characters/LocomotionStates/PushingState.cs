@@ -25,11 +25,14 @@ public class PushingState : MonoBehaviour, ILocomotionState
     {
         Vector3 bodyProjection = _characterLocomotion.Body.transform.position.HorizontalProjection();
         Vector2 bodyDirection = new (bodyProjection.x, bodyProjection.z);
-        if (input != Vector2.zero && System.Math.Abs(Vector2.SignedAngle(input, bodyDirection)) < 45f)
+        Vector2 targetInput = _characterLocomotion.CalculateVector(input);
+        Debug.Log(targetInput);
+
+        if (targetInput != Vector2.zero && System.Math.Abs(Vector2.SignedAngle(targetInput, bodyDirection)) < 45f)
         {
             _characterLocomotion.ChangeInputVelocity(bodyDirection, _acceleration, _maxSpeed, _acceleration);
         }
-        else if (input == Vector2.zero)
+        else if (targetInput == Vector2.zero)
         {
             _characterLocomotion.ChangeInputVelocity(Vector2.zero, _acceleration, _maxSpeed, _acceleration);
         }
