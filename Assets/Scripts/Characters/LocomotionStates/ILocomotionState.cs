@@ -14,4 +14,5 @@ public interface ILocomotionState
     public void StartState(GameObject obstacle);
     public void Break();
     public void Push(GameObject obstacle);
+    public void Interact(bool active);
 }

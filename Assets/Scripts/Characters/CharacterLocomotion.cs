@@ -73,7 +73,10 @@ public class CharacterLocomotion : MonoBehaviour
         BaseVelocity = baseVelocity;
     }
 
-
+    public void Interact(bool active)
+    {
+        _locomotionState.Interact(active);
+    }
 
     public void ChangeInputVelocity(Vector2 input, float acceleration, float maxSpeed, float deceleration, bool absolute)
     {

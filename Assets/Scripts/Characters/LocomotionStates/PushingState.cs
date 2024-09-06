@@ -8,6 +8,7 @@ public class PushingState : MonoBehaviour, ILocomotionState
     [SerializeField] private float _acceleration;
     [SerializeField] private float _maxSpeed;
     [SerializeField] private float _angleToExit = 60f;
+    private bool _hold = false;
     private CharacterLocomotion _characterLocomotion;
     private GameObject _object;
 
@@ -21,16 +22,27 @@ public class PushingState : MonoBehaviour, ILocomotionState
 
     public void Ground() {}
 
-    // TODO: change input method
+    public void Interact(bool active)
+    {
+        _hold = active;
+        Debug.Log(active);
+    }
+
     public void Move(Vector2 input)
     {
         Vector3 bodyProjection = _characterLocomotion.Body.transform.forward.HorizontalProjection();
         Vector2 bodyDirection = new (bodyProjection.x, bodyProjection.z);
         Vector2 targetInput = _characterLocomotion.CalculateVector(input);
 
-        if (targetInput != Vector2.zero && System.Math.Abs(Vector2.SignedAngle(targetInput, bodyDirection)) < _angleToExit)
+        if (targetInput != Vector2.zero && ((System.Math.Abs(Vector2.SignedAngle(targetInput, bodyDirection)) < _angleToExit && !_hold) || (System.Math.Abs(Vector2.SignedAngle(targetInput, bodyDirection)) < 90f && _hold)))
         {
             _characterLocomotion.ChangeInputVelocity(bodyDirection, _acceleration, _maxSpeed, _acceleration, true);
+            Debug.Log("frente");
+        }
+        else if (_hold && targetInput != Vector2.zero && System.Math.Abs(Vector2.SignedAngle(targetInput, bodyDirection)) >= 90)
+        {
+            _characterLocomotion.ChangeInputVelocity(-bodyDirection, _acceleration, _maxSpeed, _acceleration, true);
+            Debug.Log("tras");
         }
         else if (targetInput == Vector2.zero)
         {

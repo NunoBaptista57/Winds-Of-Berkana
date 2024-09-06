@@ -82,8 +82,7 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Push(GameObject obstacle) {}
 
-    public void StartState(GameObject obstacle)
-    {
-        throw new System.NotImplementedException();
-    }
+    public void StartState(GameObject obstacle) {}
+
+    public void Interact(bool active) {}
 }
