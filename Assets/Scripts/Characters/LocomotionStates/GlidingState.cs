@@ -35,8 +35,8 @@ public class GlidingState : MonoBehaviour, ILocomotionState
 
     public void Move(Vector2 input)
     {
-        _characterLocomotion.Rotate(input, _rotationSpeed, true);
-        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
+        _characterLocomotion.RotateBody(input, _rotationSpeed, true);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration, false);
     }
 
     public void Run()
@@ -65,11 +65,6 @@ public class GlidingState : MonoBehaviour, ILocomotionState
         _glider.SetActive(false);
     }
 
-    public void Tunnel()
-    {
-        _characterLocomotion.ChangeState<WindTunnel>();
-    }
-
     private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
@@ -84,4 +79,10 @@ public class GlidingState : MonoBehaviour, ILocomotionState
         _characterLocomotion.ChangeState<SlidingState>();
         _glider.SetActive(false);
     }
+
+    public void Push(GameObject obstacle) {}
+
+    public void StartState(GameObject obstacle) {}
+
+    public void Interact(bool active) {}
 }
