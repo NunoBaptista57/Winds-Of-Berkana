@@ -21,8 +21,24 @@ public class RunningState : MonoBehaviour, ILocomotionState
 
     public void Move(Vector2 input)
     {
-        _characterLocomotion.Rotate(input, _rotationSpeed, canDo180: true);
-        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
+        AudioManager audioManager = _characterLocomotion.accessAudioManager();
+        
+        if (input != Vector2.zero)
+        {
+            if (audioManager != null)
+            {
+                audioManager.RunningSound();
+            }
+        }
+        else
+        {
+            if (audioManager != null)
+            {
+                audioManager.StopSFX();
+            }
+        }
+        _characterLocomotion.RotateBody(input, _rotationSpeed, canDo180: true);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration, false);
     }
 
     public void Run()
@@ -39,8 +55,6 @@ public class RunningState : MonoBehaviour, ILocomotionState
     public void Ground()
     {
     }
-
-    public void Tunnel() { }
 
     public void Walk(bool walk)
     {
@@ -67,4 +81,13 @@ public class RunningState : MonoBehaviour, ILocomotionState
         _characterLocomotion.ChangeState<SlidingState>();
         _characterLocomotion.ChangeImediateFallVelocity(0f);
     }
+
+    public void Push(GameObject obstacle)
+    {
+        _characterLocomotion.ChangeState<PushingState>(obstacle);
+    }
+
+    public void StartState(GameObject obstacle) {}
+
+    public void Interact(bool active) {}
 }

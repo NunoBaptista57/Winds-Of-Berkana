@@ -1,16 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
-using UnityEngine.InputSystem;
-
-
 public class VitralPuzzleManager : MonoBehaviour
 {
-
-    private PlayerActions _playerActions;
-    [HideInInspector] public bool IsActivated = false;
-
     public bool IsComplete = false;
     [SerializeField] GameObject[] puzzlePieces;
     [SerializeField] GameObject puzzle;
@@ -19,8 +11,6 @@ public class VitralPuzzleManager : MonoBehaviour
     private int _pieceSelected = 0;
 
     private bool isNear = false;
-
-    private bool isSolving = false;
 
     [Header("Canvas Objects")]
     public GameObject startInteractionText;
@@ -31,14 +21,6 @@ public class VitralPuzzleManager : MonoBehaviour
     public GameObject completedPanel;
 
     private SphereColor sphereController;
-    
-    private bool overworldCamera = true;
-    [SerializeField]
-    private CinemachineVirtualCamera vitralCam;
-
-
-    [SerializeField]
-    private CinemachineFreeLook playerCam;
 
 
     void Start()
@@ -46,35 +28,6 @@ public class VitralPuzzleManager : MonoBehaviour
         sphereController = GameObject.Find("PuzzleSphere").GetComponent<SphereColor>();
     }
 
-
-  public void Activate(InputAction.CallbackContext context)
-    {
-        if (!isNear || IsActivated)
-        {
-            return;
-        }
-        IsActivated = true;
-        Debug.Log("Vitral Minigame started");
-        SolvingPuzzle();
-    }
-
-public void OnMovement(InputAction.CallbackContext context){
-    if (!isSolving) return;
-
-    Vector2 movementInput = context.ReadValue<Vector2>();
-    float horizontal = movementInput.x;  
-    float vertical = movementInput.y;    
-
-    if (Mathf.Abs(horizontal) > 0.1f)
-    {
-        RotatePiece(horizontal * 10f);
-    }
-
-    if (Mathf.Abs(vertical) > 0.1f)
-    {
-        SelectPiece(); 
-    }    
-}
 
     // Increase the Number of Puzzle Pieces Collected
     public void PuzzleCollected()
@@ -98,9 +51,7 @@ public void OnMovement(InputAction.CallbackContext context){
     // If players Press E they start trying to solve the Vitral
     public void SolvingPuzzle()
     {
-        //directionText.SetActive(true);
-        isSolving = true;
-        SwitchPriority();
+        directionText.SetActive(true);
     }
 
 
@@ -128,9 +79,9 @@ public void OnMovement(InputAction.CallbackContext context){
     {
         if (other.tag == "Player")
         {
-            //startInteractionText.gameObject.SetActive(true);
-            //puzzlePiecesText.SetActive(true);
-            //puzzlePiecesText.GetComponent<UnityEngine.UI.Text>().text = "Collected " + _piecesCollected + "/3 Puzzle Pieces";
+            startInteractionText.gameObject.SetActive(true);
+            puzzlePiecesText.SetActive(true);
+            puzzlePiecesText.GetComponent<UnityEngine.UI.Text>().text = "Collected " + _piecesCollected + "/3 Puzzle Pieces";
             isNear = true;
         }
     }
@@ -139,9 +90,9 @@ public void OnMovement(InputAction.CallbackContext context){
     {
         if (other.tag == "Player")
         {
-            //startInteractionText.gameObject.SetActive(false);
-            //puzzlePiecesText.SetActive(false);
-            //directionText.SetActive(false);
+            startInteractionText.gameObject.SetActive(false);
+            puzzlePiecesText.SetActive(false);
+            directionText.SetActive(false);
             isNear = false;
         }
     }
@@ -169,46 +120,8 @@ public void OnMovement(InputAction.CallbackContext context){
     {
         completedPanel.SetActive(true);
         IsComplete = true;
-        puzzlePieces[0].SetActive(false);
-        puzzlePieces[1].SetActive(false);
-        puzzlePieces[2].SetActive(false);
-        SwitchPriority();
-        isSolving = false;
     }
 
-
-    private void SwitchPriority()   
-    {
-         if (overworldCamera && IsComplete == false)
-         {
-             vitralCam.Priority = playerCam.Priority;
-             playerCam.Priority = 0;
-             overworldCamera = !overworldCamera;
-
-         }
-
-         else if (overworldCamera == false && IsComplete)
-         {
-             playerCam.Priority = vitralCam.Priority;
-             vitralCam.Priority = 0;
-             overworldCamera = !overworldCamera;
-
-         }
-    }
-
-     private void OnEnable()
-    {
-        _playerActions = new();
-        _playerActions.Character.Interact.started += Activate;
-        _playerActions.Character.Move.performed += OnMovement;
-        _playerActions.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _playerActions.Character.Interact.started -= Activate;
-        _playerActions.Disable();
-    }
 
     #region Singleton
 
