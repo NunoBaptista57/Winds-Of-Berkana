@@ -8,6 +8,22 @@ public class CharacterManager : MonoBehaviour
     protected CharacterAnimation CharacterAnimation;
     protected CharacterController CharacterController;
 
+    public AudioManager audioManager;
+
+
+    public void Start()
+    {
+        /* AudioManager audioManager = FindObjectOfType<AudioManager>();
+
+         if (audioManager == null)
+         {
+             Debug.LogWarning("AudioManager not found in the scene.");
+         }
+         else
+         {
+             Debug.Log("AudioManager found.");
+         }*/
+    }
     public void SetCanMove(bool canMove)
     {
         CharacterController.enabled = canMove;
@@ -65,20 +81,9 @@ public class CharacterManager : MonoBehaviour
         CharacterAnimation.ChangeAnimation(animationState);
     }
 
-    private void OnTriggerStay(Collider collider)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (collider.gameObject.TryGetComponent(out MovingPlatform _))
-        {
-            if (CharacterController.velocity != Vector3.zero)
-            {
-                return;
-            }
-            Physics.ComputePenetration(collider, collider.transform.position, collider.transform.rotation, CharacterController, transform.position, transform.rotation, out Vector3 direction, out float distance);
-        }
-    }
-
-    private void OnTriggerExit(Collider collider)
-    {
+        CharacterLocomotion.OnCollision(hit);
     }
 
     private void Update()

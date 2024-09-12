@@ -6,69 +6,108 @@ using System;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
-    
-    public Sound[] musicSounds,sfxSounds;
+
+    public Sound[] musicSounds, sfxSounds;
 
     public AudioSource _musicSource, _sfxSource;
 
+    public AudioEnvironment _environment;
+
+    public BastionEnvironment _bastionEnvironment;
     public void Start()
     {
-        //_audioSource = this.GetComponentInChildren<AudioSource>();
+        _environment = _bastionEnvironment;
     }
 
-    private void Awake() {
-        if(Instance == null)
+    private void Awake()
+    {
+        if (Instance == null)
         {
             Instance = this;
-            //Debug.LogError("Audio Manager is null");
             DontDestroyOnLoad(gameObject);
         }
-        else{
+        else
+        {
             Destroy(gameObject);
-        }        
+        }
     }
 
-    public void PlayMusic(string name, bool loop=false)
+    public void PlayMusic(string name, bool loop = false)
     {
-        //_audioSource.clip = audio;
-        //_audioSource.loop = loop;
-       // _audioSource.Play();
-       Sound s = Array.Find(musicSounds, x => x.name == name);
-       if (s == null) Debug.Log("Sound Not Found");
-       else{
+
+        Sound s = Array.Find(musicSounds, x => x.name == name);
+        if (s == null) Debug.Log("Sound Not Found");
+        else
+        {
             _musicSource.clip = s.clip;
             _musicSource.loop = loop;
             _musicSource.Play();
-       }
+        }
     }
 
-    public void StopMusic(){
+    public void StopMusic()
+    {
         _musicSource.Stop();
     }
-
-    public void PlaySFX(string name)
+    public void StopSFX()
     {
-       Sound s = Array.Find(sfxSounds, x => x.name == name);
-       if (s == null) Debug.Log("Sound Not Found");
-       else{
-            _sfxSource.clip = s.clip;
-            _sfxSource.Play();
-       }
+        float maxSuddenStopDuration = 1.0f;
+
+        if (_sfxSource.clip != null)
+            if (_sfxSource.clip.length > maxSuddenStopDuration)
+            {
+                _sfxSource.Stop();
+            }
+        _sfxSource.loop = false;
+    }
+    public void WalkSound()
+    {
+        _environment.WalkSound(_sfxSource);
+    }
+    public void LandingSound()
+    {
+        _environment.LandingSound(_sfxSource);
+
+    }
+    public void GlidingSound()
+    {
+        _environment.GlidingSound(_sfxSource);
+
     }
 
-    public void ToggleMusic(){
+    public void RunningSound()
+    {
+        _environment.RunningSound(_sfxSource);
+    }
+
+    /*public void PlaySFX(string name)
+    {
+        Sound s = Array.Find(sfxSounds, x => x.name == name);
+        if (s == null) Debug.Log("Sound Not Found");
+        else
+        {
+            _sfxSource.clip = s.clip;
+            _sfxSource.Play();
+        }
+    }*/
+
+    public void ToggleMusic()
+    {
         _musicSource.mute = !_musicSource.mute;
     }
 
-    public void ToggleSFX(){
+    public void ToggleSFX()
+    {
         _sfxSource.mute = !_sfxSource.mute;
     }
 
-    public void MusicVolume(float volume){
+    public void MusicVolume(float volume)
+    {
         _musicSource.volume = volume;
     }
 
-    public void SFXVolume(float volume){
+    public void SFXVolume(float volume)
+    {
         _sfxSource.volume = volume;
     }
 }

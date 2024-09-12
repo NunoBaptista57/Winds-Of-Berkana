@@ -26,8 +26,8 @@ public class JumpingState : MonoBehaviour, ILocomotionState
 
     public void Move(Vector2 input)
     {
-        _characterLocomotion.Rotate(input, _rotationSpeed, true);
-        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
+        _characterLocomotion.RotateBody(input, _rotationSpeed, true);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration, false);
         _characterLocomotion.ChangeFallVelocity(_gravity);
 
         if (_jump)
@@ -51,8 +51,6 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     {
 
     }
-
-    public void Tunnel() { }
 
     public void Ground()
     {
@@ -87,4 +85,10 @@ public class JumpingState : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion.ChangeState<SlidingState>();
     }
+
+    public void Push(GameObject obstacle) {}
+
+    public void StartState(GameObject obstacle) {}
+
+    public void Interact(bool active) {}
 }
