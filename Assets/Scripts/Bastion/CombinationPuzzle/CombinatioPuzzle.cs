@@ -8,6 +8,8 @@ public class CombinatioPuzzle : MonoBehaviour
     public GameObject[] lights;  
     // Start is called before the first frame update
 
+     [SerializeField] private GameObject vitral;
+
     public void Awake(){
         
         buttons = GetComponentsInChildren<ButtonsCombPuzzle>();        
@@ -53,6 +55,7 @@ public class CombinatioPuzzle : MonoBehaviour
             }
         }
         LightsOnOff();
+        CheckWin();
     }
 
     private void LightsOnOff(){
@@ -66,5 +69,14 @@ public class CombinatioPuzzle : MonoBehaviour
         }
     }
 
+    private void CheckWin(){
+        foreach (GameObject light in lights){
+            if (light.activeSelf)
+                continue;
+            else
+                return;
+        }
+        vitral.SetActive(true);
+    }
 
 }
