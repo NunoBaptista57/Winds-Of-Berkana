@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using UnityEngine.Events;
 
-public class PlayerBoatHarpoonController : PlayerBoatBehaviour
+public class PlayerBoatHarpoonController2 : PlayerBoatBehaviour
 {
     [SerializeField] Animator CameraAnimator = null;
     [SerializeField] float AimSpeed = 1;

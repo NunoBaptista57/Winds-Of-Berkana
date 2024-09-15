@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BoatMovement : MonoBehaviour
+public class BoatMovement2 : MonoBehaviour
 {
     new Rigidbody rigidbody;
 

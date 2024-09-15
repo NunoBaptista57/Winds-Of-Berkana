@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class BoatSailHandler : PlayerBoatBehaviour
+public class BoatSailHandler2 : PlayerBoatBehaviour
 {
     List<SailMode> modeList = (System.Enum.GetValues(typeof(SailMode)) as SailMode[]).ToList();
 

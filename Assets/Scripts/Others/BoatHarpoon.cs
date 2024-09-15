@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class BoatHarpoon : MonoBehaviour
+public class BoatHarpoon2 : MonoBehaviour
 {
     [SerializeField] new CinemachineVirtualCamera camera;
     [SerializeField] CableComponent cable;

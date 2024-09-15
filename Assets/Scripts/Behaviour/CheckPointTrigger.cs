@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckPointTrigger : MonoBehaviour
+public class CheckPointTrigger2 : MonoBehaviour
 {
     public int checkpointNumber;
     public Transform playerSpawnPoint;

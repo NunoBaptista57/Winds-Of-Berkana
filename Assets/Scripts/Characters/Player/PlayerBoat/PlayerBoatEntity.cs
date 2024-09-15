@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class PlayerBoatEntity : MonoBehaviour
+public class PlayerBoatEntity2 : MonoBehaviour
 {
 
-    public static PlayerBoatEntity instance { get; private set; } = null;
+    public static PlayerBoatEntity2 instance { get; private set; } = null;
     public BoatMovement movement { get; private set; }
     new public Rigidbody rigidbody { get; private set; }
 

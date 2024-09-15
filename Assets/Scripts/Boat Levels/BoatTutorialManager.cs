@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoatTutorialManager : MonoBehaviour
+public class BoatTutorialManager2 : MonoBehaviour
 {
     [SerializeField]
     private Beacon[] beacons;

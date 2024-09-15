@@ -1,4 +1,4 @@
-public enum SailMode
+public enum SailMode2
 {
     /// Sails open and motor running
     Open,

@@ -3,7 +3,7 @@ using UnityEngine;
 using TMPro;
 using Cinemachine;
 
-public class ShipHp : MonoBehaviour
+public class ShipHp2 : MonoBehaviour
 {
     [Header("Settings")]
     public int hp = 3;

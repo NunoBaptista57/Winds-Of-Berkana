@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-public class BoatSailController : PlayerBoatBehaviour
+public class BoatSailController2 : PlayerBoatBehaviour
 {
     [System.Serializable]
     public class ModeParams

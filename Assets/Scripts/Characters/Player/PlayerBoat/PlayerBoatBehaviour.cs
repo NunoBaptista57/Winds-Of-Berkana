@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerBoatBehaviour : MonoBehaviour
+public class PlayerBoatBehaviour2 : MonoBehaviour
 {
     protected PlayerBoatEntity player;
 

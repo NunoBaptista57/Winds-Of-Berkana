@@ -1,5 +1,5 @@
 [System.Serializable]
-public enum PlayerBoatState
+public enum PlayerBoatState2
 {
     Idle = 0x0,
     Harpoon = 0x1,

@@ -4,7 +4,7 @@ using UnityEngine;
 
 using UnityEngine.Splines;
 
-public class pathFollow : MonoBehaviour
+public class pathFollow2 : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private bool needsPlayerProximity = true;

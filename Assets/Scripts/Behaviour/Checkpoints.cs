@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Checkpoints : MonoBehaviour
+public class Checkpoints2 : MonoBehaviour
 {
     private Transform playerSpawnPoint;
     private Transform birdSpawnPoint;

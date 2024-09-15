@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class FadeIn : MonoBehaviour
+public class FadeIn2 : MonoBehaviour
 {
     public float fadeDuration = 1f;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
-public class CutSceneManager : MonoBehaviour
+public class CutSceneManager2 : MonoBehaviour
 {
     private PlayableDirector playableDirector;
     private bool isCutscenePlaying = false;

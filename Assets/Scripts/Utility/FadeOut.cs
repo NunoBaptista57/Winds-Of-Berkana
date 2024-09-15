@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class FadeOut : MonoBehaviour
+public class FadeOut2 : MonoBehaviour
 {
     public float fadeDuration = 1f;
     public float delayBeforeFadeOut = 1f;
