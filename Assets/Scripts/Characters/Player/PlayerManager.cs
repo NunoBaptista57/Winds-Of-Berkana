@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -24,6 +25,19 @@ public class PlayerManager : CharacterManager
             _debugMode.DebugMode = !_debugMode.DebugMode;
             Move(Vector2.zero);
             SetCanMove(!_debugMode.DebugMode);
+        }
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            CharacterLocomotion.Interact(true);
+        }
+        else if (context.canceled)
+        {
+            Debug.Log("Stopped");
+            CharacterLocomotion.Interact(false);
         }
     }
 
@@ -98,6 +112,8 @@ public class PlayerManager : CharacterManager
         _playerActions.Character.Jump.canceled += OnJump;
         _playerActions.Character.Move.performed += OnMove;
         _playerActions.Character.Debug.started += DebugMode;
+        _playerActions.Character.Interact.started += OnInteract;
+        _playerActions.Character.Interact.canceled += OnInteract;
 
         _playerActions.Enable();
     }
@@ -108,11 +124,13 @@ public class PlayerManager : CharacterManager
         _playerActions.Character.Jump.canceled -= OnJump;
         _playerActions.Character.Move.performed -= OnMove;
         _playerActions.Character.Debug.started -= DebugMode;
+        _playerActions.Character.Interact.started -= OnInteract;
+        _playerActions.Character.Interact.canceled -= OnInteract;
 
         _playerActions.Disable();
     }
 
-    private void Start()
+    private new void Start()
     {
         _debugMode = GetComponent<PlayerDebugMode>();
     }

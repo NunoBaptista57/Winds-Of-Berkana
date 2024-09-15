@@ -26,8 +26,8 @@ public class SlidingState : MonoBehaviour, ILocomotionState
 
     public void Move(Vector2 input)
     {
-        _characterLocomotion.Rotate(input, _rotationSpeed, true);
-        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration);
+        _characterLocomotion.RotateBody(input, _rotationSpeed, true);
+        _characterLocomotion.ChangeInputVelocity(input, _acceleration, _maxSpeed, _deceleration, false);
     }
 
     public void Run()
@@ -49,8 +49,6 @@ public class SlidingState : MonoBehaviour, ILocomotionState
         _characterLocomotion.ChangeState<RunningState>();
     }
 
-    public void Tunnel() { }
-
     private void Awake()
     {
         _characterLocomotion = GetComponent<CharacterLocomotion>();
@@ -62,4 +60,10 @@ public class SlidingState : MonoBehaviour, ILocomotionState
     {
         _characterLocomotion.ChangeFallVelocity(_gravity, _maxFallSpeed, _gravity);
     }
+
+    public void Push(GameObject obstacle) {}
+
+    public void StartState(GameObject obstacle) {}
+
+    public void Interact(bool active) {}
 }
