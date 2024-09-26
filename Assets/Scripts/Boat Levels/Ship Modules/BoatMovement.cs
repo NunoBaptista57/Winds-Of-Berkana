@@ -177,11 +177,6 @@ public class BoatMovement : MonoBehaviour
             currentSpeed += MaxVelocity / 2;
             Debug.Log("Entrou");
         }
-
-        if (collision.gameObject.CompareTag("WindTunnel"))
-        {
-            windVector = collision.gameObject.transform.forward.normalized * collision.gameObject.GetComponent<windTunnelBoat>().windForce;
-        }
     }
 
     private void OnTriggerExit(Collider collision)
