@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BeaconOld : MonoBehaviour
+public class Beacon : MonoBehaviour
 {
     private bool _entered = false;
 
