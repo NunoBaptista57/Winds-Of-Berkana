@@ -51,7 +51,7 @@ public class ShipHp : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (!isInvulnerable)
+        if (!isInvulnerable && other.collider.gameObject.layer != LayerMask.NameToLayer("Water"))
         {
             hp--;
             UpdateUI();

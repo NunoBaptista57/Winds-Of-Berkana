@@ -21,6 +21,14 @@ public class CutSceneManager : MonoBehaviour
         if (playOnAwake) {beginCutScene();}
     }
 
+    void Update()
+    {
+        if (isCutscenePlaying && Input.GetKeyDown(KeyCode.Space))
+        {
+            SkipCutScene();
+        }
+    }
+
     public void beginCutScene()
     {
         if (!isCutscenePlaying)
@@ -32,6 +40,18 @@ public class CutSceneManager : MonoBehaviour
             isCutscenePlaying = true;
 
             playableDirector.stopped += OnCutsceneFinished;
+        }
+    }
+
+    private void SkipCutScene()
+    {
+        if (isCutscenePlaying)
+        {
+            playableDirector.time = playableDirector.duration;
+
+            playableDirector.Evaluate();
+
+            OnCutsceneFinished(playableDirector);
         }
     }
 

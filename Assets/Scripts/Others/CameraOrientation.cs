@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class CameraOrientation : MonoBehaviour
+public class CameraOrientation2 : MonoBehaviour
 {
     [SerializeField] Camera target;
     [SerializeField] CinemachineVirtualCamera cinemachineTarget;
