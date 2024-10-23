@@ -9,6 +9,7 @@ public class VitralPuzzleManager : MonoBehaviour
 {
 
     private PlayerActions _playerActions;
+    [SerializeField] private CharacterManager _managerPlayer;
     [HideInInspector] public bool IsActivated = false;
 
     public bool IsComplete = false;
@@ -43,6 +44,7 @@ public class VitralPuzzleManager : MonoBehaviour
 
     void Start()
     {
+        _managerPlayer = GameObject.Find("Player").GetComponent<CharacterManager>();
         sphereController = GameObject.Find("PuzzleSphere").GetComponent<SphereColor>();
     }
 
@@ -53,6 +55,7 @@ public class VitralPuzzleManager : MonoBehaviour
         {
             return;
         }
+        _managerPlayer.SetCanMove(false);
         IsActivated = true;
         Debug.Log("Vitral Minigame started");
         SolvingPuzzle();
@@ -151,7 +154,7 @@ public void OnMovement(InputAction.CallbackContext context){
         foreach (var p in puzzlePieces)
         {
             Debug.Log(p.transform.rotation.z);
-            if (p.transform.rotation.z < -0.01 || p.transform.rotation.z > 0.01)
+            if (p.transform.rotation.z < -0.02 || p.transform.rotation.z > 0.02)
                 return;
         }
         // Completed the panel
@@ -167,6 +170,7 @@ public void OnMovement(InputAction.CallbackContext context){
         puzzlePieces[2].SetActive(false);
         SwitchPriority();
         isSolving = false;
+        _managerPlayer.SetCanMove(true);
     }
 
 
