@@ -10,6 +10,7 @@ public class CutSceneManager : MonoBehaviour
     private bool isCutscenePlaying = false;
 
     public BoatMovement player; //Might be replaced by a manager sys with the needed references
+    public GameObject playerChar;
     public bool playOnAwake = false;
 
     [Header("Optional reference to load scene after the cutscene")]
@@ -33,7 +34,13 @@ public class CutSceneManager : MonoBehaviour
     {
         if (!isCutscenePlaying)
         {
-            player.AllowPlayerControl(false);
+            if(player == null){
+                playerChar.SetActive(false);
+            }
+            else
+            {
+                player.AllowPlayerControl(false);
+            }
 
             playableDirector.Play();
 
@@ -57,7 +64,13 @@ public class CutSceneManager : MonoBehaviour
 
     private void OnCutsceneFinished(PlayableDirector director)
     {
-        player.AllowPlayerControl(true);
+        if(player == null){
+            playerChar.SetActive(true);
+        }
+        else
+        {
+            player.AllowPlayerControl(true);
+        }
 
         director.stopped -= OnCutsceneFinished;
 
