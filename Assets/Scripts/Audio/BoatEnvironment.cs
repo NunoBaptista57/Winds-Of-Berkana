@@ -31,38 +31,48 @@ public class BoatEnvironment : MonoBehaviour, AudioEnvironment
     {
         Sound s = Array.Find(sfxSounds, x => x.name == slowSpeed);
         if (s == null) Debug.Log("Sound Not Found");
-        else
-        {
-            audio.clip = s.clip;
-            audio.loop = true;
-            audio.Play();
-            lastPlayed = s.name;
+        else {
+            if(lastPlayed == null || !lastPlayed.Equals(slowSpeed)){
+                
+                    Debug.Log("Enetered sound change");
+                    audio.clip = s.clip;
+                    audio.loop = true;
+                    audio.Play();
+                    lastPlayed = s.name;
+                }
         }
     }
     public void FastSound(AudioSource audio)
     {
         Sound s = Array.Find(sfxSounds, x => x.name == fastSpeed);
         if (s == null) Debug.Log("Sound Not Found");
-        else
-        {
-           audio.clip = s.clip;
-            audio.loop = true;
-            audio.Play();
-            lastPlayed = s.name;
+        else {
+            if(lastPlayed == null || !lastPlayed.Equals(fastSpeed)){
+                
+                    Debug.Log("Enetered sound change");
+                    audio.clip = s.clip;
+                    audio.loop = true;
+                    audio.Play();
+                    lastPlayed = s.name;
+                }
         }
     }
     public void GlidingSound(AudioSource audio)
     {
         Sound s = Array.Find(sfxSounds, x => x.name == glidingSound);
         if (s == null) Debug.Log("Sound Not Found");
-        else
-        {
-            audio.clip = s.clip;
-            audio.loop = true;
-            audio.Play();
-            lastPlayed = s.name;
-        }
+        else {
+              if(lastPlayed == null || !lastPlayed.Equals(glidingSound)){
+                
+                    Debug.Log("Enetered sound change");
+                    audio.clip = s.clip;
+                    audio.loop = true;
+                    audio.Play();
+                    lastPlayed = s.name;
+                }
+            }
     }
+    
 
     public void WalkSound(AudioSource audio){}
     public void LandingSound(AudioSource audio){}

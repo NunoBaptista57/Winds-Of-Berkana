@@ -87,6 +87,14 @@ public class BoatMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
+            if (!flightMode)
+            {
+                Debug.Log("FastSound");
+                audioManager.FastSound();
+            }
+            else{
+                audioManager.GlidingSound();
+            }
             if (currentSpeed < MaxVelocity * 2)
             {
                 currentSpeed += acceleration;
@@ -94,6 +102,14 @@ public class BoatMovement : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            if (!flightMode)
+            {
+                Debug.Log("SlowSound");
+                audioManager.SlowSound();
+            }
+            else{
+                audioManager.GlidingSound();
+            }
             if (currentSpeed > 0)
             {   
                 currentSpeed -= acceleration;
@@ -165,34 +181,17 @@ public class BoatMovement : MonoBehaviour
         {
             return;
         }
-        //Debug.Log("Lwasdanding");
+        Debug.Log("Lwasdanding");
         input.Pitch = value.Get<float>();
     }
 
     void OnSlow(InputValue value)
     {
-        if (!flightMode)
-        {
-            Debug.Log("SlowSound");
-            audioManager.SlowSound();
-        }
-        else{
-            audioManager.GlidingSound();
-        }
         input.Slow = value.Get<float>();
     }
 
     void OnSpeedUp(InputValue value)
-    {
-        if (!flightMode)
-        {
-            Debug.Log("FastSound");
-            audioManager.FastSound();
-        }
-        else
-        {
-            audioManager.GlidingSound();
-        }        
+    {     
         input.SpeedUp = value.Get<float>();
     }
 

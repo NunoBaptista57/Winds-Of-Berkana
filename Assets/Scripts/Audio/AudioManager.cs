@@ -89,7 +89,6 @@ public class AudioManager : MonoBehaviour
     public void SlowSound()
     {
         environment.SlowSound(_sfxSource);
-
     }
 
     public void RunningSound()
