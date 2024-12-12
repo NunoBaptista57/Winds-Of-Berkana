@@ -4,13 +4,11 @@ using UnityEngine;
 using System;
 
 
-public class BastionEnvironment : MonoBehaviour, AudioEnvironment
+public class BoatEnvironment : MonoBehaviour, AudioEnvironment
 {
-    [SerializeField] private string walkingSound;
-    [SerializeField] private string landingSound;
+    [SerializeField] private string slowSpeed;
+    [SerializeField] private string fastSpeed;
     [SerializeField] private string glidingSound;
-
-    [SerializeField] private string runningSound;
 
     public Sound[] sfxSounds;
 
@@ -29,9 +27,9 @@ public class BastionEnvironment : MonoBehaviour, AudioEnvironment
         counter_to_use = counter_to_use - 1 * Time.deltaTime;
     }
 
-    public void WalkSound(AudioSource audio)
+    public void SlowSound(AudioSource audio)
     {
-        Sound s = Array.Find(sfxSounds, x => x.name == walkingSound);
+        Sound s = Array.Find(sfxSounds, x => x.name == slowSpeed);
         if (s == null) Debug.Log("Sound Not Found");
         else
         {
@@ -41,13 +39,14 @@ public class BastionEnvironment : MonoBehaviour, AudioEnvironment
             lastPlayed = s.name;
         }
     }
-    public void LandingSound(AudioSource audio)
+    public void FastSound(AudioSource audio)
     {
-        Sound s = Array.Find(sfxSounds, x => x.name == landingSound);
+        Sound s = Array.Find(sfxSounds, x => x.name == fastSpeed);
         if (s == null) Debug.Log("Sound Not Found");
         else
         {
-            audio.clip = s.clip;
+           audio.clip = s.clip;
+            audio.loop = true;
             audio.Play();
             lastPlayed = s.name;
         }
@@ -65,26 +64,8 @@ public class BastionEnvironment : MonoBehaviour, AudioEnvironment
         }
     }
 
-    public void RunningSound(AudioSource audio)
-    {
-        Sound s = Array.Find(sfxSounds, x => x.name == runningSound);
-        if (s == null) Debug.Log("Sound Not Found");
-        else
-        {
-            if (counter_to_use < 0)
-            {
-                if (!(audio.isPlaying && lastPlayed.Equals(landingSound)))
-                {
-                    audio.clip = s.clip;
-                    audio.Play();
-                    counter_to_use = time_until_play;
-                    lastPlayed = s.name;
-                }
-            }
-        }
-    }
+    public void WalkSound(AudioSource audio){}
+    public void LandingSound(AudioSource audio){}
 
-    public void SlowSound(AudioSource audio){}
-    public void FastSound(AudioSource audio){}
-
+    public void RunningSound(AudioSource audio){}
 }

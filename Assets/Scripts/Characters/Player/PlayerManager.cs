@@ -133,5 +133,16 @@ public class PlayerManager : CharacterManager
     private new void Start()
     {
         _debugMode = GetComponent<PlayerDebugMode>();
+        
+        audioManager = AudioManager.Instance;
+
+        if (audioManager == null)
+        {
+            Debug.LogWarning("AudioManager not found in the scene.");
+        }
+        else
+        {
+            Debug.Log("AudioManager found.");
+        }
     }
 }
