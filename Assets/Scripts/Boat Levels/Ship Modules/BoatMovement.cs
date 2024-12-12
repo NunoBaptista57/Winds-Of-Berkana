@@ -46,6 +46,8 @@ public class BoatMovement : MonoBehaviour
 
     public PlayerInput input;
     public Action onInteraction;
+    public AudioManager audioManager;
+
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +66,17 @@ public class BoatMovement : MonoBehaviour
         {
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationZ;
         }
+
+        audioManager = AudioManager.Instance;
+
+        if (audioManager == null)
+        {
+            Debug.LogWarning("AudioManager not found in the scene.");
+        }
+        else
+        {
+            Debug.Log("AudioManager found.");
+        }
     }
 
     public void AllowPlayerControl(bool setTo) { canMove = setTo; }
@@ -74,6 +87,14 @@ public class BoatMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
+            if (!flightMode)
+            {
+                Debug.Log("FastSound");
+                audioManager.FastSound();
+            }
+            else{
+                audioManager.GlidingSound();
+            }
             if (currentSpeed < MaxVelocity * 2)
             {
                 currentSpeed += acceleration;
@@ -81,6 +102,14 @@ public class BoatMovement : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            if (!flightMode)
+            {
+                Debug.Log("SlowSound");
+                audioManager.SlowSound();
+            }
+            else{
+                audioManager.GlidingSound();
+            }
             if (currentSpeed > 0)
             {   
                 currentSpeed -= acceleration;
@@ -152,7 +181,7 @@ public class BoatMovement : MonoBehaviour
         {
             return;
         }
-        //Debug.Log("Lwasdanding");
+        Debug.Log("Lwasdanding");
         input.Pitch = value.Get<float>();
     }
 
@@ -162,7 +191,7 @@ public class BoatMovement : MonoBehaviour
     }
 
     void OnSpeedUp(InputValue value)
-    {
+    {     
         input.SpeedUp = value.Get<float>();
     }
 

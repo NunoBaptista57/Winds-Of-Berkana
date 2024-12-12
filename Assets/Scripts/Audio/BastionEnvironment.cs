@@ -83,4 +83,8 @@ public class BastionEnvironment : MonoBehaviour, AudioEnvironment
             }
         }
     }
+
+    public void SlowSound(AudioSource audio){}
+    public void FastSound(AudioSource audio){}
+
 }

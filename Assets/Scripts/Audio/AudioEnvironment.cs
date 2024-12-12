@@ -10,4 +10,9 @@ public interface AudioEnvironment
     public void GlidingSound(AudioSource audio);
 
     public void RunningSound(AudioSource audio);
+
+    public void SlowSound(AudioSource audio);
+    public void FastSound(AudioSource audio);
+
+
 }

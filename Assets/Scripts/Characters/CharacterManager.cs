@@ -13,17 +13,9 @@ public class CharacterManager : MonoBehaviour
 
     public void Start()
     {
-        /* AudioManager audioManager = FindObjectOfType<AudioManager>();
-
-         if (audioManager == null)
-         {
-             Debug.LogWarning("AudioManager not found in the scene.");
-         }
-         else
-         {
-             Debug.Log("AudioManager found.");
-         }*/
+ 
     }
+
     public void SetCanMove(bool canMove)
     {
         CharacterController.enabled = canMove;

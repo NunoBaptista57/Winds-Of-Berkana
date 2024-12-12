@@ -10,13 +10,18 @@ public class AudioManager : MonoBehaviour
     public Sound[] musicSounds, sfxSounds;
 
     public AudioSource _musicSource, _sfxSource;
-
-    public AudioEnvironment _environment;
+    public bool inBastion;
+    public AudioEnvironment environment;
 
     public BastionEnvironment _bastionEnvironment;
+    
+    public BoatEnvironment _boatEnvironment;
     public void Start()
     {
-        _environment = _bastionEnvironment;
+        if(inBastion)
+            environment = _bastionEnvironment;
+        else
+            environment = _boatEnvironment;
     }
 
     private void Awake()
@@ -62,22 +67,33 @@ public class AudioManager : MonoBehaviour
     }
     public void WalkSound()
     {
-        _environment.WalkSound(_sfxSource);
+        environment.WalkSound(_sfxSource);
     }
     public void LandingSound()
     {
-        _environment.LandingSound(_sfxSource);
+        environment.LandingSound(_sfxSource);
 
     }
     public void GlidingSound()
     {
-        _environment.GlidingSound(_sfxSource);
+        environment.GlidingSound(_sfxSource);
 
+    }
+
+    public void FastSound()
+    {
+        environment.FastSound(_sfxSource);
+
+    }
+
+    public void SlowSound()
+    {
+        environment.SlowSound(_sfxSource);
     }
 
     public void RunningSound()
     {
-        _environment.RunningSound(_sfxSource);
+        environment.RunningSound(_sfxSource);
     }
 
     /*public void PlaySFX(string name)
